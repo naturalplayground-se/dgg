@@ -335,6 +335,8 @@ export default function Index() {
   const handleDynamicPrefix = (event) => {
     if (event.target.value.length > 1) {
       setDynamicPrefix(event.target.value);
+    } else {
+      setDynamicPrefix(null);
     }
   };
 
