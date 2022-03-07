@@ -3,14 +3,17 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
 
 export default function Index() {
   const [field1, setField1] = React.useState("");
-  const [field2, setField2] = React.useState("");
-  const [fieldType1, setFieldType1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
+  const [fieldCountError, setFieldCountError] = React.useState(false);
+  const [dynamicPrefix, setDynamicPrefix] = React.useState(null);
+
   const [textAreaFieldCount, setTextAreaFieldCount] = React.useState([1]);
   const [textAreaError, setTextAreaError] = React.useState(false);
+  const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
 
   const prefix = [
@@ -51,12 +54,14 @@ export default function Index() {
     "ZJ",
   ];
 
-  const dynamicTextfield = (data) => {
-    setTextField(JSON.parse(data));
-    const regex1 = data.replace(/ALL_Testlayer/i, "ALL_Stefan");
+  const dynamicTextfield = (i) => {
+    const regex = new RegExp(dynamicPrefix, "g");
+    const replaced = textField.replace(regex, `${prefix[i]}_`);
+    const parsed = JSON.parse(replaced);
+    console.log(parsed);
 
     return {
-      regex1,
+      parsed,
     };
   };
 
@@ -261,6 +266,7 @@ export default function Index() {
 
     for (let i = 0; i <= times; i++) {
       // const field0 = `${JSON.stringify(dynamicField1(i))},`;
+      const df = `${JSON.stringify(dynamicTextfield(i))},`;
       const field1 = `${JSON.stringify(produktNamn(i))},`;
       const field2 = `${JSON.stringify(produktBeskrivning(i))},`;
       const field3 = `${JSON.stringify(ikon(i))},`;
@@ -272,10 +278,20 @@ export default function Index() {
       cluster.push(field1, field2, field3, field4, field5, field6);
     }
 
-    //Replace ALL for dynamic replacement
-    // const regex = /_PrisTeckenKr.width/gi;
     const merged = cluster.join("");
-    // console.log(merged.replaceAll(regex, "STEFAN"));
+
+    return merged;
+  };
+
+  const generateClusters = () => {
+    let cluster = [];
+
+    for (let i = 0; i <= fieldCount; i++) {
+      const df = `${JSON.stringify(dynamicTextfield(i))},`;
+      cluster.push(df);
+    }
+
+    const merged = cluster.join("");
 
     return merged;
   };
@@ -291,27 +307,35 @@ export default function Index() {
   }
 
   async function handleField(event) {
-    if (event.target.id == "TextField1") {
-      if (event.target.value.length > 1) {
-        if (IsJsonString(event.target.value)) {
-          setTextAreaError(false);
-          dynamicTextfield(event.target.value);
-        } else {
-          setTextField(null);
-          setTextAreaError(true);
-        }
-      } else {
+    setJsonSuccess(false);
+    if (event.target.value.length > 2) {
+      if (IsJsonString(event.target.value)) {
+        setJsonSuccess(true);
         setTextAreaError(false);
+        setTextField(event.target.value);
+      } else {
+        setTextField(null);
+        setTextAreaError(true);
+        setJsonSuccess(false);
       }
-      setField1(event.target.value);
+    } else {
+      setTextAreaError(false);
     }
-    if (event.target.id == 2) {
-      setField2(event.target.value);
-    }
+    setField1(event.target.value);
   }
 
   const handleFieldCount = (event) => {
+    /^[0-9]*$/.test(event.target.value)
+      ? setFieldCountError(false)
+      : setFieldCountError(true);
+
     setFieldCount(event.target.value);
+  };
+
+  const handleDynamicPrefix = (event) => {
+    if (event.target.value.length > 1) {
+      setDynamicPrefix(event.target.value);
+    }
   };
 
   return (
@@ -337,60 +361,68 @@ export default function Index() {
       >
         Förslag funktionalitet nedan
       </Typography>
-
+      <FormControl sx={{ width: "800px", mb: 3 }}>
+        <TextField
+          onChange={handleField}
+          fullWidth
+          label="Klistra in din JSON-kod från Designgeneratorn"
+          multiline
+          rows={8}
+          error={textAreaError}
+          color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
+          helperText={
+            textAreaError
+              ? `Not a valid JSON format`
+              : jsonSuccess
+              ? "Correct JSON"
+              : ""
+          }
+        />
+      </FormControl>
       <Box
-        component="form"
         sx={{
           width: "800px",
           display: "flex",
           flexDirection: "row",
-          "& > :not(style)": { m: 1, width: "200px" },
+          "& > :not(style)": { mr: 3, width: "200px" },
           mb: 20,
         }}
         noValidate
         autoComplete="off"
       >
         <TextField
+          disabled={jsonSuccess ? false : true}
           onChange={handleFieldCount}
           id="outlined-basic"
           label="Number of groups"
           variant="outlined"
+          helperText={fieldCountError ? `Please, type in a number` : ""}
+          color={fieldCountError ? "error" : "success"}
         />
         <TextField
+          disabled={jsonSuccess && !fieldCountError ? false : true}
+          onChange={handleDynamicPrefix}
           id="outlined-basic"
           label="Dynamic prefix"
           variant="outlined"
-        />{" "}
+        />
+        <Button
+          disabled={
+            jsonSuccess && !fieldCountError && dynamicPrefix !== null
+              ? false
+              : true
+          }
+          sx={{ mb: 20 }}
+          onClick={() => {
+            navigator.clipboard.writeText(generateClusters());
+          }}
+          variant="contained"
+          size="large"
+        >
+          Grab the JSON
+        </Button>
       </Box>
-
-      <Button
-        sx={{ mb: 10, width: 200 }}
-        onClick={() => {
-          setTextAreaFieldCount([1, 2]);
-        }}
-        variant="text"
-      >
-        Add field to group
-      </Button>
-
-      {textAreaFieldCount.map((i) => {
-        return (
-          <Box key={i} sx={{ width: 600 }}>
-            <TextField
-              onChange={handleField}
-              fullWidth
-              label="Klistra in din JSON-kod från Designgeneratorn"
-              multiline
-              id={`TextField${i}`}
-              rows={8}
-              size="Large"
-              value={i == 1 ? field1 : field2}
-              color={textAreaError ? "error" : "success"}
-              helperText={textAreaError ? `Not a valid JSON format` : ""}
-            />
-          </Box>
-        );
-      })}
+      {}
     </Box>
   );
 }
