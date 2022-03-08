@@ -7,8 +7,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Badge from "@mui/material/Badge";
-import MailIcon from "@mui/icons-material/Mail";
 
 export default function Index() {
   const [type, setType] = React.useState("");
@@ -21,7 +19,17 @@ export default function Index() {
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
+  const [layout, setLayout] = React.useState("column");
   const [masterPosition, setMasterPosition] = React.useState(null);
+  const [xPos, setXPos] = React.useState(null);
+  const [yPos, setYPos] = React.useState(null);
+  const [distance, setDistance] = React.useState(null);
+  const [maxItems, setMaxItems] = React.useState(null);
+
+  const parsedTextField = JSON.parse(textField);
+
+  // console.log("test");
+  // console.log(parsedTextField.find((x) => x.name === masterPosition));
 
   const prefix = [
     "A",
@@ -75,6 +83,42 @@ export default function Index() {
     };
   };
 
+  const columnPositions = (i) => {
+    const columnXPositions = (i) => {
+      if (i <= maxItems) {
+        return xPos;
+      }
+      if (i <= maxItems * 2) {
+        return xPos + distance;
+      }
+      if (i <= maxItems * 3) {
+        return xPos + distance * 2;
+      }
+      if (i <= maxItems * 4) {
+        return xPos + distance * 3;
+      }
+      if (i <= maxItems * 5) {
+        return xPos + distance * 4;
+      }
+    };
+
+    const masterObj = parsedTextField.find((x) => x.name === masterPosition);
+
+    const columnYPositions = (i) => {
+      if (
+        i === 0 ||
+        i === maxItems ||
+        i === maxItems * 2 ||
+        i === maxItems * 3 ||
+        i === maxItems * 4 ||
+        i === maxItems * 5
+      ) {
+        return yPos;
+      } else return prefix[i - 1] + `${masterObj.y}`;
+      // else return prefix[i - 1] + "_Pris.bottom + 15.8";
+    };
+  };
+
   const produktNamn = (i) => {
     const xPos = (i) => {
       if (i <= 5) {
@@ -97,7 +141,7 @@ export default function Index() {
     const yPos = (i) => {
       if (i === 0 || i === 6 || i === 12 || i === 18 || i === 24 || i === 30) {
         return 62;
-      } else return prefix[i - 1] + "_Pris.bottom + 15";
+      } else return prefix[i - 1] + "_Pris.bottom + 15.8";
     };
 
     return {
@@ -189,6 +233,27 @@ export default function Index() {
             "https://assets.mediaflowpro.com/a/eab7687982d085831f799acbefd7f228/thumb_grid.png",
           srcpdf:
             "https://assets.mediaflowpro.com/a/45acfa1737367f362f9c0a5bac22ab90/ikoner_rutor.pdf",
+          dpi: 300,
+          displayDPI: 300,
+          background: "white",
+        },
+        {
+          selected: true,
+          name: "Prickar",
+          fit: true,
+          displayDPI: 300,
+          dpi: 300,
+          thumbnail:
+            "https://assets.mediaflowpro.com/a/a66b6d0584d16cd9b292ac6790fe926e/thumb_prickar.jpg",
+          srcpdf:
+            "https://assets.mediaflowpro.com/a/7729a71cca29c57dcbebd7f76d059ae0/ikoner_dots.pdf",
+        },
+        {
+          name: "Rektangel",
+          thumbnail:
+            "https://assets.mediaflowpro.com/a/613561ba0f8142af4d8856e55963134d/thumb_square.jpg",
+          srcpdf:
+            "https://assets.mediaflowpro.com/a/ebad7afce3bbaf436faee7903843c1fd/ikoner_square.pdf",
           dpi: 300,
           displayDPI: 300,
           background: "white",
@@ -318,6 +383,7 @@ export default function Index() {
 
   async function handleField(event) {
     setJsonSuccess(false);
+
     if (event.target.value.length > 2) {
       if (IsJsonString(event.target.value)) {
         setJsonSuccess(true);
@@ -358,6 +424,26 @@ export default function Index() {
     setMasterPosition(event.target.value);
   };
 
+  const handleLayout = (event) => {
+    setLayout(event.target.value);
+  };
+
+  const handleXPos = (event) => {
+    setXPos(event.target.value);
+  };
+
+  const handleYPos = (event) => {
+    setYPos(event.target.value);
+  };
+
+  const handleDistance = (event) => {
+    setDistance(event.target.value);
+  };
+
+  const handleMaxItems = (event) => {
+    setMaxItems(event.target.value);
+  };
+
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom>
@@ -381,7 +467,7 @@ export default function Index() {
       >
         [WIP]
       </Typography>
-      <FormControl sx={{ width: "800px", mb: 3 }}>
+      <FormControl sx={{ width: "1000px", mb: 3 }}>
         <TextField
           onChange={handleField}
           fullWidth
@@ -402,7 +488,7 @@ export default function Index() {
 
       <Box
         sx={{
-          width: "800px",
+          width: "1000px",
           border: "1px solid lightgrey",
           borderRadius: "4px",
           padding: "2rem 2rem 2rem 1rem",
@@ -429,7 +515,7 @@ export default function Index() {
           >
             <MenuItem value={"index"}>Add group index</MenuItem>
             <MenuItem value={"replace"}>Replace string</MenuItem>
-            <MenuItem value={"position"}>Master position field</MenuItem>
+            <MenuItem value={"position"}>Positioning</MenuItem>
           </Select>
         </FormControl>
 
@@ -475,9 +561,14 @@ export default function Index() {
         {/* Master position */}
 
         {type === "position" && textField !== null && (
-          <>
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <FormControl sx={{ width: "250px", ml: 3 }}>
+              <InputLabel id="demo-simple-select-label">Master</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -486,28 +577,72 @@ export default function Index() {
                 onChange={handleMasterPosition}
               >
                 {JSON.parse(textField).map((a) => (
-                  <MenuItem value={a.name}>{a.name}</MenuItem>
+                  <MenuItem key={a.name} value={a.name}>
+                    {a.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
 
-            <FormControl sx={{ width: "80px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="X-cord"
-                variant="outlined"
-              />
-            </FormControl>
-            <FormControl sx={{ width: "80px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Y-cord"
-                variant="outlined"
-              />
-            </FormControl>
-          </>
+                flexWrap: "wrap",
+              }}
+            >
+              <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
+                <InputLabel id="layout1">Layout</InputLabel>
+                <Select
+                  labelId="demo-layout"
+                  id="dgg-layout"
+                  value={layout}
+                  label="Type"
+                  onChange={handleLayout}
+                >
+                  <MenuItem value={"column"}>Column</MenuItem>
+                  <MenuItem value={"row"}>Row</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ width: "100px", ml: 3 }}>
+                <TextField
+                  // onChange={handleDynamicPrefix}
+                  id="outlined-basic"
+                  label="Start X"
+                  variant="outlined"
+                  onChange={handleXPos}
+                />
+              </FormControl>
+              <FormControl sx={{ width: "100px", ml: 3 }}>
+                <TextField
+                  // onChange={handleDynamicPrefix}
+                  id="outlined-basic"
+                  label="Start Y"
+                  variant="outlined"
+                  onChange={handleYPos}
+                />
+              </FormControl>
+              <FormControl sx={{ width: "150px", ml: 3 }}>
+                <TextField
+                  // onChange={handleDynamicPrefix}
+                  id="outlined-basic"
+                  label={`Max items in ${layout}`}
+                  variant="outlined"
+                  onChange={handleMaxItems}
+                />
+              </FormControl>
+              <FormControl sx={{ width: "150px", ml: 3 }}>
+                <TextField
+                  // onChange={handleDynamicPrefix}
+                  id="outlined-basic"
+                  label={`distance ${layout}s`}
+                  variant="outlined"
+                  onChange={handleDistance}
+                />
+              </FormControl>
+            </Box>
+          </Box>
         )}
       </Box>
 
@@ -522,15 +657,6 @@ export default function Index() {
         noValidate
         autoComplete="off"
       >
-        <TextField
-          disabled={jsonSuccess ? false : true}
-          onChange={handleFieldCount}
-          id="outlined-basic"
-          label="Number of groups"
-          variant="outlined"
-          helperText={fieldCountError ? `Please, type in a number` : ""}
-          color={fieldCountError ? "error" : "success"}
-        />
         <FormControl sx={{ width: "200px", ml: 3 }}>
           <TextField
             disabled={
@@ -542,6 +668,17 @@ export default function Index() {
             id="outlined-basic"
             label="String"
             variant="outlined"
+          />
+        </FormControl>
+        <FormControl sx={{ width: "150px", ml: 3 }}>
+          <TextField
+            disabled={jsonSuccess ? false : true}
+            onChange={handleFieldCount}
+            id="outlined-basic"
+            label="Number of groups"
+            variant="outlined"
+            helperText={fieldCountError ? `Please, type in a number` : ""}
+            color={fieldCountError ? "error" : "success"}
           />
         </FormControl>
 
