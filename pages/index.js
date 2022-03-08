@@ -21,9 +21,7 @@ export default function Index() {
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
-
-  console.log("textField");
-  console.log(JSON.parse(textField));
+  const [masterPosition, setMasterPosition] = React.useState(null);
 
   const prefix = [
     "A",
@@ -64,10 +62,13 @@ export default function Index() {
   ];
 
   const dynamicTextfield = (i) => {
-    const regex = new RegExp(dynamicPrefix, "g");
-    const replaced = textField.replace(regex, `${prefix[i]}_`);
-    const parsed = JSON.parse(replaced);
-    // console.log(parsed);
+    if (textField !== null) {
+      const regex = new RegExp(dynamicPrefix, "g");
+      const replaced = textField.replace(regex, `${prefix[i]}_`);
+      const parsed = JSON.parse(replaced);
+    } else {
+      const parsed = "";
+    }
 
     return {
       parsed,
@@ -85,10 +86,10 @@ export default function Index() {
       if (i <= 17) {
         return 356;
       }
-      if (i <= 24) {
+      if (i <= 23) {
         return 513;
       }
-      if (i <= 30) {
+      if (i <= 29) {
         return 669;
       }
     };
@@ -96,7 +97,7 @@ export default function Index() {
     const yPos = (i) => {
       if (i === 0 || i === 6 || i === 12 || i === 18 || i === 24 || i === 30) {
         return 62;
-      } else return prefix[i - 1] + "_ProduktNamn.bottom + 68";
+      } else return prefix[i - 1] + "_Pris.bottom + 15";
     };
 
     return {
@@ -202,7 +203,7 @@ export default function Index() {
       title: `${i + 1}. EAN-kod`,
       type: "textline",
       editui: "text",
-      contents: "4712759212776",
+      contents: "0000000000000",
       x: `${prefix[i]}_Ikon.visible ? ${prefix[i]}_ProduktNamn.left + 130.607 - ${prefix[i]}_EanKod.width : ${prefix[i]}_ProduktNamn.left`,
       y: `${prefix[i]}_Ikon.visible ? ${prefix[i]}_ProduktNamn.top + 37: ${prefix[i]}_ProduktNamn.top + 55.3`,
       w: "auto",
@@ -273,7 +274,7 @@ export default function Index() {
   const generateCluster = (times) => {
     let cluster = [];
 
-    for (let i = 0; i <= times; i++) {
+    for (let i = 0; i < times; i++) {
       // const field0 = `${JSON.stringify(dynamicField1(i))},`;
       const df = `${JSON.stringify(dynamicTextfield(i))},`;
       const field1 = `${JSON.stringify(produktNamn(i))},`;
@@ -351,6 +352,10 @@ export default function Index() {
 
   const handleType = (event) => {
     setType(event.target.value);
+  };
+
+  const handleMasterPosition = (event) => {
+    setMasterPosition(event.target.value);
   };
 
   return (
@@ -469,33 +474,36 @@ export default function Index() {
 
         {/* Master position */}
 
-        {type === "position" && (
+        {type === "position" && textField !== null && (
           <>
             <FormControl sx={{ width: "200px", ml: 3 }}>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={type}
+                value={JSON.parse(textField)[0].name}
                 label="Type"
-                onChange={handleType}
+                onChange={handleMasterPosition}
               >
-                {/* {JSON.parse(textField).map((i, hej) => {
-                  console.log("hej");
-                  console.log(JSON.parse(textField).name);
-                  return <MenuItem value={i}>{textField.name}</MenuItem>;
-                })} */}
-                <MenuItem value={"index"}>Textfield1</MenuItem>
-                <MenuItem value={"replace"}>Textfield2</MenuItem>
-                <MenuItem value={"position"}>Textfield3</MenuItem>
+                {JSON.parse(textField).map((a) => (
+                  <MenuItem value={a.name}>{a.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
 
-            <FormControl sx={{ width: "200px", ml: 3 }}>
+            <FormControl sx={{ width: "80px", ml: 3 }}>
               <TextField
                 // onChange={handleDynamicPrefix}
                 id="outlined-basic"
-                label="Replace"
+                label="X-cord"
+                variant="outlined"
+              />
+            </FormControl>
+            <FormControl sx={{ width: "80px", ml: 3 }}>
+              <TextField
+                // onChange={handleDynamicPrefix}
+                id="outlined-basic"
+                label="Y-cord"
                 variant="outlined"
               />
             </FormControl>
