@@ -3,9 +3,15 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
 
 export default function Index() {
+  const [type, setType] = React.useState("");
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
@@ -15,6 +21,9 @@ export default function Index() {
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
+
+  console.log("textField");
+  console.log(JSON.parse(textField));
 
   const prefix = [
     "A",
@@ -58,7 +67,7 @@ export default function Index() {
     const regex = new RegExp(dynamicPrefix, "g");
     const replaced = textField.replace(regex, `${prefix[i]}_`);
     const parsed = JSON.parse(replaced);
-    console.log(parsed);
+    // console.log(parsed);
 
     return {
       parsed,
@@ -340,8 +349,12 @@ export default function Index() {
     }
   };
 
+  const handleType = (event) => {
+    setType(event.target.value);
+  };
+
   return (
-    <Box sx={{ p: 10, my: 4, width: "300px" }}>
+    <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom>
         Designgenerator Generator
       </Typography>
@@ -359,9 +372,9 @@ export default function Index() {
         variant="h5"
         component="p"
         gutterBottom
-        sx={{ width: 400, mb: 10 }}
+        sx={{ width: 400, mb: 10, color: "black" }}
       >
-        Förslag funktionalitet nedan
+        [WIP]
       </Typography>
       <FormControl sx={{ width: "800px", mb: 3 }}>
         <TextField
@@ -369,7 +382,7 @@ export default function Index() {
           fullWidth
           label="Klistra in din JSON-kod från Designgeneratorn"
           multiline
-          rows={8}
+          rows={12}
           error={textAreaError}
           color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
           helperText={
@@ -381,6 +394,115 @@ export default function Index() {
           }
         />
       </FormControl>
+
+      <Box
+        sx={{
+          width: "800px",
+          border: "1px solid lightgrey",
+          borderRadius: "4px",
+          padding: "2rem 2rem 2rem 1rem",
+          mb: 10,
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <Typography
+          sx={{ pr: 6, color: "#686868de", mt: -2 }}
+          variant="body1"
+          color="info"
+        >
+          1
+        </Typography>
+        <FormControl sx={{ width: "200px" }}>
+          <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={type}
+            label="Type"
+            onChange={handleType}
+          >
+            <MenuItem value={"index"}>Add group index</MenuItem>
+            <MenuItem value={"replace"}>Replace string</MenuItem>
+            <MenuItem value={"position"}>Master position field</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Add group index */}
+
+        {type === "index" && (
+          <>
+            <FormControl sx={{ width: "200px", ml: 3 }}>
+              <TextField
+                // onChange={handleDynamicPrefix}
+                id="outlined-basic"
+                label="Prefix"
+                variant="outlined"
+              />
+            </FormControl>
+          </>
+        )}
+
+        {/* Replace String */}
+
+        {type === "replace" && (
+          <>
+            <FormControl sx={{ width: "200px", ml: 3 }}>
+              <TextField
+                // onChange={handleDynamicPrefix}
+                id="outlined-basic"
+                label="Find"
+                variant="outlined"
+              />
+            </FormControl>
+
+            <FormControl sx={{ width: "200px", ml: 3 }}>
+              <TextField
+                // onChange={handleDynamicPrefix}
+                id="outlined-basic"
+                label="Replace"
+                variant="outlined"
+              />
+            </FormControl>
+          </>
+        )}
+
+        {/* Master position */}
+
+        {type === "position" && (
+          <>
+            <FormControl sx={{ width: "200px", ml: 3 }}>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={type}
+                label="Type"
+                onChange={handleType}
+              >
+                {/* {JSON.parse(textField).map((i, hej) => {
+                  console.log("hej");
+                  console.log(JSON.parse(textField).name);
+                  return <MenuItem value={i}>{textField.name}</MenuItem>;
+                })} */}
+                <MenuItem value={"index"}>Textfield1</MenuItem>
+                <MenuItem value={"replace"}>Textfield2</MenuItem>
+                <MenuItem value={"position"}>Textfield3</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl sx={{ width: "200px", ml: 3 }}>
+              <TextField
+                // onChange={handleDynamicPrefix}
+                id="outlined-basic"
+                label="Replace"
+                variant="outlined"
+              />
+            </FormControl>
+          </>
+        )}
+      </Box>
+
       <Box
         sx={{
           width: "800px",
@@ -401,30 +523,37 @@ export default function Index() {
           helperText={fieldCountError ? `Please, type in a number` : ""}
           color={fieldCountError ? "error" : "success"}
         />
-        <TextField
-          disabled={jsonSuccess && !fieldCountError ? false : true}
-          onChange={handleDynamicPrefix}
-          id="outlined-basic"
-          label="Dynamic prefix"
-          variant="outlined"
-        />
+        <FormControl sx={{ width: "200px", ml: 3 }}>
+          <TextField
+            disabled={
+              jsonSuccess && !fieldCountError && fieldCount.length > 0
+                ? false
+                : true
+            }
+            onChange={handleDynamicPrefix}
+            id="outlined-basic"
+            label="String"
+            variant="outlined"
+          />
+        </FormControl>
+
         <Button
           disabled={
             jsonSuccess && !fieldCountError && dynamicPrefix !== null
               ? false
               : true
           }
-          sx={{ mb: 20 }}
+          sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
             navigator.clipboard.writeText(generateClusters());
           }}
+          color="success"
           variant="contained"
           size="large"
         >
           Grab the JSON
         </Button>
       </Box>
-      {}
     </Box>
   );
 }
