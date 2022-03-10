@@ -29,8 +29,8 @@ export default function Index() {
   const [yPos, setYPos] = React.useState(null);
   const [distance, setDistance] = React.useState(null);
   const [maxItems, setMaxItems] = React.useState(null);
-  const [marginRight, setMarginRight] = React.useState(null);
-  const [marginBottom, setMarginBottom] = React.useState(null);
+  const [spaceX, setspaceX] = React.useState(null);
+  const [spaceY, setspaceY] = React.useState(null);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -111,7 +111,7 @@ export default function Index() {
         } else {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
-              ? ((field.y = yPositionsColumn(i, arrayNames[i - 1])),
+              ? ((field.y = yPositionsRow(i, arrayNames[i - 1])),
                 (field.x = xPositionsRow(i, arrayNames[i - 1])),
                 arrayNames.push(field.name))
               : "";
@@ -130,14 +130,14 @@ export default function Index() {
   const yPositionsColumn = (i, name) => {
     if (
       i === 0 ||
-      i === maxItems + 1 ||
-      i === maxItems * 2 + 1 ||
-      i === maxItems * 3 + 1 ||
-      i === maxItems * 4 + 1 ||
-      i === maxItems * 5 + 1
+      i === maxItems ||
+      i === maxItems * 2 ||
+      i === maxItems * 3 ||
+      i === maxItems * 4 ||
+      i === maxItems * 5
     ) {
       return yPos;
-    } else return `${name}.bottom + ${marginBottom ? marginBottom : 200}`;
+    } else return `${name}.top + ${spaceY ? spaceY : 200}`;
   };
 
   const xPositionsColumn = (i) => {
@@ -146,16 +146,16 @@ export default function Index() {
         return xPos;
       }
       if (i < maxItems * 2) {
-        return xPos + marginRight;
+        return xPos + spaceX;
       }
       if (i < maxItems * 3) {
-        return xPos + marginRight * 2;
+        return xPos + spaceX * 2;
       }
       if (i <= maxItems * 4) {
-        return xPos + marginRight * 3;
+        return xPos + spaceX * 3;
       }
       if (i <= maxItems * 5) {
-        return xPos + marginRight * 4;
+        return xPos + spaceX * 4;
       }
     } else {
       return 666;
@@ -177,7 +177,32 @@ export default function Index() {
       ) {
         return xPos;
       } else {
-        return `${name}.left + ${marginRight ? marginRight : 200}`;
+        return `${name}.left + ${spaceX ? spaceX : 200}`;
+      }
+    } else {
+      return 666;
+    }
+  };
+
+  const yPositionsRow = (i) => {
+    if (yPos !== null) {
+      if (i < maxItems) {
+        return yPos;
+      }
+      if (i < maxItems * 2) {
+        return yPos + spaceY;
+      }
+      if (i < maxItems * 3) {
+        return yPos + spaceY * 2;
+      }
+      if (i <= maxItems * 4) {
+        return yPos + spaceY * 3;
+      }
+      if (i <= maxItems * 5) {
+        return yPos + spaceY * 4;
+      }
+      if (i <= maxItems * 6) {
+        return yPos + spaceY * 5;
       }
     } else {
       return 666;
@@ -311,11 +336,11 @@ export default function Index() {
     setMaxItems(parseInt(event.target.value));
   };
 
-  const handleMarginRight = (event) => {
-    setMarginRight(parseInt(event.target.value));
+  const handlespaceX = (event) => {
+    setspaceX(parseInt(event.target.value));
   };
-  const handleMarginBottom = (event) => {
-    setMarginBottom(parseInt(event.target.value));
+  const handlespaceY = (event) => {
+    setspaceY(parseInt(event.target.value));
   };
 
   return (
@@ -492,18 +517,18 @@ export default function Index() {
                 <TextField
                   // onChange={handleDynamicPrefix}
                   id="outlined-basic"
-                  label="Margin Right"
+                  label="Space X"
                   variant="outlined"
-                  onChange={handleMarginRight}
+                  onChange={handlespaceX}
                 />
               </FormControl>
               <FormControl sx={{ width: "150px", ml: 3 }}>
                 <TextField
                   // onChange={handleDynamicPrefix}
                   id="outlined-basic"
-                  label="Margin Bottom"
+                  label="Space Y"
                   variant="outlined"
-                  onChange={handleMarginBottom}
+                  onChange={handlespaceY}
                 />
               </FormControl>
             </Box>
