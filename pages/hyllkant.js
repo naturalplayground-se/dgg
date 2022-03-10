@@ -19,24 +19,17 @@ export default function Index() {
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
-  const [parsedTextField, setParsedTextField] = React.useState(null);
   const [layout, setLayout] = React.useState("column");
   const [masterPosition, setMasterPosition] = React.useState(null);
   const [xPos, setXPos] = React.useState(null);
   const [yPos, setYPos] = React.useState(null);
   const [distance, setDistance] = React.useState(null);
   const [maxItems, setMaxItems] = React.useState(null);
-  const [marginRight, setMarginRight] = React.useState(null);
-  const [marginBottom, setMarginBottom] = React.useState(null);
 
-  console.log(parsedTextField);
+  const parsedTextField = JSON.parse(textField);
 
-  React.useEffect(() => {
-    if (jsonSuccess) {
-      const isParsed = JSON.parse(`[${textField}]`);
-    }
-    setParsedTextField(isParsed);
-  }, [textField]);
+  // console.log("test");
+  // console.log(parsedTextField.find((x) => x.name === masterPosition));
 
   const prefix = [
     "A",
@@ -80,11 +73,14 @@ export default function Index() {
     if (textField !== null) {
       const regex = new RegExp(dynamicPrefix, "g");
       const replaced = textField.replace(regex, `${prefix[i]}_`);
-      const parsed = JSON.parse(`[${replaced}]`);
-      return parsed;
+      const parsed = JSON.parse(replaced);
     } else {
-      return "";
+      const parsed = "";
     }
+
+    return {
+      parsed,
+    };
   };
 
   const columnPositions = (i) => {
@@ -197,7 +193,6 @@ export default function Index() {
       hideable: false,
     };
   };
-
   const ikon = (i) => {
     return {
       name: `${prefix[i]}_Ikon`,
@@ -364,28 +359,21 @@ export default function Index() {
   };
 
   const generateClusters = () => {
-    let clusters = [];
+    let cluster = [];
 
-    for (let i = 0; i < fieldCount; i++) {
-      // const modifiedCluster = `${JSON.stringify(dynamicTextfield(i))},`;
-
-      const stringObject = `${JSON.stringify(dynamicTextfield(i))
-        .substring(1)
-        .slice(0, -1)},`;
-
-      clusters.push(stringObject);
+    for (let i = 0; i <= fieldCount; i++) {
+      const df = `${JSON.stringify(dynamicTextfield(i))},`;
+      cluster.push(df);
     }
 
-    const merged = clusters.join("");
-    console.log(merged);
+    const merged = cluster.join("");
+
     return merged;
   };
 
   function IsJsonString(str) {
-    const withBrackets1 = `[${str}]`;
-
     try {
-      JSON.parse(withBrackets1);
+      JSON.parse(str);
     } catch (e) {
       return false;
     }
@@ -404,7 +392,6 @@ export default function Index() {
       } else {
         setTextField(null);
         setTextAreaError(true);
-
         setJsonSuccess(false);
       }
     } else {
@@ -457,13 +444,6 @@ export default function Index() {
     setMaxItems(event.target.value);
   };
 
-  const handleMarginRight = (event) => {
-    setMarginRight(event.target.value);
-  };
-  const handleMarginBottom = (event) => {
-    setMarginBottom(event.target.value);
-  };
-
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom>
@@ -478,256 +458,6 @@ export default function Index() {
       >
         Copy JSON
       </Button>
-
-      <Typography
-        variant="h5"
-        component="p"
-        gutterBottom
-        sx={{ width: 400, mb: 10, color: "black" }}
-      >
-        [WIP]
-      </Typography>
-      <FormControl sx={{ width: "1000px", mb: 3 }}>
-        <TextField
-          onChange={handleField}
-          fullWidth
-          label="Klistra in din JSON-kod från Designgeneratorn"
-          multiline
-          rows={12}
-          error={textAreaError}
-          color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
-          helperText={
-            textAreaError
-              ? `Not a valid JSON format`
-              : jsonSuccess
-              ? "Correct JSON"
-              : ""
-          }
-        />
-      </FormControl>
-
-      <Box
-        sx={{
-          width: "1000px",
-          border: "1px solid lightgrey",
-          borderRadius: "4px",
-          padding: "2rem 2rem 2rem 1rem",
-          mb: 10,
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <Typography
-          sx={{ pr: 6, color: "#686868de", mt: -2 }}
-          variant="body1"
-          color="info"
-        >
-          1
-        </Typography>
-        <FormControl sx={{ width: "200px" }}>
-          <InputLabel id="demo-simple-select-label">Type</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={type}
-            label="Type"
-            onChange={handleType}
-          >
-            <MenuItem value={"index"}>Add group index</MenuItem>
-            <MenuItem value={"replace"}>Replace string</MenuItem>
-            <MenuItem value={"position"}>Positioning</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Add group index */}
-
-        {type === "index" && (
-          <>
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Prefix"
-                variant="outlined"
-              />
-            </FormControl>
-          </>
-        )}
-
-        {/* Replace String */}
-
-        {type === "replace" && (
-          <>
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Find"
-                variant="outlined"
-              />
-            </FormControl>
-
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Replace"
-                variant="outlined"
-              />
-            </FormControl>
-          </>
-        )}
-
-        {/* Master position */}
-
-        {type === "position" && parsedTextField !== undefined && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <FormControl sx={{ width: "250px", ml: 3 }}>
-              <InputLabel id="demo-simple-select-label">Master</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={parsedTextField[0].name}
-                label="Type"
-                onChange={handleMasterPosition}
-              >
-                {parsedTextField.map((a) => (
-                  <MenuItem key={a.name} value={a.name}>
-                    {a.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-
-                flexWrap: "wrap",
-              }}
-            >
-              <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
-                <InputLabel id="layout1">Layout</InputLabel>
-                <Select
-                  labelId="demo-layout"
-                  id="dgg-layout"
-                  value={layout}
-                  label="Type"
-                  onChange={handleLayout}
-                >
-                  <MenuItem value={"column"}>Column</MenuItem>
-                  <MenuItem value={"row"}>Row</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Start X"
-                  variant="outlined"
-                  onChange={handleXPos}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Start Y"
-                  variant="outlined"
-                  onChange={handleYPos}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label={`Max items in ${layout}`}
-                  variant="outlined"
-                  onChange={handleMaxItems}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Margin Right"
-                  variant="outlined"
-                  onChange={handleMarginRight}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Margin Bottom"
-                  variant="outlined"
-                  onChange={handleMarginBottom}
-                />
-              </FormControl>
-            </Box>
-          </Box>
-        )}
-      </Box>
-
-      <Box
-        sx={{
-          width: "800px",
-          display: "flex",
-          flexDirection: "row",
-          "& > :not(style)": { mr: 3, width: "200px" },
-          mb: 20,
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <FormControl sx={{ width: "200px", ml: 3 }}>
-          <TextField
-            disabled={
-              jsonSuccess && !fieldCountError && fieldCount.length > 0
-                ? false
-                : true
-            }
-            onChange={handleDynamicPrefix}
-            id="outlined-basic"
-            label="String"
-            variant="outlined"
-          />
-        </FormControl>
-        <FormControl sx={{ width: "150px", ml: 3 }}>
-          <TextField
-            disabled={jsonSuccess ? false : true}
-            onChange={handleFieldCount}
-            id="outlined-basic"
-            label="Number of groups"
-            variant="outlined"
-            helperText={fieldCountError ? `Please, type in a number` : ""}
-            color={fieldCountError ? "error" : "success"}
-          />
-        </FormControl>
-
-        <Button
-          disabled={
-            jsonSuccess && !fieldCountError && dynamicPrefix !== null
-              ? false
-              : true
-          }
-          sx={{ p: 1.85, mb: 20 }}
-          onClick={() => {
-            navigator.clipboard.writeText(generateClusters());
-          }}
-          color="success"
-          variant="contained"
-          size="large"
-        >
-          Grab the JSON
-        </Button>
-      </Box>
     </Box>
   );
 }
