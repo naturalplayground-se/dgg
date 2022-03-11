@@ -332,16 +332,16 @@ export default function Index() {
         <TextField
           onChange={handleField}
           fullWidth
-          label="Klistra in din JSON-kod från Designgeneratorn"
+          label="Paste JSON fields from Designgeneratorn (no square brackets)."
           multiline
           rows={12}
           error={textAreaError}
           color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
           helperText={
             textAreaError
-              ? `Not a valid JSON format`
+              ? `Not valid format on JSON fields`
               : jsonSuccess
-              ? "Correct JSON"
+              ? "Correct JSON fields"
               : ""
           }
         />
