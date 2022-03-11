@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export default function Index() {
   const [type, setType] = React.useState("index");
+  const [typeArray, setTypeArray] = React.useState([]);
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
@@ -37,8 +38,13 @@ export default function Index() {
   const [rows, setRows] = React.useState([]);
   const rowRefs = React.useRef(new Array());
 
-  console.log(rows);
-  console.log(rowRefs);
+  const typeItems = [
+    { value: "index", label: "Add group index" },
+    { value: "replace", label: "Replace string" },
+    { value: "position", label: "Positioning" },
+  ];
+
+  console.log(typeof typeItems);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -281,7 +287,16 @@ export default function Index() {
     }
   };
 
-  const handleType = (event) => {
+  const handleType = (event, i) => {
+    // console.log(event.target);
+    // typeArray.findIndex((p) => console.log(p));
+
+    let selectedTypes = [...typeArray];
+    let thisType = { ...typeArray[i] };
+    thisType.name = `${event.target.value}`;
+    selectedTypes[i] = thisType;
+    setTypeArray(selectedTypes);
+
     setType(event.target.value);
   };
 
@@ -313,14 +328,18 @@ export default function Index() {
     setspaceY(parseInt(event.target.value));
   };
 
-  const handleRows = (event, length) => {
+  const handleAddRows = (event, length) => {
     setRows([...rows, length]);
   };
 
-  const handleRow = (event, i) => {
+  const handleRemoveRow = (event, i) => {
     const array = [...rows];
     array.splice(i, 1);
     setRows(array);
+
+    const newTypearray = [...typeArray];
+    newTypearray.splice(i, 1);
+    setTypeArray(newTypearray);
   };
 
   return (
@@ -356,7 +375,7 @@ export default function Index() {
       >
         <IconButton
           aria-label="Add row"
-          onClick={(event) => handleRows(event, rows.length)}
+          onClick={(event) => handleAddRows(event, rows.length)}
         >
           <AddIcon fontSize="large" />
         </IconButton>
@@ -381,7 +400,7 @@ export default function Index() {
                 <Box sx={{ position: "absolute", right: "0", top: "0" }}>
                   <IconButton
                     aria-label="Remove row"
-                    onClick={(event) => handleRow(event, i)}
+                    onClick={(event) => handleRemoveRow(event, i)}
                   >
                     <CloseIcon fontSize="small" />
                   </IconButton>
@@ -393,20 +412,28 @@ export default function Index() {
                 >
                   {i + 1}
                 </Typography>
+
                 <FormControl sx={{ width: "200px" }}>
                   <InputLabel id="demo-simple-select-label">Type</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={type}
+                    value={
+                      typeArray.length
+                        ? typeArray.length <= i
+                          ? type
+                          : typeArray[i].name
+                        : type
+                    }
+                    name={type}
                     label="Type"
-                    onChange={handleType}
+                    onChange={(event) => handleType(event, i)}
                   >
-                    <MenuItem value={"index"}>Add group index</MenuItem>
-                    <MenuItem value={"replace"}>Replace string</MenuItem>
-                    {/* {type !== "position" && ( */}
-                    <MenuItem value={"position"}>Positioning</MenuItem>
-                    {/* )} */}
+                    {typeItems.map((item, i) => {
+                      return (
+                        <MenuItem value={Object.values(item)[0]}>
+                          {Object.values(item)[1]}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
 
@@ -561,16 +588,28 @@ export default function Index() {
 
       <Box
         sx={{
-          width: "800px",
+          width: "1000px",
           display: "flex",
           flexDirection: "row",
-          "& > :not(style)": { mr: 3, width: "200px" },
+          justifyContent: "flex-end",
+
           mb: 20,
         }}
         noValidate
         autoComplete="off"
       >
-        <FormControl sx={{ width: "200px", ml: 3 }}>
+        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
+          <TextField
+            disabled={jsonSuccess ? false : true}
+            onChange={handleFieldCount}
+            id="outlined-basic"
+            label="Number of groups"
+            variant="outlined"
+            helperText={fieldCountError ? `Please, type in a number` : ""}
+            color={fieldCountError ? "error" : "success"}
+          />
+        </FormControl>
+        <FormControl sx={{ width: "200px", mr: 6, ml: 3 }}>
           <TextField
             disabled={
               jsonSuccess && !fieldCountError && fieldCount.length > 0
@@ -581,17 +620,6 @@ export default function Index() {
             id="outlined-basic"
             label="String"
             variant="outlined"
-          />
-        </FormControl>
-        <FormControl sx={{ width: "150px", ml: 3 }}>
-          <TextField
-            disabled={jsonSuccess ? false : true}
-            onChange={handleFieldCount}
-            id="outlined-basic"
-            label="Number of groups"
-            variant="outlined"
-            helperText={fieldCountError ? `Please, type in a number` : ""}
-            color={fieldCountError ? "error" : "success"}
           />
         </FormControl>
 
