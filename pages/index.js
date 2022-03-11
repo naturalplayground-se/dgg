@@ -12,7 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Index() {
-  const [type, setType] = React.useState("");
+  const [type, setType] = React.useState("index");
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
@@ -366,7 +366,187 @@ export default function Index() {
         rows.map((val, i) => {
           return (
             <>
-              <h3 ref={(element) => rowRefs.current.push(element)} key={i}>
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "1000px",
+                  border: "1px solid lightgrey",
+                  borderRadius: "4px",
+                  padding: "2rem 2rem 2rem 1rem",
+                  mb: 10,
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <Box sx={{ position: "absolute", right: "0", top: "0" }}>
+                  <IconButton
+                    aria-label="Remove row"
+                    onClick={(event) => handleRow(event, i)}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+                <Typography
+                  sx={{ pr: 6, color: "#686868de", mt: -2 }}
+                  variant="body1"
+                  color="info"
+                >
+                  {i + 1}
+                </Typography>
+                <FormControl sx={{ width: "200px" }}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={type}
+                    label="Type"
+                    onChange={handleType}
+                  >
+                    <MenuItem value={"index"}>Add group index</MenuItem>
+                    <MenuItem value={"replace"}>Replace string</MenuItem>
+                    {/* {type !== "position" && ( */}
+                    <MenuItem value={"position"}>Positioning</MenuItem>
+                    {/* )} */}
+                  </Select>
+                </FormControl>
+
+                {/* Add group index */}
+
+                {type === "index" && (
+                  <>
+                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                      <TextField
+                        // onChange={handleDynamicPrefix}
+                        id="outlined-basic"
+                        label="Prefix"
+                        variant="outlined"
+                      />
+                    </FormControl>
+                  </>
+                )}
+
+                {/* Replace String */}
+
+                {type === "replace" && (
+                  <>
+                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                      <TextField
+                        id="outlined-basic"
+                        label="Find"
+                        variant="outlined"
+                      />
+                    </FormControl>
+
+                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                      <TextField
+                        id="outlined-basic"
+                        label="Replace"
+                        variant="outlined"
+                      />
+                    </FormControl>
+                  </>
+                )}
+
+                {/* Master position */}
+
+                {type === "position" && parsedTextField !== null && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <FormControl sx={{ width: "250px", ml: 3 }}>
+                      <InputLabel id="demo-simple-select-label">
+                        Master
+                      </InputLabel>
+                      <Select
+                        labelId="masterPos3"
+                        id="masterPos"
+                        value={masterPosition ? masterPosition : ""}
+                        label="Type"
+                        onChange={handleMasterPosition}
+                      >
+                        {parsedTextField.map((a, i) => (
+                          <MenuItem key={a.name} value={a.name} data-id={i}>
+                            {a.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
+                        <InputLabel id="layout1">Layout</InputLabel>
+                        <Select
+                          labelId="demo-layout"
+                          id="dgg-layout"
+                          value={layout}
+                          label="Type"
+                          onChange={handleLayout}
+                        >
+                          <MenuItem value={"column"}>Column</MenuItem>
+                          <MenuItem value={"row"}>Row</MenuItem>
+                        </Select>
+                      </FormControl>
+
+                      <FormControl sx={{ width: "150px", ml: 3 }}>
+                        <TextField
+                          // onChange={handleDynamicPrefix}
+                          id="outlined-basic"
+                          label="Start X"
+                          variant="outlined"
+                          onChange={handleXPos}
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "150px", ml: 3 }}>
+                        <TextField
+                          // onChange={handleDynamicPrefix}
+                          id="outlined-basic"
+                          label="Start Y"
+                          variant="outlined"
+                          onChange={handleYPos}
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "150px", ml: 3 }}>
+                        <TextField
+                          // onChange={handleDynamicPrefix}
+                          id="outlined-basic"
+                          label={`Max items in ${layout}`}
+                          variant="outlined"
+                          onChange={handleMaxItems}
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "150px", ml: 3 }}>
+                        <TextField
+                          // onChange={handleDynamicPrefix}
+                          id="outlined-basic"
+                          label="Space X"
+                          variant="outlined"
+                          onChange={handlespaceX}
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "150px", ml: 3 }}>
+                        <TextField
+                          // onChange={handleDynamicPrefix}
+                          id="outlined-basic"
+                          label="Space Y"
+                          variant="outlined"
+                          onChange={handlespaceY}
+                        />
+                      </FormControl>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+
+              {/* <h3 ref={(element) => rowRefs.current.push(element)} key={i}>
                 Row
                 <IconButton
                   aria-label="Add row"
@@ -374,181 +554,10 @@ export default function Index() {
                 >
                   <CloseIcon fontSize="medium" />
                 </IconButton>
-              </h3>
+              </h3> */}
             </>
           );
         })}
-
-      <Box
-        sx={{
-          width: "1000px",
-          border: "1px solid lightgrey",
-          borderRadius: "4px",
-          padding: "2rem 2rem 2rem 1rem",
-          mb: 10,
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <Typography
-          sx={{ pr: 6, color: "#686868de", mt: -2 }}
-          variant="body1"
-          color="info"
-        >
-          1
-        </Typography>
-        <FormControl sx={{ width: "200px" }}>
-          <InputLabel id="demo-simple-select-label">Type</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={type}
-            label="Type"
-            onChange={handleType}
-          >
-            <MenuItem value={"index"}>Add group index</MenuItem>
-            <MenuItem value={"replace"}>Replace string</MenuItem>
-            <MenuItem value={"position"}>Positioning</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Add group index */}
-
-        {type === "index" && (
-          <>
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Prefix"
-                variant="outlined"
-              />
-            </FormControl>
-          </>
-        )}
-
-        {/* Replace String */}
-
-        {type === "replace" && (
-          <>
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Find"
-                variant="outlined"
-              />
-            </FormControl>
-
-            <FormControl sx={{ width: "200px", ml: 3 }}>
-              <TextField
-                // onChange={handleDynamicPrefix}
-                id="outlined-basic"
-                label="Replace"
-                variant="outlined"
-              />
-            </FormControl>
-          </>
-        )}
-
-        {/* Master position */}
-
-        {type === "position" && parsedTextField !== null && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            {/* parsedTextField !== undefined) ||
-          parsedTextField !== null) && */}
-            <FormControl sx={{ width: "250px", ml: 3 }}>
-              <InputLabel id="demo-simple-select-label">Master</InputLabel>
-              <Select
-                labelId="masterPos3"
-                id="masterPos"
-                value={masterPosition ? masterPosition : ""}
-                label="Type"
-                onChange={handleMasterPosition}
-              >
-                {parsedTextField.map((a, i) => (
-                  <MenuItem key={a.name} value={a.name} data-id={i}>
-                    {a.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-
-                flexWrap: "wrap",
-              }}
-            >
-              <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
-                <InputLabel id="layout1">Layout</InputLabel>
-                <Select
-                  labelId="demo-layout"
-                  id="dgg-layout"
-                  value={layout}
-                  label="Type"
-                  onChange={handleLayout}
-                >
-                  <MenuItem value={"column"}>Column</MenuItem>
-                  <MenuItem value={"row"}>Row</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Start X"
-                  variant="outlined"
-                  onChange={handleXPos}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Start Y"
-                  variant="outlined"
-                  onChange={handleYPos}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label={`Max items in ${layout}`}
-                  variant="outlined"
-                  onChange={handleMaxItems}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Space X"
-                  variant="outlined"
-                  onChange={handlespaceX}
-                />
-              </FormControl>
-              <FormControl sx={{ width: "150px", ml: 3 }}>
-                <TextField
-                  // onChange={handleDynamicPrefix}
-                  id="outlined-basic"
-                  label="Space Y"
-                  variant="outlined"
-                  onChange={handlespaceY}
-                />
-              </FormControl>
-            </Box>
-          </Box>
-        )}
-      </Box>
 
       <Box
         sx={{
