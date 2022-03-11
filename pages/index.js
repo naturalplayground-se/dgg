@@ -7,6 +7,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Index() {
   const [type, setType] = React.useState("");
@@ -31,6 +34,11 @@ export default function Index() {
   const [maxItems, setMaxItems] = React.useState(null);
   const [spaceX, setspaceX] = React.useState(null);
   const [spaceY, setspaceY] = React.useState(null);
+  const [rows, setRows] = React.useState([]);
+  const rowRefs = React.useRef(new Array());
+
+  console.log(rows);
+  console.log(rowRefs);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -118,8 +126,6 @@ export default function Index() {
           });
         }
       }
-      console.log("parsed");
-      console.log(parsed);
 
       return parsed;
     } else {
@@ -208,42 +214,6 @@ export default function Index() {
       return 666;
     }
   };
-
-  // const columnPositions = (i) => {
-  //   const columnXPositions = (i) => {
-  //     if (i <= maxItems) {
-  //       return xPos;
-  //     }
-  //     if (i <= maxItems * 2) {
-  //       return xPos + distance;
-  //     }
-  //     if (i <= maxItems * 3) {
-  //       return xPos + distance * 2;
-  //     }
-  //     if (i <= maxItems * 4) {
-  //       return xPos + distance * 3;
-  //     }
-  //     if (i <= maxItems * 5) {
-  //       return xPos + distance * 4;
-  //     }
-  //   };
-
-  //   const masterObj = parsedTextField.find((x) => x.name === masterPosition);
-
-  //   const columnYPositions = (i) => {
-  //     if (
-  //       i === 0 ||
-  //       i === maxItems ||
-  //       i === maxItems * 2 ||
-  //       i === maxItems * 3 ||
-  //       i === maxItems * 4 ||
-  //       i === maxItems * 5
-  //     ) {
-  //       return yPos;
-  //     } else return prefix[i - 1] + `${masterObj.y}`;
-  //     // else return prefix[i - 1] + "_Pris.bottom + 15.8";
-  //   };
-  // };
 
   const generateClusters = () => {
     let clusters = [];
@@ -343,12 +313,22 @@ export default function Index() {
     setspaceY(parseInt(event.target.value));
   };
 
+  const handleRows = (event, length) => {
+    setRows([...rows, length]);
+  };
+
+  const handleRow = (event, i) => {
+    const array = [...rows];
+    array.splice(i, 1);
+    setRows(array);
+  };
+
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
         Designgenerator Generator
       </Typography>
-      <FormControl sx={{ width: "1000px", mb: 3 }}>
+      <FormControl sx={{ width: "1000px", mb: 10 }}>
         <TextField
           onChange={handleField}
           fullWidth
@@ -366,6 +346,38 @@ export default function Index() {
           }
         />
       </FormControl>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          width: "1000px",
+          mb: 4,
+        }}
+      >
+        <IconButton
+          aria-label="Add row"
+          onClick={(event) => handleRows(event, rows.length)}
+        >
+          <AddIcon fontSize="large" />
+        </IconButton>
+      </Box>
+
+      {rows &&
+        rows.map((val, i) => {
+          return (
+            <>
+              <h3 ref={(element) => rowRefs.current.push(element)} key={i}>
+                Row
+                <IconButton
+                  aria-label="Add row"
+                  onClick={(event) => handleRow(event, i)}
+                >
+                  <CloseIcon fontSize="medium" />
+                </IconButton>
+              </h3>
+            </>
+          );
+        })}
 
       <Box
         sx={{
@@ -441,13 +453,15 @@ export default function Index() {
 
         {/* Master position */}
 
-        {type === "position" && parsedTextField !== undefined && (
+        {type === "position" && parsedTextField !== null && (
           <Box
             sx={{
               display: "flex",
               flexDirection: "row",
             }}
           >
+            {/* parsedTextField !== undefined) ||
+          parsedTextField !== null) && */}
             <FormControl sx={{ width: "250px", ml: 3 }}>
               <InputLabel id="demo-simple-select-label">Master</InputLabel>
               <Select
