@@ -38,20 +38,13 @@ export default function Index() {
   const [rows, setRows] = React.useState([]);
   const rowRefs = React.useRef(new Array());
 
-  const [jason, setJason] = React.useState(false);
-
   const typeItems = [
     { value: "index", label: "Add group index" },
     { value: "replace", label: "Replace string" },
     { value: "position", label: "Positioning" },
   ];
 
-  React.useEffect(() => {
-    let timer1 = setTimeout(() => setJason(false), 4000);
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [jason]);
+  console.log(typeof typeItems);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -242,7 +235,6 @@ export default function Index() {
     }
 
     const merged = clusters.join("");
-    grabJason();
 
     return merged;
   };
@@ -350,9 +342,6 @@ export default function Index() {
     setTypeArray(newTypearray);
   };
 
-  const grabJason = () => {
-    setJason(true);
-  };
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
@@ -389,12 +378,7 @@ export default function Index() {
               justifyContent: "flex-end",
             }}
           >
-            <img
-              src={jason ? "/brandon2.png" : "/brandon1.png"}
-              width="200px"
-              height="200px"
-              alt=""
-            />
+            <img src="/brandon1.png" width="200px" height="200px" alt="" />
           </Box>
         )}
       </Box>
@@ -671,7 +655,7 @@ export default function Index() {
           variant="contained"
           size="large"
         >
-          Grab JSON
+          Grab the JSON
         </Button>
       </Box>
     </Box>
