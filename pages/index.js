@@ -370,7 +370,7 @@ export default function Index() {
           <Box
             sx={{
               width: "100%",
-
+              pointerEvents: "none",
               position: "absolute",
               right: -78,
               bottom: 105,
