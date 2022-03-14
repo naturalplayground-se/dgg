@@ -345,26 +345,44 @@ export default function Index() {
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
-        Designgenerator Generator
+        Designgenerator Generator [WIP]
       </Typography>
-      <FormControl sx={{ width: "1000px", mb: 10 }}>
-        <TextField
-          onChange={handleField}
-          fullWidth
-          label="Paste JSON fields from Designgeneratorn (no square brackets)."
-          multiline
-          rows={12}
-          error={textAreaError}
-          color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
-          helperText={
-            textAreaError
-              ? `Not valid format on JSON fields`
-              : jsonSuccess
-              ? "Correct JSON fields"
-              : ""
-          }
-        />
-      </FormControl>
+      <Box sx={{ position: "relative", width: "1000px" }}>
+        <FormControl sx={{ width: "100%", mb: 10 }}>
+          <TextField
+            onChange={handleField}
+            fullWidth
+            label="Paste JSON fields from Designgeneratorn (no square brackets)."
+            multiline
+            rows={12}
+            error={textAreaError}
+            color={textAreaError ? "" : jsonSuccess ? "success" : "primary"}
+            helperText={
+              textAreaError
+                ? `Not valid JSON`
+                : jsonSuccess
+                ? "Correct JSON"
+                : ""
+            }
+          />
+        </FormControl>
+        {jsonSuccess && (
+          <Box
+            sx={{
+              width: "100%",
+
+              position: "absolute",
+              right: -78,
+              bottom: 105,
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <img src="/brandon1.png" width="200px" height="200px" alt="" />
+          </Box>
+        )}
+      </Box>
+
       <Box
         sx={{
           display: "flex",
@@ -609,7 +627,7 @@ export default function Index() {
             color={fieldCountError ? "error" : "success"}
           />
         </FormControl>
-        <FormControl sx={{ width: "200px", mr: 6, ml: 3 }}>
+        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
           <TextField
             disabled={
               jsonSuccess && !fieldCountError && fieldCount.length > 0
