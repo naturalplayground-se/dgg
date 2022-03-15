@@ -12,7 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Index() {
-  const [type, setType] = React.useState("index");
+  const [type, setType] = React.useState("");
   const [typeArray, setTypeArray] = React.useState([]);
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
@@ -29,6 +29,14 @@ export default function Index() {
   const [masterPositionId, setMasterPositionId] = React.useState(null);
   const [keyPosition, setKeyPosition] = React.useState(null);
 
+  //Replace
+  const [replaceType, setReplaceType] = React.useState("");
+  const [replaceFind, setReplaceFind] = React.useState(null);
+
+  const [findString, setFindString] = React.useState(null);
+  const [alphabetical, setAlpabetical] = React.useState(null);
+  const [numerical, setNumerical] = React.useState(null);
+
   const [xPos, setXPos] = React.useState(null);
   const [yPos, setYPos] = React.useState(null);
   const [distance, setDistance] = React.useState(null);
@@ -41,10 +49,14 @@ export default function Index() {
   const [jason, setJason] = React.useState(false);
 
   const typeItems = [
-    { value: "index", label: "Add group index" },
+    // { value: "index", label: "Add group index" },
     { value: "replace", label: "Replace string" },
     { value: "position", label: "Positioning" },
   ];
+
+  // React.useEffect(() => {
+  //   typeArray.length === 0 ? setTypeArray([type]) : "";
+  // }, [type]);
 
   React.useEffect(() => {
     let timer1 = setTimeout(() => setJason(false), 4000);
@@ -57,6 +69,8 @@ export default function Index() {
     if (jsonSuccess) {
       const isParsed = JSON.parse(`[${textField}]`);
       setParsedTextField(isParsed);
+    } else {
+      setParsedTextField(null);
     }
   }, [textField]);
 
@@ -112,7 +126,21 @@ export default function Index() {
     if (textField !== null) {
       const regex = new RegExp(dynamicPrefix, "g");
       const replaced = textField.replace(regex, `${prefix[i]}_`);
-      const parsed = JSON.parse(`[${replaced}]`);
+
+      // const alphabeticalRegex = alphabetical
+      //   ? new RegExp(alphabetical, "g")
+      //   : "";
+      // const replaced = alphabetical
+      //   ? textField.replace(alphabeticalRegex, `${prefix[i]}_`)
+      //   : textField;
+
+      const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
+      const replacedSecond = numerical
+        ? replaced.replace(numericalRegex, `${[i + 1]}`)
+        : replaced;
+
+      const parsed = JSON.parse(`[${replacedSecond}]`);
+      console.log(parsed);
 
       if (masterPosition !== null) {
         //
@@ -296,9 +324,6 @@ export default function Index() {
   };
 
   const handleType = (event, i) => {
-    // console.log(event.target);
-    // typeArray.findIndex((p) => console.log(p));
-
     let selectedTypes = [...typeArray];
     let thisType = { ...typeArray[i] };
     thisType.name = `${event.target.value}`;
@@ -338,13 +363,15 @@ export default function Index() {
 
   const handleAddRows = (event, length) => {
     setRows([...rows, length]);
+    // if (typeArray.length === 0) {
+    //   setTypeArray([`${type}`]);
+    // }
   };
 
   const handleRemoveRow = (event, i) => {
     const array = [...rows];
     array.splice(i, 1);
     setRows(array);
-
     const newTypearray = [...typeArray];
     newTypearray.splice(i, 1);
     setTypeArray(newTypearray);
@@ -353,6 +380,31 @@ export default function Index() {
   const grabJason = () => {
     setJason(true);
   };
+  const handleReplaceType = (event) => {
+    setReplaceType(event.target.value);
+  };
+
+  const handleReplaceFind = (event) => {
+    setReplaceFind(event.target.value);
+    if (replaceType === "string") {
+      setFindString(event.target.value);
+      setAlpabetical(null);
+      setNumerical(null);
+    }
+    if (replaceType === "alphabetical") {
+      setAlpabetical(event.target.value);
+      setFindString(null);
+      setNumerical(null);
+    }
+    if (replaceType === "numerical") {
+      setNumerical(event.target.value);
+      setAlpabetical(null);
+      setFindString(null);
+    } else {
+      return "";
+    }
+  };
+
   return (
     <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
       <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
@@ -418,99 +470,130 @@ export default function Index() {
       {rows &&
         rows.map((val, i) => {
           return (
-            <>
-              <Box
-                sx={{
-                  position: "relative",
-                  width: "1000px",
-                  border: "1px solid lightgrey",
-                  borderRadius: "4px",
-                  padding: "2rem 2rem 2rem 1rem",
-                  mb: 10,
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <Box sx={{ position: "absolute", right: "0", top: "0" }}>
-                  <IconButton
-                    aria-label="Remove row"
-                    onClick={(event) => handleRemoveRow(event, i)}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-                <Typography
-                  sx={{ pr: 6, color: "#686868de", mt: -2 }}
-                  variant="body1"
-                  color="info"
+            <Box
+              key={i}
+              sx={{
+                position: "relative",
+                width: "1000px",
+                border: "1px solid lightgrey",
+                borderRadius: "4px",
+                padding: "2rem 2rem 2rem 1rem",
+                mb: 10,
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <Box sx={{ position: "absolute", right: "0", top: "0" }}>
+                <IconButton
+                  aria-label="Remove row"
+                  onClick={(event) => handleRemoveRow(event, i)}
                 >
-                  {i + 1}
-                </Typography>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Box>
+              <Typography
+                sx={{ pr: 6, color: "#686868de", mt: -2 }}
+                variant="body1"
+                color="info"
+              >
+                {i + 1}
+              </Typography>
 
-                <FormControl sx={{ width: "200px" }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                  <Select
-                    value={
-                      typeArray.length
-                        ? typeArray.length <= i
+              <FormControl sx={{ width: "200px" }}>
+                <InputLabel id="type">Type</InputLabel>
+                <Select
+                  value={
+                    typeArray.length
+                      ? typeArray.length <= i
+                        ? type !== null
                           ? type
-                          : typeArray[i].name
-                        : type
-                    }
-                    name={type}
-                    label="Type"
-                    onChange={(event) => handleType(event, i)}
-                  >
-                    {typeItems.map((item, i) => {
-                      return (
-                        <MenuItem value={Object.values(item)[0]}>
-                          {Object.values(item)[1]}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                          : ""
+                        : typeArray[i].name
+                      : type !== null
+                      ? type
+                      : ""
+                  }
+                  name={type}
+                  label="Type"
+                  onChange={(event) => handleType(event, i)}
+                >
+                  {typeItems.map((item, i) => {
+                    return (
+                      <MenuItem key={i} value={Object.values(item)[0]}>
+                        {Object.values(item)[1]}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
 
-                {/* Add group index */}
+              {/* Add group index */}
 
-                {type === "index" && (
-                  <>
-                    <FormControl sx={{ width: "200px", ml: 3 }}>
-                      <TextField
-                        // onChange={handleDynamicPrefix}
-                        id="outlined-basic"
-                        label="Prefix"
-                        variant="outlined"
-                      />
-                    </FormControl>
-                  </>
-                )}
+              {type === "index" && (
+                <>
+                  <FormControl sx={{ width: "200px", ml: 3 }}>
+                    <TextField
+                      // onChange={handleDynamicPrefix}
+                      id="outlined-basic"
+                      label="Prefix"
+                      variant="outlined"
+                    />
+                  </FormControl>
+                </>
+              )}
 
-                {/* Replace String */}
+              {/* Replace String */}
 
-                {type === "replace" && (
-                  <>
+              {typeArray[i] !== undefined && typeArray[i].name === "replace" && (
+                <>
+                  <FormControl sx={{ width: "200px", ml: 3 }}>
+                    <InputLabel id="replace-string-type">Type</InputLabel>
+                    <Select
+                      value={replaceType}
+                      name={type}
+                      label="Type"
+                      onChange={(event) => handleReplaceType(event)}
+                    >
+                      <MenuItem value="alphabetical">
+                        Incremental Alphabetical
+                      </MenuItem>
+                      <MenuItem value="numerical">
+                        Incremental Numerical
+                      </MenuItem>
+                      <MenuItem value="string">String</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {replaceType !== "" && (
                     <FormControl sx={{ width: "200px", ml: 3 }}>
                       <TextField
                         id="outlined-basic"
                         label="Find"
                         variant="outlined"
+                        value={replaceFind}
+                        name={replaceFind}
+                        onChange={(event) => handleReplaceFind(event)}
                       />
                     </FormControl>
+                  )}
 
+                  {replaceType === "string" && (
                     <FormControl sx={{ width: "200px", ml: 3 }}>
                       <TextField
                         id="outlined-basic"
-                        label="Replace"
+                        label="String"
                         variant="outlined"
                       />
                     </FormControl>
-                  </>
-                )}
+                  )}
+                </>
+              )}
 
-                {/* Master position */}
+              {/* Master position */}
 
-                {type === "position" && parsedTextField !== null && (
+              {typeArray[i] !== undefined &&
+                typeArray[i].name === "position" &&
+                parsedTextField !== null && (
                   <Box
                     sx={{
                       display: "flex",
@@ -605,18 +688,7 @@ export default function Index() {
                     </Box>
                   </Box>
                 )}
-              </Box>
-
-              {/* <h3 ref={(element) => rowRefs.current.push(element)} key={i}>
-                Row
-                <IconButton
-                  aria-label="Add row"
-                  onClick={(event) => handleRow(event, i)}
-                >
-                  <CloseIcon fontSize="medium" />
-                </IconButton>
-              </h3> */}
-            </>
+            </Box>
           );
         })}
 
