@@ -10,6 +10,9 @@ import Select from "@mui/material/Select";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 export default function Index() {
   const [type, setType] = React.useState("");
@@ -45,6 +48,16 @@ export default function Index() {
   const [spaceY, setspaceY] = React.useState(null);
   const [rows, setRows] = React.useState([]);
   const rowRefs = React.useRef(new Array());
+  const [hasPosition, setHasPosition] = React.useState(false);
+
+  const [dynamicSpaceX, setDynamicSpaceX] = React.useState(false);
+  const [dynamicSpaceY, setDynamicSpaceY] = React.useState(false);
+
+  console.log("dynamicSpaceX");
+  console.log(dynamicSpaceX);
+
+  console.log("dynamicSpaceY");
+  console.log(dynamicSpaceY);
 
   const [jason, setJason] = React.useState(false);
 
@@ -82,6 +95,15 @@ export default function Index() {
       setKeyPosition(indexMaster);
     }
   }, [masterPosition]);
+
+  React.useEffect(() => {
+    if (typeArray.length > 0) {
+      const string1 = Object.values(typeArray).map((val) => val.name)[0];
+      setHasPosition(string1 === "position");
+    } else {
+      setHasPosition(false);
+    }
+  }, [typeArray, rows]);
 
   const prefix = [
     "A",
@@ -130,9 +152,14 @@ export default function Index() {
       // const alphabeticalRegex = alphabetical
       //   ? new RegExp(alphabetical, "g")
       //   : "";
-      // const replaced = alphabetical
-      //   ? textField.replace(alphabeticalRegex, `${prefix[i]}_`)
+      // const alphabeticalFilter = alphabetical
+      //   ? textField.replace(alphabeticalRegex, `${[i + 1]}`)
       //   : textField;
+
+      // const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
+      // const numericalFilter = numerical
+      //   ? alphabeticalFilter.replace(numericalRegex, `${[i + 1]}`)
+      //   : alphabeticalFilter;
 
       const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
       const replacedSecond = numerical
@@ -140,7 +167,6 @@ export default function Index() {
         : replaced;
 
       const parsed = JSON.parse(`[${replacedSecond}]`);
-      console.log(parsed);
 
       if (masterPosition !== null) {
         //
@@ -150,7 +176,7 @@ export default function Index() {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
               ? ((field.y = yPositionsColumn(i, arrayNames[i - 1])),
-                (field.x = xPositionsColumn(i)),
+                (field.x = xPositionsColumn(i, arrayNames)),
                 arrayNames.push(field.name))
               : "";
           });
@@ -160,7 +186,7 @@ export default function Index() {
         } else {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
-              ? ((field.y = yPositionsRow(i, arrayNames[i - 1])),
+              ? ((field.y = yPositionsRow(i, arrayNames)),
                 (field.x = xPositionsRow(i, arrayNames[i - 1])),
                 arrayNames.push(field.name))
               : "";
@@ -184,29 +210,44 @@ export default function Index() {
       i === maxItems * 5
     ) {
       return yPos;
-    } else return `${name}.bottom + ${spaceY ? spaceY : 200}`;
+    } else
+      return `${name}.${dynamicSpaceY ? "bottom" : "top"} + ${
+        spaceY ? spaceY : 200
+      }`;
   };
 
-  const xPositionsColumn = (i) => {
+  const xPositionsColumn = (i, arrayNames) => {
+    const newMaxItems = maxItems ? maxItems : 200;
+
     if (xPos !== null) {
-      if (i < maxItems) {
+      if (i <= newMaxItems - 1) {
         return xPos;
       }
-      if (i < maxItems * 2) {
-        return xPos + spaceX;
+      if (i > newMaxItems - 1) {
+        return `${arrayNames[i - newMaxItems]}.${
+          dynamicSpaceX ? "right" : "left"
+        } + ${spaceX ? spaceX : 200}`;
       }
-      if (i < maxItems * 3) {
-        return xPos + spaceX * 2;
-      }
-      if (i <= maxItems * 4) {
-        return xPos + spaceX * 3;
-      }
-      if (i <= maxItems * 5) {
-        return xPos + spaceX * 4;
-      }
-    } else {
-      return 666;
     }
+    // if (xPos !== null) {
+    //   if (i < maxItems) {
+    //     return xPos;
+    //   }
+    //   if (i < maxItems * 2) {
+    //     return xPos + spaceX;
+    //   }
+    //   if (i < maxItems * 3) {
+    //     return xPos + spaceX * 2;
+    //   }
+    //   if (i < maxItems * 4) {
+    //     return xPos + spaceX * 3;
+    //   }
+    //   if (i < maxItems * 5) {
+    //     return xPos + spaceX * 4;
+    //   }
+    // } else {
+    //   return 666;
+    // }
   };
 
   const xPositionsRow = (i, name) => {
@@ -224,36 +265,72 @@ export default function Index() {
       ) {
         return xPos;
       } else {
-        return `${name}.left + ${spaceX ? spaceX : 200}`;
+        return `${name}.${dynamicSpaceX ? "right" : "left"} + ${
+          spaceX ? spaceX : 200
+        }`;
       }
     } else {
       return 666;
     }
   };
 
-  const yPositionsRow = (i) => {
+  const yPositionsRow = (i, arrayNames) => {
+    const newMaxItems = maxItems ? maxItems : 200;
     if (yPos !== null) {
-      if (i < maxItems) {
+      if (i <= newMaxItems - 1) {
         return yPos;
       }
-      if (i < maxItems * 2) {
-        return yPos + spaceY;
+      if (i > newMaxItems - 1) {
+        return `${arrayNames[i - newMaxItems]}.${
+          dynamicSpaceY ? "bottom" : "top"
+        } + ${spaceY ? spaceY : 200}`;
       }
-      if (i < maxItems * 3) {
-        return yPos + spaceY * 2;
-      }
-      if (i <= maxItems * 4) {
-        return yPos + spaceY * 3;
-      }
-      if (i <= maxItems * 5) {
-        return yPos + spaceY * 4;
-      }
-      if (i <= maxItems * 6) {
-        return yPos + spaceY * 5;
-      }
+      // if (
+      //   i === 0 ||
+      //   i === 1 + maxItems ||
+      //   i === 1 + maxItems * 2 ||
+      //   i === 1 + maxItems * 3 ||
+      //   i === 1 + maxItems * 4 ||
+      //   i === 1 + maxItems * 5 ||
+      //   i === 1 + maxItems * 6 ||
+      //   i === 1 + maxItems * 7 ||
+      //   i === 1 + maxItems * 8
+      // )
+
+      // {
+      //   return yPos;
+      // }
+      // else {
+      //   return `${name}.${dynamicSpaceY ? "bottom" : "top"} + ${
+      //     spaceY ? spaceY : 200
+      //   }`;
+      // }
     } else {
       return 666;
     }
+
+    // if (yPos !== null) {
+    //   if (i < maxItems) {
+    //     return yPos;
+    //   }
+    //   if (i < maxItems * 2) {
+    //     return yPos + spaceY;
+    //   }
+    //   if (i < maxItems * 3) {
+    //     return yPos + spaceY * 2;
+    //   }
+    //   if (i <= maxItems * 4) {
+    //     return yPos + spaceY * 3;
+    //   }
+    //   if (i <= maxItems * 5) {
+    //     return yPos + spaceY * 4;
+    //   }
+    //   if (i <= maxItems * 6) {
+    //     return yPos + spaceY * 5;
+    //   }
+    // } else {
+    //   return 666;
+    // }
   };
 
   const generateClusters = () => {
@@ -271,6 +348,8 @@ export default function Index() {
 
     const merged = clusters.join("");
     grabJason();
+
+    console.log(merged);
 
     return merged;
   };
@@ -359,6 +438,14 @@ export default function Index() {
   };
   const handlespaceY = (event) => {
     setspaceY(parseInt(event.target.value));
+  };
+
+  const handleDynamicSpaceX = (event) => {
+    setDynamicSpaceX(!dynamicSpaceX);
+  };
+
+  const handleDynamicSpaceY = (event) => {
+    setDynamicSpaceY(!dynamicSpaceY);
   };
 
   const handleAddRows = (event, length) => {
@@ -506,24 +593,28 @@ export default function Index() {
                     typeArray.length
                       ? typeArray.length <= i
                         ? type !== null
-                          ? type
+                          ? ""
                           : ""
                         : typeArray[i].name
                       : type !== null
-                      ? type
+                      ? ""
                       : ""
                   }
                   name={type}
                   label="Type"
                   onChange={(event) => handleType(event, i)}
                 >
-                  {typeItems.map((item, i) => {
-                    return (
-                      <MenuItem key={i} value={Object.values(item)[0]}>
-                        {Object.values(item)[1]}
-                      </MenuItem>
-                    );
-                  })}
+                  {typeItems.map((item, i) => (
+                    //   /* prettier-ignore */
+                    //   (Object.values(item)[0] === "position") ? (
+                    //   hasPosition ? "" :   <MenuItem key={i} value={Object.values(item)[0]}>
+                    //   {Object.values(item)[1]}
+                    // </MenuItem>
+                    //   ) : (
+                    <MenuItem key={i} value={Object.values(item)[0]}>
+                      {Object.values(item)[1]}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
@@ -685,6 +776,30 @@ export default function Index() {
                           onChange={handlespaceY}
                         />
                       </FormControl>
+                      <Box sx={{ width: "300px", mt: 3, ml: 3 }}>
+                        <FormGroup>
+                          <FormControlLabel
+                            disabled={spaceX ? false : true}
+                            control={
+                              <Checkbox
+                                checked={dynamicSpaceX}
+                                onChange={handleDynamicSpaceX}
+                              />
+                            }
+                            label="Dynamic width - Space X"
+                          />
+                          <FormControlLabel
+                            disabled={spaceY ? false : true}
+                            control={
+                              <Checkbox
+                                checked={dynamicSpaceY}
+                                onChange={handleDynamicSpaceY}
+                              />
+                            }
+                            label="Dynamic height - Space Y"
+                          />
+                        </FormGroup>
+                      </Box>
                     </Box>
                   </Box>
                 )}
