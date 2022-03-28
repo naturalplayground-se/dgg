@@ -38,7 +38,7 @@ export default function Index() {
 
   const [findString, setFindString] = React.useState(null);
   const [alphabetical, setAlpabetical] = React.useState(null);
-  const [numerical, setNumerical] = React.useState(null);
+  const [numerical, setNumerical] = React.useState("");
 
   const [xPos, setXPos] = React.useState(null);
   const [yPos, setYPos] = React.useState(null);
@@ -144,6 +144,7 @@ export default function Index() {
   ];
 
   const arrayNames = [];
+  const arrayNames2 = [];
   let newOptionArray = [];
 
   const dynamicTextfield = (i) => {
@@ -170,22 +171,68 @@ export default function Index() {
 
       const parsed = JSON.parse(`[${replacedSecond}]`);
 
+      Object.values(parsed).forEach((field, index) => {
+        index === keyPosition ? arrayNames.push(field.name) : "";
+      });
+
       if (masterPosition !== null) {
         if (layout === "column") {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
               ? ((field.y = yPositionsColumn(i, arrayNames[i - 1])),
-                (field.x = xPositionsColumn(i, arrayNames)),
-                arrayNames.push(field.name))
-              : "";
+                (field.x = xPositionsColumn(i, arrayNames)))
+              : // arrayNames.push(field.name))
+                "";
           });
         } else {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
               ? ((field.y = yPositionsRow(i, arrayNames)),
-                (field.x = xPositionsRow(i, arrayNames[i - 1])),
-                arrayNames.push(field.name))
-              : "";
+                (field.x = xPositionsRow(i, arrayNames[i - 1])))
+              : // arrayNames.push(field.name))
+                "";
+          });
+        }
+      }
+
+      return parsed;
+    } else {
+      return "";
+    }
+  };
+
+  const dynamicTextfield2 = (i) => {
+    if (textField !== null) {
+      const regex = new RegExp(dynamicPrefix, "g");
+      const replaced = textField.replace(regex, `${prefix[i]}_`);
+
+      const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
+      const replacedSecond = numerical
+        ? replaced.replace(numericalRegex, `${[i + 1]}`)
+        : replaced;
+
+      const parsed = JSON.parse(`[${replacedSecond}]`);
+
+      Object.values(parsed).forEach((field, index) => {
+        index === keyPosition ? arrayNames2.push(field.name) : "";
+      });
+
+      if (masterPosition !== null) {
+        if (layout === "column") {
+          Object.values(parsed).forEach((field, index) => {
+            index === keyPosition
+              ? ((field.y = yPositionsColumn(i, arrayNames2[i - 1])),
+                (field.x = xPositionsColumn(i, arrayNames2)))
+              : // arrayNames.push(field.name))
+                "";
+          });
+        } else {
+          Object.values(parsed).forEach((field, index) => {
+            index === keyPosition
+              ? ((field.y = yPositionsRow(i, arrayNames2)),
+                (field.x = xPositionsRow(i, arrayNames2[i - 1])))
+              : // arrayNames.push(field.name))
+                "";
           });
         }
       }
@@ -217,7 +264,7 @@ export default function Index() {
     const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
 
     const dropdownObject = {
-      title: i + 1,
+      title: `${i + 1}`,
       selected: i === 0 ? true : false,
       show: [showArrayStripped],
       hide: last ? ["fieldX"] : [hideArrayStripped],
@@ -302,15 +349,15 @@ export default function Index() {
     let clusterObject = [];
 
     for (let i = 0; i < fieldCount; i++) {
-      const stringObject = `${JSON.stringify(dynamicTextfield(i))
-        .substring(1)
-        .slice(0, -1)},`;
+      const obj = dynamicTextfield(i);
+      const stringObject = `${JSON.stringify(obj).substring(1).slice(0, -1)},`;
 
       clusters.push(stringObject);
-      clusterObject.push(dynamicTextfield(i));
+      clusterObject.push(obj);
     }
 
     const clusterNames = [];
+
     clusterObject.map((val, i) =>
       clusterNames.push(val.map((value) => `"${value.name}"`))
     );
@@ -322,7 +369,7 @@ export default function Index() {
 
     const showHideObject = {
       name: "select",
-      title: "Välj i listan",
+      title: "Antal",
       type: "select",
       options: clusterOptions,
       editui: "selectlist",
@@ -336,6 +383,7 @@ export default function Index() {
 
     setShowHideField(showHideObjectString);
     const mergedWithShowHide = [showHideField].concat(clusters.join(""));
+
     const merged = clusters.join("");
     grabJason();
 
