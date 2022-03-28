@@ -214,8 +214,6 @@ export default function Index() {
     });
 
     const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
-    console.log("showArrayStripped");
-    console.log(showArrayStripped);
     const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
 
     const dropdownObject = {
@@ -323,9 +321,6 @@ export default function Index() {
         clusterOptions.push(generateShowHide(i, clusterNames));
       }
 
-      // console.log("clusterOptions");
-      // console.log(JSON.stringify(clusterOptions).replace(/\\/g, ""));
-
       const showHideObject = {
         name: "select",
         title: "Välj i listan",
@@ -349,7 +344,8 @@ export default function Index() {
 
     grabJason();
 
-    return showHide ? mergedWithShowHide : merged;
+    // return showHide ? mergedWithShowHide : merged;
+    return merged;
   };
 
   function IsJsonString(str) {
