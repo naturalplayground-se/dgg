@@ -310,38 +310,33 @@ export default function Index() {
       clusterObject.push(dynamicTextfield(i));
     }
 
-    if (showHide) {
-      const clusterNames = [];
-      clusterObject.map((val, i) =>
-        clusterNames.push(val.map((value) => `"${value.name}"`))
-      );
+    const clusterNames = [];
+    clusterObject.map((val, i) =>
+      clusterNames.push(val.map((value) => `"${value.name}"`))
+    );
 
-      const clusterOptions = [];
-      for (let i = 0; i < fieldCount; i++) {
-        clusterOptions.push(generateShowHide(i, clusterNames));
-      }
-
-      const showHideObject = {
-        name: "select",
-        title: "Välj i listan",
-        type: "select",
-        options: clusterOptions,
-        editui: "selectlist",
-        editable: true,
-      };
-
-      const showHideObjectString = JSON.stringify(showHideObject).replace(
-        /\\/g,
-        ""
-      );
-
-      setShowHideField(showHideObjectString);
+    const clusterOptions = [];
+    for (let i = 0; i < fieldCount; i++) {
+      clusterOptions.push(generateShowHide(i, clusterNames));
     }
 
+    const showHideObject = {
+      name: "select",
+      title: "Välj i listan",
+      type: "select",
+      options: clusterOptions,
+      editui: "selectlist",
+      editable: true,
+    };
+
+    const showHideObjectString = JSON.stringify(showHideObject).replace(
+      /\\/g,
+      ""
+    );
+
+    setShowHideField(showHideObjectString);
     const mergedWithShowHide = [showHideField].concat(clusters.join(""));
-
     const merged = clusters.join("");
-
     grabJason();
 
     // return showHide ? mergedWithShowHide : merged;
@@ -800,7 +795,7 @@ export default function Index() {
               {typeArray[i] !== undefined &&
                 typeArray[i].name === "showHide" &&
                 parsedTextField !== null &&
-                showHide === true && (
+                showHideField.length > 0 && (
                   <Box
                     sx={{
                       width: "100%",
@@ -895,8 +890,8 @@ export default function Index() {
           }
           sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
-            navigator.clipboard.writeText(generateClusters()),
-              setShowHide(true);
+            navigator.clipboard.writeText(generateClusters());
+            // setShowHide(true);
           }}
           color="success"
           variant="contained"
