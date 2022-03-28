@@ -49,22 +49,22 @@ export default function Index() {
   const [rows, setRows] = React.useState([]);
   const rowRefs = React.useRef(new Array());
   const [hasPosition, setHasPosition] = React.useState(false);
+  const [showHide, setShowHide] = React.useState(false);
+  // const [showHideNameArray, setShowHideNameArray] = React.useState([]);
+
+  // const [showHideOptions, setShowHideOptions] = React.useState({});
+
+  const [showHideField, setShowHideField] = React.useState([]);
 
   const [dynamicSpaceX, setDynamicSpaceX] = React.useState(false);
   const [dynamicSpaceY, setDynamicSpaceY] = React.useState(false);
 
-  console.log("dynamicSpaceX");
-  console.log(dynamicSpaceX);
-
-  console.log("dynamicSpaceY");
-  console.log(dynamicSpaceY);
-
   const [jason, setJason] = React.useState(false);
 
   const typeItems = [
-    // { value: "index", label: "Add group index" },
     { value: "replace", label: "Replace string" },
     { value: "position", label: "Positioning" },
+    { value: "showHide", label: "Generate Show/Hide" },
   ];
 
   // React.useEffect(() => {
@@ -144,6 +144,8 @@ export default function Index() {
   ];
 
   const arrayNames = [];
+  let newOptionArray = [];
+
   const dynamicTextfield = (i) => {
     if (textField !== null) {
       const regex = new RegExp(dynamicPrefix, "g");
@@ -169,9 +171,6 @@ export default function Index() {
       const parsed = JSON.parse(`[${replacedSecond}]`);
 
       if (masterPosition !== null) {
-        //
-        // COLUMN
-        //
         if (layout === "column") {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
@@ -180,9 +179,6 @@ export default function Index() {
                 arrayNames.push(field.name))
               : "";
           });
-          //
-          // ROW
-          //
         } else {
           Object.values(parsed).forEach((field, index) => {
             index === keyPosition
@@ -198,6 +194,38 @@ export default function Index() {
     } else {
       return "";
     }
+  };
+
+  const generateShowHide = (i, names) => {
+    const hideItems = names.length - i - 1;
+    const last = i === names.length - 1;
+
+    const showNames = names;
+    const hideNames = names;
+
+    const showArray = [];
+    showNames.slice(0, i + 1).map((val) => {
+      showArray.push(`${val},`);
+    });
+
+    const hideArray = [];
+    hideNames.slice(-hideItems).map((val) => {
+      hideArray.push(`${val},`);
+    });
+
+    const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
+    console.log("showArrayStripped");
+    console.log(showArrayStripped);
+    const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
+
+    const dropdownObject = {
+      title: i + 1,
+      selected: i === 0 ? true : false,
+      show: [showArrayStripped],
+      hide: last ? ["fieldX"] : [hideArrayStripped],
+    };
+
+    return dropdownObject;
   };
 
   const yPositionsColumn = (i, name) => {
@@ -229,25 +257,6 @@ export default function Index() {
         } + ${spaceX ? spaceX : 200}`;
       }
     }
-    // if (xPos !== null) {
-    //   if (i < maxItems) {
-    //     return xPos;
-    //   }
-    //   if (i < maxItems * 2) {
-    //     return xPos + spaceX;
-    //   }
-    //   if (i < maxItems * 3) {
-    //     return xPos + spaceX * 2;
-    //   }
-    //   if (i < maxItems * 4) {
-    //     return xPos + spaceX * 3;
-    //   }
-    //   if (i < maxItems * 5) {
-    //     return xPos + spaceX * 4;
-    //   }
-    // } else {
-    //   return 666;
-    // }
   };
 
   const xPositionsRow = (i, name) => {
@@ -285,73 +294,62 @@ export default function Index() {
           dynamicSpaceY ? "bottom" : "top"
         } + ${spaceY ? spaceY : 200}`;
       }
-      // if (
-      //   i === 0 ||
-      //   i === 1 + maxItems ||
-      //   i === 1 + maxItems * 2 ||
-      //   i === 1 + maxItems * 3 ||
-      //   i === 1 + maxItems * 4 ||
-      //   i === 1 + maxItems * 5 ||
-      //   i === 1 + maxItems * 6 ||
-      //   i === 1 + maxItems * 7 ||
-      //   i === 1 + maxItems * 8
-      // )
-
-      // {
-      //   return yPos;
-      // }
-      // else {
-      //   return `${name}.${dynamicSpaceY ? "bottom" : "top"} + ${
-      //     spaceY ? spaceY : 200
-      //   }`;
-      // }
     } else {
       return 666;
     }
-
-    // if (yPos !== null) {
-    //   if (i < maxItems) {
-    //     return yPos;
-    //   }
-    //   if (i < maxItems * 2) {
-    //     return yPos + spaceY;
-    //   }
-    //   if (i < maxItems * 3) {
-    //     return yPos + spaceY * 2;
-    //   }
-    //   if (i <= maxItems * 4) {
-    //     return yPos + spaceY * 3;
-    //   }
-    //   if (i <= maxItems * 5) {
-    //     return yPos + spaceY * 4;
-    //   }
-    //   if (i <= maxItems * 6) {
-    //     return yPos + spaceY * 5;
-    //   }
-    // } else {
-    //   return 666;
-    // }
   };
 
   const generateClusters = () => {
     let clusters = [];
+    let clusterObject = [];
 
     for (let i = 0; i < fieldCount; i++) {
-      // const modifiedCluster = `${JSON.stringify(dynamicTextfield(i))},`;
-
       const stringObject = `${JSON.stringify(dynamicTextfield(i))
         .substring(1)
         .slice(0, -1)},`;
 
       clusters.push(stringObject);
+      clusterObject.push(dynamicTextfield(i));
     }
 
+    if (showHide) {
+      const clusterNames = [];
+      clusterObject.map((val, i) =>
+        clusterNames.push(val.map((value) => `"${value.name}"`))
+      );
+
+      const clusterOptions = [];
+      for (let i = 0; i < fieldCount; i++) {
+        clusterOptions.push(generateShowHide(i, clusterNames));
+      }
+
+      // console.log("clusterOptions");
+      // console.log(JSON.stringify(clusterOptions).replace(/\\/g, ""));
+
+      const showHideObject = {
+        name: "select",
+        title: "Välj i listan",
+        type: "select",
+        options: clusterOptions,
+        editui: "selectlist",
+        editable: true,
+      };
+
+      const showHideObjectString = JSON.stringify(showHideObject).replace(
+        /\\/g,
+        ""
+      );
+
+      setShowHideField(showHideObjectString);
+    }
+
+    const mergedWithShowHide = [showHideField].concat(clusters.join(""));
+
     const merged = clusters.join("");
+
     grabJason();
 
-    console.log(merged);
-
-    return merged;
+    return showHide ? mergedWithShowHide : merged;
   };
 
   function IsJsonString(str) {
@@ -803,6 +801,37 @@ export default function Index() {
                     </Box>
                   </Box>
                 )}
+              {typeArray[i] !== undefined &&
+                typeArray[i].name === "showHide" &&
+                parsedTextField !== null &&
+                showHide === true && (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Button
+                      disabled={
+                        jsonSuccess &&
+                        !fieldCountError &&
+                        dynamicPrefix !== null
+                          ? false
+                          : true
+                      }
+                      sx={{ p: 1.85, mr: 3 }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(showHideField);
+                      }}
+                      color="success"
+                      variant="text"
+                      size="large"
+                    >
+                      Grab "Show/Hide" field
+                    </Button>
+                  </Box>
+                )}
             </Box>
           );
         })}
@@ -843,6 +872,24 @@ export default function Index() {
             variant="outlined"
           />
         </FormControl>
+        {/* {showHide && (
+          <Button
+            disabled={
+              jsonSuccess && !fieldCountError && dynamicPrefix !== null
+                ? false
+                : true
+            }
+            sx={{ p: 1.85, mb: 20, mr: 3 }}
+            onClick={() => {
+              navigator.clipboard.writeText(generateClusters());
+            }}
+            color="info"
+            variant="contained"
+            size="large"
+          >
+            Grab Show Hide
+          </Button>
+        )} */}
 
         <Button
           disabled={
@@ -852,7 +899,8 @@ export default function Index() {
           }
           sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
-            navigator.clipboard.writeText(generateClusters());
+            navigator.clipboard.writeText(generateClusters()),
+              setShowHide(true);
           }}
           color="success"
           variant="contained"
