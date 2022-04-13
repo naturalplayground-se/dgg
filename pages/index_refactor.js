@@ -14,10 +14,17 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { v4 as uuidv4 } from "uuid";
+import SelectFields from "../components/form/selectFields";
+import Fab from "@mui/material/Fab";
 
 export default function Index() {
   const [type, setType] = React.useState("");
   const [typeArray, setTypeArray] = React.useState([]);
+
+  const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
+  const [selectedFields, setSelectedFields] = React.useState([]);
+  const [selectedFieldsNames, setSelectedFieldsNames] = React.useState([]);
+
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
@@ -83,8 +90,8 @@ export default function Index() {
   const [jason, setJason] = React.useState(false);
 
   const typeItems = [
-    { value: "replace", label: "Replace string" },
-    { value: "position", label: "Positioning" },
+    { value: "replaceString", label: "Replace" },
+    { value: "layout", label: "Layout" },
     { value: "showHide", label: "Generate Show/Hide" },
   ];
 
@@ -121,8 +128,8 @@ export default function Index() {
 
   React.useEffect(() => {
     if (typeArray.length > 0) {
-      const string1 = Object.values(typeArray).map((val) => val.name)[0];
-      setHasPosition(string1 === "position");
+      const string1 = Object.values(rowArray).map((val) => val.type)[0];
+      setHasPosition(string1 === "layout");
     } else {
       setHasPosition(false);
     }
@@ -168,7 +175,6 @@ export default function Index() {
 
   const arrayNames = [];
   const arrayNames2 = [];
-  let newOptionArray = [];
 
   const dynamicTextfield = (i) => {
     if (textField !== null) {
@@ -224,46 +230,35 @@ export default function Index() {
     }
   };
 
-  const dynamicTextfield2 = (i) => {
-    if (textField !== null) {
-      const regex = new RegExp(dynamicPrefix, "g");
-      const replaced = textField.replace(regex, `${prefix[i]}_`);
+  const dggGeneratePositions = (i, direction) => {
+    const groupArray = [];
 
-      const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      const replacedSecond = numerical
-        ? replaced.replace(numericalRegex, `${[i + 1]}`)
-        : replaced;
+    const allFields = selectedFields;
 
-      const parsed = JSON.parse(`[${replacedSecond}]`);
-
-      Object.values(parsed).forEach((field, index) => {
-        index === keyPosition ? arrayNames2.push(field.name) : "";
+    // for (let i = 0; i < row.layoutObject.groups; i++) {
+    if (direction === "column") {
+      Object.values(allFields).forEach((field) => {
+        field.name == row.layoutObject.master
+          ? ((field.y = yPositionsColumn(i, selectedFieldsNames[i - 1])),
+            (field.x = xPositionsColumn(i, selectedFieldsNames)))
+          : "rrr";
       });
 
-      if (masterPosition !== null) {
-        if (layout === "column") {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsColumn(i, arrayNames2[i - 1])),
-                (field.x = xPositionsColumn(i, arrayNames2)))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        } else {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsRow(i, arrayNames2)),
-                (field.x = xPositionsRow(i, arrayNames2[i - 1])))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        }
-      }
-
-      return parsed;
+      groupArray.push("test");
+    }
+    if (direction === "row") {
+      Object.values(selectedFields).forEach((field, index) => {
+        index === keyPosition
+          ? ((field.y = yPositionsRow(i, selectedFieldsNames)),
+            (field.x = xPositionsRow(i, selectedFieldsNames[i - 1])))
+          : "";
+      });
     } else {
       return "";
     }
+    // }
+
+    return groupArray;
   };
 
   const generateShowHide = (i, names) => {
@@ -296,7 +291,9 @@ export default function Index() {
     return dropdownObject;
   };
 
-  const yPositionsColumn = (i, name) => {
+  const yPositionsColumn = (i, name, layoutObject, y) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+
     if (
       i === 0 ||
       i === maxItems ||
@@ -305,25 +302,23 @@ export default function Index() {
       i === maxItems * 4 ||
       i === maxItems * 5
     ) {
-      return yPos;
+      return y;
     } else
-      return `${name}.${dynamicSpaceY ? "bottom" : "top"} + ${
-        spaceY ? spaceY : 200
-      }`;
+      return `${name}.${
+        layoutObject.dynamicHeightSpaceY ? "bottom" : "top"
+      } + ${layoutObject.spaceY ? layoutObject.spaceY : 200}`;
   };
 
-  const xPositionsColumn = (i, arrayNames) => {
-    const newMaxItems = maxItems ? maxItems : 200;
+  const xPositionsColumn = (i, name, layoutObject, x) => {
+    const maxItems = parseInt(layoutObject.maxItems);
 
-    if (xPos !== null) {
-      if (i <= newMaxItems - 1) {
-        return xPos;
-      }
-      if (i > newMaxItems - 1) {
-        return `${arrayNames[i - newMaxItems]}.${
-          dynamicSpaceX ? "right" : "left"
-        } + ${spaceX ? spaceX : 200}`;
-      }
+    if (i <= maxItems - 1) {
+      return x;
+    }
+    if (i > maxItems - 1) {
+      return `${name}.${
+        layoutObject.dynamicHeightSpaceX ? "right" : "left"
+      } + ${layoutObject.spaceX ? layoutObject.spaceX : 200}`;
     }
   };
 
@@ -367,63 +362,157 @@ export default function Index() {
     }
   };
 
-  const generateClusters = () => {
-    let clusters = [];
-    let clusterObject = [];
+  const generateJSON = () => {
+    let groupsObject = [];
+    let fieldObject = [];
 
-    for (let i = 0; i < fieldCount; i++) {
-      const obj = dynamicTextfield(i);
-      const stringObject = `${JSON.stringify(obj).substring(1).slice(0, -1)},`;
+    const layoutIndex = rowArray.findIndex((object) => {
+      return object.type === "layout";
+    });
 
-      clusters.push(stringObject);
-      clusterObject.push(obj);
+    if (layoutIndex !== -1) {
+      const layoutObject = rowArray[layoutIndex].layoutObject;
+
+      // DET HÄR ÄR LOOPEN, här ska varje grupp få sina rows functioner applicerade
+      for (let index = 0; index < layoutObject.groups; index++) {
+        // selectedFields.map((field, i) => {
+        //   const fieldY = field.y;
+
+        //   field.name === layoutObject.master
+        //     ? ((field.y = yPositionsColumn(
+        //         index,
+        //         selectedFieldsNames[i],
+        //         layoutObject,
+        //         fieldY
+        //       )),
+        //       (field.x = xPositionsColumn(
+        //         index,
+        //         selectedFieldsNames[i],
+        //         layoutObject,
+        //         fieldY
+        //       )))
+        //     : "rrr";
+
+        //   fieldObject.push(field);
+        // });
+
+        const modifiedSelectedFields = selectedFields.map((obj, i) => {
+          if (obj.name === layoutObject.master) {
+            return {
+              ...obj,
+
+              y: yPositionsColumn(
+                index,
+                selectedFieldsNames[i],
+                layoutObject,
+                obj.y
+              ),
+              x: xPositionsColumn(
+                index,
+                selectedFieldsNames[i],
+                layoutObject,
+                obj.x
+              ),
+            };
+          }
+
+          return obj;
+        });
+
+        groupsObject.push(modifiedSelectedFields);
+        console.log("groupsObject");
+        console.log(groupsObject);
+
+        const test = [];
+        // Object.values(selectedFields).forEach((field, i) => {
+        //   //Layout
+        //   const fieldY = field.y;
+        //   field.name === layoutObject.master
+        //     ? ((field.y = yPositionsColumn(
+        //         index,
+        //         selectedFieldsNames[i],
+        //         layoutObject,
+        //         fieldY
+        //       )),
+        //       (field.x = xPositionsColumn(
+        //         index,
+        //         selectedFieldsNames[i],
+        //         layoutObject,
+        //         fieldY
+        //       )))
+        //     : "rrr";
+        //   test.push(field);
+        // });
+        // console.log("test");
+        // console.log(test);
+      }
+    } else {
+      return "";
     }
 
-    const clusterNames = [];
+    // for (let i = 0; i < rowArray.length; i++) {
+    //   if (rowArray.type === "layout") {
+    //     const obj = dggGeneratePositions(i);
+    //     const stringObject = `${JSON.stringify(obj)
+    //       .substring(1)
+    //       .slice(0, -1)},`;
+    //     clusters.push(stringObject);
+    //     clusterObject.push(obj);
+    //   }
+    //   const obj = dynamicTextfield(i);
+    //   const stringObject = `${JSON.stringify(obj).substring(1).slice(0, -1)},`;
 
-    clusterObject.map((val, i) =>
-      clusterNames.push(val.map((value) => `"${value.name}"`))
-    );
+    //   clusters.push(stringObject);
+    //   clusterObject.push(obj);
+    // }
 
-    const clusterOptions = [];
-    for (let i = 0; i < fieldCount; i++) {
-      clusterOptions.push(generateShowHide(i, clusterNames));
-    }
+    // const clusterNames = [];
 
-    const showHideObject = {
-      name: "select",
-      title: "Antal",
-      type: "select",
-      options: clusterOptions,
-      editui: "selectlist",
-      editable: true,
-    };
+    // clusterObject.map((val, i) =>
+    //   clusterNames.push(val.map((value) => `"${value.name}"`))
+    // );
 
-    const showHideObjectString = JSON.stringify(showHideObject).replace(
-      /\\/g,
-      ""
-    );
+    // const clusterOptions = [];
+    // for (let i = 0; i < fieldCount; i++) {
+    //   clusterOptions.push(generateShowHide(i, clusterNames));
+    // }
 
-    setShowHideField(showHideObjectString);
-    const mergedWithShowHide = [showHideField].concat(clusters.join(""));
+    // const showHideObject = {
+    //   name: "select",
+    //   title: "Antal",
+    //   type: "select",
+    //   options: clusterOptions,
+    //   editui: "selectlist",
+    //   editable: true,
+    // };
 
-    const merged = clusters.join("");
+    // const showHideObjectString = JSON.stringify(showHideObject).replace(
+    //   /\\/g,
+    //   ""
+    // );
+
+    // setShowHideField(showHideObjectString);
+    // const mergedWithShowHide = [showHideField].concat(clusters.join(""));
+
+    // const merged = clusters.join("");
     grabJason();
 
     // return showHide ? mergedWithShowHide : merged;
-    return merged;
+    return "";
   };
 
   function IsJsonString(str) {
-    const withBrackets1 = `[${str}]`;
-
     try {
-      JSON.parse(withBrackets1);
+      JSON.parse(str);
     } catch (e) {
       return false;
     }
 
-    return true;
+    const designGeneratorJson = JSON.parse(str)[0].pagenr === 1;
+
+    designGeneratorJson ? setDesignGeneratorJson(JSON.parse(str)) : "";
+
+    return designGeneratorJson ? true : false;
   }
 
   async function handleField(event) {
@@ -437,7 +526,6 @@ export default function Index() {
       } else {
         setTextField(null);
         setTextAreaError(true);
-
         setJsonSuccess(false);
       }
     } else {
@@ -462,91 +550,40 @@ export default function Index() {
     }
   };
 
-  const handleType = (event, i) => {
-    let selectedTypes = [...typeArray];
-    let thisType = { ...typeArray[i] };
-    thisType.name = `${event.target.value}`;
-    selectedTypes[i] = thisType;
-    setTypeArray(selectedTypes);
-
-    setType(event.target.value);
-  };
-
-  const handleMasterPosition = (event) => {
-    setMasterPosition(event.target.value);
-    // setMasterPositionId(event.target.value[0].index);
-  };
-
-  const handleLayout = (event) => {
-    setLayout(event.target.value);
-  };
-
-  const handleXPos = (event) => {
-    setXPos(parseInt(event.target.value));
-  };
-
-  const handleYPos = (event) => {
-    setYPos(parseInt(event.target.value));
-  };
-
-  const handleMaxItems = (event) => {
-    setMaxItems(parseInt(event.target.value));
-  };
-
-  const handlespaceX = (event) => {
-    setspaceX(parseInt(event.target.value));
-  };
-  const handlespaceY = (event) => {
-    setspaceY(parseInt(event.target.value));
-  };
-
-  const handleDynamicSpaceX = (event) => {
-    setDynamicSpaceX(!dynamicSpaceX);
-  };
-
-  const handleDynamicSpaceY = (event) => {
-    setDynamicSpaceY(!dynamicSpaceY);
+  const handleSelectFields = (fields, fieldsName) => {
+    setSelectedFields(fields);
+    setSelectedFieldsNames(fieldsName);
   };
 
   const handleAddRows = (event, length) => {
-    console.log(elementsRef);
-
-    // elementsRef.current[0].current !== null
-    //   ? (elementsRef.current[0].current.baseURI = "www.test.nu")
-    //   : "nej";
-
-    // console.log(
-    //   elementsRef.current[0].current !== null
-    //     ? elementsRef.current[0].current.baseURI
-    //     : "nej"
-    // );
+    // const replaceStringObject = {
+    //   find: "",
+    //   replace: ""
+    // }
 
     const rowObject = {
       id: uuidv4(),
-      // id: "222",
-      // id: `row-${rowArray.length + 1}`,
-      type: null,
+      type: "",
+      replaceStringObject: { type: "", input1: "", input2: "" },
+      layoutObject: {
+        groups: "",
+        master: "",
+        direction: "",
+        startX: "",
+        startY: "",
+        maxItems: "",
+        spaceX: "",
+        spaceY: "",
+        dynamicWidthSpaceX: false,
+        dynamicHeightSpaceY: false,
+      },
+      showHideObject: { input1: "", input2: "", input3: "" },
     };
 
     const oldArray = rowArray;
-    setRowArray([...oldArray, rowObject]);
-    // console.log(elementsRef);
-
+    setRowArray([rowObject, ...oldArray]);
     setRows([...rows, length]);
-    // if (typeArray.length === 0) {
-    //   setTypeArray([`${type}`]);
-    // }
   };
-
-  console.log("rowArray");
-  console.log(rowArray);
-
-  // console.log("base efter set");
-  // console.log(
-  //   elementsRef.current[0].current !== null
-  //     ? elementsRef.current[0].current.baseURI
-  //     : "nej"
-  // );
 
   const handleRemoveRow = (event, i) => {
     const getRow = 8;
@@ -555,9 +592,6 @@ export default function Index() {
       elementsRef.current[0].current !== null
         ? elementsRef.current[i].current.id
         : "0";
-
-    console.log("rowId");
-    console.log(rowId);
 
     if (rowArray.length > 0) {
       rowArray.map((val, index) => {
@@ -569,114 +603,134 @@ export default function Index() {
         }
       });
     }
+  };
 
-    const array = [...rows];
-    array.splice(i, 1);
-    setRows(array);
-    const newTypearray = [...typeArray];
-    newTypearray.splice(i, 1);
-    setTypeArray(newTypearray);
+  const handleUpdateRows = (event, id, cat) => {
+    const index = rowArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    let newArray = [...rowArray];
+    let thisObject = { ...rowArray[index] };
+
+    if (cat === "updateRow") {
+      if (index !== -1) {
+        newArray[index].type = event.target.value;
+        setRowArray(newArray);
+      } else {
+        newArray[0].type = event.target.value;
+        setRowArray(newArray);
+      }
+    }
+    if (cat === "replaceString") {
+      if (index !== -1) {
+        newArray[index].replaceStringObject.type = event.target.value;
+        setRowArray(newArray);
+      } else {
+        newArray[0].replaceStringObject.type = event.target.value;
+        setRowArray(newArray);
+      }
+    }
   };
 
   const grabJason = () => {
     setJason(true);
   };
-  const handleReplaceType = (event) => {
-    const rType = event.target.value.split("-")[0];
-    const rId = event.target.value.split("-")[1];
 
-    const obj = {
-      id: rId,
-      type: rType,
-    };
+  const handleReplace = (event, id, type) => {
+    let newArray = [...rowArray];
 
-    if (replaceType1.length === 0) {
-      setReplaceType1([obj]);
+    const index = rowArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    if (type === "find") {
+      newArray[index].replaceStringObject.input1 = event.target.value;
+      setRowArray(newArray);
     }
-    if (replaceType1.length > 0) {
-      const hasValue = replaceType1.findIndex((obj) => obj.id == rId);
-      if (hasValue !== -1) {
-        const newArray = replaceType1.map((obj) => {
-          if (obj.id == rId) {
-            return { ...obj, type: rType };
-          }
-        });
+    if (type === "replace") {
+      newArray[index].replaceStringObject.input2 = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "alphabetical" || type === "numerical") {
+      newArray[index].replaceStringObject.input1 = event.target.value;
+      newArray[index].replaceStringObject.input2 = "";
+      setRowArray(newArray);
+    }
+  };
 
-        setReplaceType1(newArray);
+  const handleLayout = (event, id, type) => {
+    let newArray = [...rowArray];
+
+    const index = rowArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    if (type === "groups") {
+      newArray[index].layoutObject.groups = event.target.value;
+      setRowArray(newArray);
+    }
+
+    if (type === "master") {
+      newArray[index].layoutObject.master = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "direction") {
+      newArray[index].layoutObject.direction = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "startX") {
+      newArray[index].layoutObject.startX = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "startY") {
+      newArray[index].layoutObject.startY = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "maxItems") {
+      newArray[index].layoutObject.maxItems = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "spaceX") {
+      newArray[index].layoutObject.spaceX = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "spaceY") {
+      newArray[index].layoutObject.spaceY = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "dynamicWidthSpaceX") {
+      if (newArray[index].layoutObject.dynamicWidthSpaceX) {
+        newArray[index].layoutObject.dynamicWidthSpaceX = false;
       } else {
-        setReplaceType1([...replaceType1, obj]);
+        newArray[index].layoutObject.dynamicWidthSpaceX = true;
       }
+      setRowArray(newArray);
     }
-
-    // setRows([...rows, length]);
-
-    // const oldArray = replaceType1;
-    // setReplaceType1([...replaceType1, obj]);
-
-    setReplaceType(event.target.value);
-  };
-
-  const handleReplaceFind = (event) => {
-    setReplaceFind(event.target.value);
-    if (replaceType === "string") {
-      setFindString(event.target.value);
-      setAlphabetical(null);
-      setNumerical(null);
-    }
-    if (replaceType === "alphabetical") {
-      setAlphabetical(event.target.value);
-      setFindString(null);
-      setNumerical(null);
-    }
-    if (replaceType === "numerical") {
-      setNumerical(event.target.value);
-      setAlphabetical(null);
-      setFindString(null);
-    } else {
-      return "";
+    if (type === "dynamicHeightSpaceY") {
+      if (newArray[index].layoutObject.dynamicHeightSpaceY) {
+        newArray[index].layoutObject.dynamicHeightSpaceY = false;
+      } else {
+        newArray[index].layoutObject.dynamicHeightSpaceY = true;
+      }
+      setRowArray(newArray);
     }
   };
 
-  const getParentId = (i) => {
-    const id = elementsRef.current.map((el) =>
-      el.current != null
-        ? elementsRef.current[i].current.childNodes[0].id
-        : "nej"
-    );
-
-    return id;
-  };
-
-  // const getId = (i) => {
-  //   console.log("först i loopen");
-  //   console.log(
-  //     elementsRef.current[i].current !== null &&
-  //       elementsRef.current[i].current.id.length !== 0
-  //   );
-  //   if (
-  //     elementsRef.current[i].current !== null &&
-  //     elementsRef.current[i].current.id.length !== 0
-  //   ) {
-  //     return `${elementsRef.current[i].current.id}`;
-  //   } else {
-  //     return `${rowArray[i].id}`;
-  //   }
-  // };
-
-  // console.log("elementsRef.current");
-  // console.log(elementsRef.current);
+  console.log("rowArray");
+  console.log(rowArray);
 
   return (
-    <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
-      <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
-        Designgenerator Generator [WIP]
+    <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>
+      <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
+        1. Paste Designgenerator JSON
       </Typography>
       <Box sx={{ position: "relative", width: "1000px" }}>
         <FormControl sx={{ width: "100%", mb: 10 }}>
           <TextField
             onChange={handleField}
             fullWidth
-            label="Paste JSON fields from Designgeneratorn (no square brackets)."
+            label="Paste JSON here"
             multiline
             rows={12}
             error={textAreaError}
@@ -704,28 +758,45 @@ export default function Index() {
           >
             <img
               src={jason ? "/brandon2.png" : "/brandon1.png"}
-              width="200px"
-              height="200px"
+              width="145px"
+              height="145px"
               alt=""
             />
           </Box>
         )}
       </Box>
-
+      {jsonSuccess && (
+        <Box sx={{ position: "relative", width: "1000px" }}>
+          <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
+            2. Select Fields
+          </Typography>
+          <SelectFields
+            handleSelectFields={handleSelectFields}
+            designGeneratorJson={designGeneratorJson[0].fields}
+          />
+        </Box>
+      )}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-end",
+          mt: 10,
+          mb: 10,
           width: "1000px",
-          mb: 4,
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        <IconButton
-          aria-label="Add row"
-          onClick={(event) => handleAddRows(event, rows.length)}
-        >
-          <AddIcon fontSize="large" />
-        </IconButton>
+        <Typography variant="h4" component="p" gutterBottom sx={{ mb: 1 }}>
+          3. Add functionality to selected fields
+        </Typography>
+        <Box sx={{ "& > :not(style)": { m: 1 } }}>
+          <Fab
+            color="success"
+            aria-label="add"
+            onClick={(event) => handleAddRows(event, rows.length)}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       </Box>
 
       {rowArray &&
@@ -754,7 +825,7 @@ export default function Index() {
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </Box>
-              {rowArray[i].id}
+
               <Typography
                 sx={{ pr: 6, color: "#686868de", mt: -2 }}
                 variant="body1"
@@ -762,31 +833,27 @@ export default function Index() {
               >
                 {i + 1}
               </Typography>
-              <FormControl sx={{ width: "200px" }}>
-                <InputLabel id="type">Type</InputLabel>
+              <FormControl sx={{ minWidth: "200px" }}>
+                <InputLabel id="type">Category</InputLabel>
                 <Select
                   value={
-                    typeArray.length
-                      ? typeArray.length <= i
+                    rowArray.length
+                      ? rowArray.length <= i
                         ? type !== null
                           ? ""
                           : ""
-                        : typeArray[i].name
+                        : rowArray[i].type
                       : type !== null
                       ? ""
                       : ""
                   }
                   name={type}
                   label="Type"
-                  onChange={(event) => handleType(event, i)}
+                  onChange={(event) =>
+                    handleUpdateRows(event, val.id, "updateRow")
+                  }
                 >
                   {typeItems.map((item, i) => (
-                    //   /* prettier-ignore */
-                    //   (Object.values(item)[0] === "position") ? (
-                    //   hasPosition ? "" :   <MenuItem key={i} value={Object.values(item)[0]}>
-                    //   {Object.values(item)[1]}
-                    // </MenuItem>
-                    //   ) : (
                     <MenuItem key={i} value={Object.values(item)[0]}>
                       {Object.values(item)[1]}
                     </MenuItem>
@@ -796,234 +863,252 @@ export default function Index() {
               {/* Add group index */}
               {type === "index" && (
                 <>
-                  <FormControl sx={{ width: "200px", ml: 3 }}>
-                    <TextField
-                      // onChange={handleDynamicPrefix}
-                      id="outlined-basic"
-                      label="Prefix"
-                      variant="outlined"
-                    />
+                  <FormControl sx={{ width: "145px", ml: 3 }}>
+                    <TextField id="index" label="Prefix" variant="outlined" />
                   </FormControl>
                 </>
               )}
-              {/* Replace String */}
-              {typeArray[i] !== undefined && typeArray[i].name === "replace" && (
+              {/* Replace */}
+              {val.type === "replaceString" && (
                 <>
-                  <FormControl sx={{ width: "200px", ml: 3 }}>
+                  <FormControl sx={{ width: "145px", ml: 3 }}>
                     <InputLabel id="replace-string-type">Type</InputLabel>
                     <Select
-                      // value={
-                      //   replaceType1[i] !== undefined
-                      //     ? replaceType1[i].type
-                      //     : ""
-                      // }
-                      // name={
-                      //   replaceType1[i] !== undefined
-                      //     ? replaceType1[i].type
-                      //     : ""
-                      // }
-
-                      value={""}
-                      label="Type"
-                      // onChange={(event) => handleReplaceType(event, 4)}
+                      value={val.replaceStringObject.type}
+                      onChange={(event) =>
+                        handleUpdateRows(event, val.id, "replaceString")
+                      }
                     >
-                      {/* {console.log("elementsRef")}
-                      {console.log(
-                        elementsRef.current.map((el) =>
-                          el.current != null
-                            ? elementsRef.current[i].current.childNodes[0].id
-                            : "nej"
-                        )
-                      )} */}
-                      <MenuItem value={`alphabetical-${getParentId(i)}`}>
+                      <MenuItem value={`alphabetical`}>
                         Incremental Alphabetical
                       </MenuItem>
-                      <MenuItem value={`numerical-${getParentId(i)}`}>
+                      <MenuItem value={`numerical`}>
                         Incremental Numerical
                       </MenuItem>
-                      <MenuItem value={`string-${getParentId(i)}`}>
-                        String
-                      </MenuItem>
+                      <MenuItem value={`string`}>String</MenuItem>
                     </Select>
                   </FormControl>
 
-                  {replaceType !== "" && (
-                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                  {val.replaceStringObject.type === "alphabetical" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
                       <TextField
-                        id="outlined-basic"
+                        id="Alphabetical-input1"
                         label="Find"
                         variant="outlined"
-                        value={replaceFind}
-                        name={replaceFind}
-                        onChange={(event) => handleReplaceFind(event)}
+                        value={val.replaceStringObject.input1}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "alphabetical")
+                        }
                       />
                     </FormControl>
                   )}
 
-                  {replaceType === "string" && (
-                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                  {val.replaceStringObject.type === "numerical" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
                       <TextField
-                        id="outlined-basic"
-                        label="String"
+                        id="Alphabetical-input1"
+                        label="Find"
                         variant="outlined"
+                        value={val.replaceStringObject.input1}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "numerical")
+                        }
+                      />
+                    </FormControl>
+                  )}
+
+                  {val.replaceStringObject.type === "string" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="Find-input1"
+                        label="Find"
+                        variant="outlined"
+                        value={val.replaceStringObject.input1}
+                        // name={replaceFind}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "find")
+                        }
+                      />
+                    </FormControl>
+                  )}
+
+                  {val.replaceStringObject.type === "string" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="Replace-input2"
+                        label="Replace"
+                        variant="outlined"
+                        value={val.replaceStringObject.input2}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "replace")
+                        }
                       />
                     </FormControl>
                   )}
                 </>
               )}
-              {/* Master position */}
-              {typeArray[i] !== undefined &&
-                typeArray[i].name === "position" &&
-                parsedTextField !== null && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <FormControl sx={{ width: "250px", ml: 3 }}>
-                      <InputLabel id="demo-simple-select-label">
-                        Master
-                      </InputLabel>
-                      <Select
-                        labelId="masterPos3"
-                        id="masterPos"
-                        value={masterPosition ? masterPosition : ""}
-                        label="Type"
-                        onChange={handleMasterPosition}
-                      >
-                        {parsedTextField.map((a, i) => (
-                          <MenuItem key={a.name} value={a.name} data-id={i}>
-                            {a.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
-                        <InputLabel id="layout1">Layout</InputLabel>
-                        <Select
-                          labelId="demo-layout"
-                          id="dgg-layout"
-                          value={layout}
-                          label="Type"
-                          onChange={handleLayout}
-                        >
-                          <MenuItem value={"column"}>Column</MenuItem>
-                          <MenuItem value={"row"}>Row</MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Start X"
-                          variant="outlined"
-                          onChange={handleXPos}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Start Y"
-                          variant="outlined"
-                          onChange={handleYPos}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label={`Max items in ${layout}`}
-                          variant="outlined"
-                          onChange={handleMaxItems}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Space X"
-                          variant="outlined"
-                          onChange={handlespaceX}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Space Y"
-                          variant="outlined"
-                          onChange={handlespaceY}
-                        />
-                      </FormControl>
-                      <Box sx={{ width: "300px", mt: 3, ml: 3 }}>
-                        <FormGroup>
-                          <FormControlLabel
-                            disabled={spaceX ? false : true}
-                            control={
-                              <Checkbox
-                                checked={dynamicSpaceX}
-                                onChange={handleDynamicSpaceX}
-                              />
-                            }
-                            label="Dynamic width - Space X"
-                          />
-                          <FormControlLabel
-                            disabled={spaceY ? false : true}
-                            control={
-                              <Checkbox
-                                checked={dynamicSpaceY}
-                                onChange={handleDynamicSpaceY}
-                              />
-                            }
-                            label="Dynamic height - Space Y"
-                          />
-                        </FormGroup>
-                      </Box>
-                    </Box>
-                  </Box>
-                )}
-              {typeArray[i] !== undefined &&
-                typeArray[i].name === "showHide" &&
-                parsedTextField !== null &&
-                showHideField.length > 0 && (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <Button
-                      disabled={
-                        jsonSuccess &&
-                        !fieldCountError &&
-                        dynamicPrefix !== null
-                          ? false
-                          : true
+              {/* Layout */}
+              {val.type === "layout" && parsedTextField !== null && (
+                <Box
+                  sx={{
+                    ml: "20px",
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: "20px 20px",
+                    width: "650px",
+                  }}
+                >
+                  <FormControl sx={{ width: "145px" }}>
+                    <InputLabel id="master">Master</InputLabel>
+                    <Select
+                      id="master"
+                      value={val.layoutObject.master}
+                      label="Type"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "master")
                       }
-                      sx={{ p: 1.85, mr: 3 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(showHideField);
-                      }}
-                      color="success"
-                      variant="text"
-                      size="large"
                     >
-                      Grab "Show/Hide" field
-                    </Button>
+                      {selectedFields.map((a, i) => (
+                        <MenuItem key={i} value={a.name} data-id={i}>
+                          {a.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="groups"
+                      label="Number of groups"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "groups")
+                      }
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ width: "145px" }}>
+                    <InputLabel id="layout1">Direction</InputLabel>
+                    <Select
+                      id="direction"
+                      value={val.layoutObject.direction}
+                      label="Type"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "direction")
+                      }
+                    >
+                      <MenuItem value={"column"}>Column</MenuItem>
+                      <MenuItem value={"row"}>Row</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="maxItems"
+                      label={`Max groups in ${val.layoutObject.direction}`}
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "maxItems")
+                      }
+                    />
+                  </FormControl>
+
+                  {/* <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="startX"
+                        label="Start X"
+                        variant="outlined"
+                        onChange={(event) =>
+                          handleLayout(event, val.id, "startX")
+                        }
+                      />
+                    </FormControl>
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="startY"
+                        label="Start Y"
+                        variant="outlined"
+                        onChange={(event) =>
+                          handleLayout(event, val.id, "startY")
+                        }
+                      />
+                    </FormControl> */}
+
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="spaceX"
+                      label="Space X"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "spaceX")
+                      }
+                    />
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="spaceY"
+                      label="Space Y"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleLayout(event, val.id, "spaceY")
+                      }
+                    />
+                  </FormControl>
+                  <Box sx={{ width: "650px" }}>
+                    <FormGroup>
+                      <FormControlLabel
+                        disabled={val.layoutObject.spaceX !== "" ? false : true}
+                        control={
+                          <Checkbox
+                            checked={val.layoutObject.dynamicWidthSpaceX}
+                            onChange={(event) =>
+                              handleLayout(event, val.id, "dynamicWidthSpaceX")
+                            }
+                          />
+                        }
+                        label="Dynamic width - Space X"
+                      />
+                      <FormControlLabel
+                        disabled={val.layoutObject.spaceY !== "" ? false : true}
+                        control={
+                          <Checkbox
+                            checked={val.layoutObject.dynamicHeightSpaceY}
+                            onChange={(event) =>
+                              handleLayout(event, val.id, "dynamicHeightSpaceY")
+                            }
+                          />
+                        }
+                        label="Dynamic height - Space Y"
+                      />
+                    </FormGroup>
                   </Box>
-                )}
+                </Box>
+              )}
+              {val.type === "showHide" && parsedTextField !== null && (
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Button
+                    disabled={
+                      jsonSuccess && !fieldCountError && dynamicPrefix !== null
+                        ? false
+                        : true
+                    }
+                    sx={{ p: 1.85, mr: 3 }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(showHideField);
+                    }}
+                    color="success"
+                    variant="text"
+                    size="large"
+                  >
+                    Grab "Show/Hide" field
+                  </Button>
+                </Box>
+              )}
             </Box>
           );
         })}
@@ -1040,7 +1125,7 @@ export default function Index() {
         noValidate
         autoComplete="off"
       >
-        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
+        {/* <FormControl sx={{ width: "145px", mr: 3, ml: 3 }}>
           <TextField
             disabled={jsonSuccess ? false : true}
             onChange={handleFieldCount}
@@ -1050,8 +1135,8 @@ export default function Index() {
             helperText={fieldCountError ? `Please, type in a number` : ""}
             color={fieldCountError ? "error" : "success"}
           />
-        </FormControl>
-        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
+        </FormControl> */}
+        {/* <FormControl sx={{ width: "145px", mr: 3, ml: 3 }}>
           <TextField
             disabled={
               jsonSuccess && !fieldCountError && fieldCount.length > 0
@@ -1063,7 +1148,7 @@ export default function Index() {
             label="String"
             variant="outlined"
           />
-        </FormControl>
+        </FormControl> */}
         {/* {showHide && (
           <Button
             disabled={
@@ -1073,7 +1158,7 @@ export default function Index() {
             }
             sx={{ p: 1.85, mb: 20, mr: 3 }}
             onClick={() => {
-              navigator.clipboard.writeText(generateClusters());
+              navigator.clipboard.writeText(generateJSON());
             }}
             color="info"
             variant="contained"
@@ -1084,14 +1169,10 @@ export default function Index() {
         )} */}
 
         <Button
-          disabled={
-            jsonSuccess && !fieldCountError && dynamicPrefix !== null
-              ? false
-              : true
-          }
+          disabled={jsonSuccess && rowArray.length > 0 ? false : true}
           sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
-            navigator.clipboard.writeText(generateClusters());
+            navigator.clipboard.writeText(generateJSON());
             // setShowHide(true);
           }}
           color="success"
