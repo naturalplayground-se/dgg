@@ -91,7 +91,7 @@ export default function Index() {
 
   const typeItems = [
     { value: "replaceString", label: "Replace" },
-    { value: "layout", label: "Layout" },
+    { value: "repetition", label: "Repetition" },
     { value: "showHide", label: "Generate Show/Hide" },
   ];
 
@@ -129,13 +129,13 @@ export default function Index() {
   React.useEffect(() => {
     if (typeArray.length > 0) {
       const string1 = Object.values(rowArray).map((val) => val.type)[0];
-      setHasPosition(string1 === "layout");
+      setHasPosition(string1 === "repetition");
     } else {
       setHasPosition(false);
     }
   }, [typeArray, rows]);
 
-  const prefix = [
+  const alphabet = [
     "A",
     "B",
     "C",
@@ -172,6 +172,16 @@ export default function Index() {
     "ZI",
     "ZJ",
   ];
+
+  const prefixer = (index, name, prefix1) => {
+    if (prefix1 !== "") {
+      const newName = name.replace(prefix1, `${alphabet[index]}_`);
+
+      return newName;
+    } else {
+      return name;
+    }
+  };
 
   const arrayNames = [];
   const arrayNames2 = [];
@@ -291,8 +301,10 @@ export default function Index() {
     return dropdownObject;
   };
 
-  const yPositionsColumn = (i, name, layoutObject, y) => {
+  const yPositionsColumn = (i, layoutObject, y, masterNames) => {
     const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - 1];
+    // const name = masterNames[i - maxItems];
 
     if (
       i === 0 ||
@@ -309,195 +321,134 @@ export default function Index() {
       } + ${layoutObject.spaceY ? layoutObject.spaceY : 200}`;
   };
 
-  const xPositionsColumn = (i, name, layoutObject, x) => {
+  const xPositionsColumn = (i, layoutObject, x, masterNames) => {
     const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - maxItems];
 
     if (i <= maxItems - 1) {
       return x;
     }
     if (i > maxItems - 1) {
+      return `${name}.${layoutObject.dynamicWidthSpaceX ? "right" : "left"} + ${
+        layoutObject.spaceX ? layoutObject.spaceX : 200
+      }`;
+    }
+  };
+
+  const xPositionsRow = (i, layoutObject, x, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    // const name = selectedFieldsNames[i];
+    const name = masterNames[i - 1];
+
+    if (
+      i === 0 ||
+      i === maxItems ||
+      i === maxItems * 2 ||
+      i === maxItems * 3 ||
+      i === maxItems * 4 ||
+      i === maxItems * 5 ||
+      i === maxItems * 6 ||
+      i === maxItems * 7 ||
+      i === maxItems * 8
+    ) {
+      return x;
+    } else {
+      return `${name}.${layoutObject.dynamicWidthSpaceX ? "right" : "left"} + ${
+        layoutObject.spaceX ? layoutObject.spaceX : 200
+      }`;
+    }
+  };
+
+  const yPositionsRow = (i, layoutObject, y, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - maxItems];
+
+    if (i <= maxItems - 1) {
+      return y;
+    }
+    if (i > maxItems - 1) {
       return `${name}.${
-        layoutObject.dynamicHeightSpaceX ? "right" : "left"
-      } + ${layoutObject.spaceX ? layoutObject.spaceX : 200}`;
-    }
-  };
-
-  const xPositionsRow = (i, name) => {
-    if (xPos !== null) {
-      if (
-        i === 0 ||
-        i === maxItems ||
-        i === maxItems * 2 ||
-        i === maxItems * 3 ||
-        i === maxItems * 4 ||
-        i === maxItems * 5 ||
-        i === maxItems * 6 ||
-        i === maxItems * 7 ||
-        i === maxItems * 8
-      ) {
-        return xPos;
-      } else {
-        return `${name}.${dynamicSpaceX ? "right" : "left"} + ${
-          spaceX ? spaceX : 200
-        }`;
-      }
-    } else {
-      return 666;
-    }
-  };
-
-  const yPositionsRow = (i, arrayNames) => {
-    const newMaxItems = maxItems ? maxItems : 200;
-    if (yPos !== null) {
-      if (i <= newMaxItems - 1) {
-        return yPos;
-      }
-      if (i > newMaxItems - 1) {
-        return `${arrayNames[i - newMaxItems]}.${
-          dynamicSpaceY ? "bottom" : "top"
-        } + ${spaceY ? spaceY : 200}`;
-      }
-    } else {
-      return 666;
+        layoutObject.dynamicHeightSpaceY ? "bottom" : "top"
+      } + ${layoutObject.spaceY ? layoutObject.spaceY : 200}`;
     }
   };
 
   const generateJSON = () => {
     let groupsObject = [];
-    let fieldObject = [];
 
     const layoutIndex = rowArray.findIndex((object) => {
-      return object.type === "layout";
+      return object.type === "repetition";
     });
+
+    const masterNames = [];
 
     if (layoutIndex !== -1) {
       const layoutObject = rowArray[layoutIndex].layoutObject;
+      const regex = new RegExp(`${layoutObject.prefix}`, "g");
 
-      // DET HÄR ÄR LOOPEN, här ska varje grupp få sina rows functioner applicerade
+      //  Construct a mastername array
       for (let index = 0; index < layoutObject.groups; index++) {
-        // selectedFields.map((field, i) => {
-        //   const fieldY = field.y;
-
-        //   field.name === layoutObject.master
-        //     ? ((field.y = yPositionsColumn(
-        //         index,
-        //         selectedFieldsNames[i],
-        //         layoutObject,
-        //         fieldY
-        //       )),
-        //       (field.x = xPositionsColumn(
-        //         index,
-        //         selectedFieldsNames[i],
-        //         layoutObject,
-        //         fieldY
-        //       )))
-        //     : "rrr";
-
-        //   fieldObject.push(field);
-        // });
-
-        const modifiedSelectedFields = selectedFields.map((obj, i) => {
+        selectedFields.map((obj, i) => {
           if (obj.name === layoutObject.master) {
-            return {
-              ...obj,
-
-              y: yPositionsColumn(
-                index,
-                selectedFieldsNames[i],
-                layoutObject,
-                obj.y
-              ),
-              x: xPositionsColumn(
-                index,
-                selectedFieldsNames[i],
-                layoutObject,
-                obj.x
-              ),
-            };
+            masterNames.push(obj.name.replace(regex, `${alphabet[index]}_`));
           }
+        });
+      }
 
-          return obj;
+      // Loops ("Number of groups") and if the field has been selected as master, applies new positions.
+
+      for (let index = 0; index < layoutObject.groups; index++) {
+        const fieldGroup = selectedFields.map((obj, i) => {
+          const newField = { ...obj };
+          newField.name = obj.name.replace(regex, `${alphabet[index]}_`);
+
+          if (obj.name === layoutObject.master) {
+            if (layoutObject.direction === "row") {
+              (newField.y = yPositionsRow(
+                index,
+                layoutObject,
+                obj.y,
+                masterNames
+              )),
+                (newField.x = xPositionsRow(
+                  index,
+                  layoutObject,
+                  obj.x,
+                  masterNames
+                ));
+            }
+            if (layoutObject.direction === "column") {
+              (newField.y = yPositionsColumn(
+                index,
+                layoutObject,
+                obj.y,
+                masterNames
+              )),
+                (newField.x = xPositionsColumn(
+                  index,
+                  layoutObject,
+                  obj.x,
+                  masterNames
+                ));
+            }
+          }
+          return { ...newField };
         });
 
-        groupsObject.push(modifiedSelectedFields);
-        console.log("groupsObject");
-        console.log(groupsObject);
+        console.log("fieldGroup");
+        console.log(fieldGroup);
 
-        const test = [];
-        // Object.values(selectedFields).forEach((field, i) => {
-        //   //Layout
-        //   const fieldY = field.y;
-        //   field.name === layoutObject.master
-        //     ? ((field.y = yPositionsColumn(
-        //         index,
-        //         selectedFieldsNames[i],
-        //         layoutObject,
-        //         fieldY
-        //       )),
-        //       (field.x = xPositionsColumn(
-        //         index,
-        //         selectedFieldsNames[i],
-        //         layoutObject,
-        //         fieldY
-        //       )))
-        //     : "rrr";
-        //   test.push(field);
-        // });
-        // console.log("test");
-        // console.log(test);
+        groupsObject.push(fieldGroup);
       }
     } else {
       return "";
     }
 
-    // for (let i = 0; i < rowArray.length; i++) {
-    //   if (rowArray.type === "layout") {
-    //     const obj = dggGeneratePositions(i);
-    //     const stringObject = `${JSON.stringify(obj)
-    //       .substring(1)
-    //       .slice(0, -1)},`;
-    //     clusters.push(stringObject);
-    //     clusterObject.push(obj);
-    //   }
-    //   const obj = dynamicTextfield(i);
-    //   const stringObject = `${JSON.stringify(obj).substring(1).slice(0, -1)},`;
-
-    //   clusters.push(stringObject);
-    //   clusterObject.push(obj);
-    // }
-
-    // const clusterNames = [];
-
-    // clusterObject.map((val, i) =>
-    //   clusterNames.push(val.map((value) => `"${value.name}"`))
-    // );
-
-    // const clusterOptions = [];
-    // for (let i = 0; i < fieldCount; i++) {
-    //   clusterOptions.push(generateShowHide(i, clusterNames));
-    // }
-
-    // const showHideObject = {
-    //   name: "select",
-    //   title: "Antal",
-    //   type: "select",
-    //   options: clusterOptions,
-    //   editui: "selectlist",
-    //   editable: true,
-    // };
-
-    // const showHideObjectString = JSON.stringify(showHideObject).replace(
-    //   /\\/g,
-    //   ""
-    // );
-
-    // setShowHideField(showHideObjectString);
-    // const mergedWithShowHide = [showHideField].concat(clusters.join(""));
-
-    // const merged = clusters.join("");
+    const allGroups = groupsObject.flat();
+    console.log("allGroups");
+    console.log(allGroups);
     grabJason();
 
-    // return showHide ? mergedWithShowHide : merged;
     return "";
   };
 
@@ -576,6 +527,8 @@ export default function Index() {
         spaceY: "",
         dynamicWidthSpaceX: false,
         dynamicHeightSpaceY: false,
+        prefix: "",
+        numbering: "",
       },
       showHideObject: { input1: "", input2: "", input3: "" },
     };
@@ -713,6 +666,14 @@ export default function Index() {
       } else {
         newArray[index].layoutObject.dynamicHeightSpaceY = true;
       }
+      setRowArray(newArray);
+    }
+    if (type === "numbering") {
+      newArray[index].layoutObject.numbering = event.target.value;
+      setRowArray(newArray);
+    }
+    if (type === "prefix") {
+      newArray[index].layoutObject.prefix = event.target.value;
       setRowArray(newArray);
     }
   };
@@ -948,7 +909,7 @@ export default function Index() {
                 </>
               )}
               {/* Layout */}
-              {val.type === "layout" && parsedTextField !== null && (
+              {val.type === "repetition" && parsedTextField !== null && (
                 <Box
                   sx={{
                     ml: "20px",
@@ -1012,27 +973,6 @@ export default function Index() {
                     />
                   </FormControl>
 
-                  {/* <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="startX"
-                        label="Start X"
-                        variant="outlined"
-                        onChange={(event) =>
-                          handleLayout(event, val.id, "startX")
-                        }
-                      />
-                    </FormControl>
-                    <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="startY"
-                        label="Start Y"
-                        variant="outlined"
-                        onChange={(event) =>
-                          handleLayout(event, val.id, "startY")
-                        }
-                      />
-                    </FormControl> */}
-
                   <FormControl sx={{ width: "145px" }}>
                     <TextField
                       id="spaceX"
@@ -1079,6 +1019,30 @@ export default function Index() {
                         }
                         label="Dynamic height - Space Y"
                       />
+                    </FormGroup>
+                  </Box>
+                  <Box sx={{ width: "650px" }}>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControl sx={{ width: "145px", mr: 3 }}>
+                        <TextField
+                          id="prefix"
+                          label="Prefix replacement"
+                          variant="outlined"
+                          onChange={(event) =>
+                            handleLayout(event, val.id, "prefix")
+                          }
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "145px" }}>
+                        <TextField
+                          id="numbering"
+                          label="Number replacement"
+                          variant="outlined"
+                          onChange={(event) =>
+                            handleLayout(event, val.id, "numbering")
+                          }
+                        />
+                      </FormControl>
                     </FormGroup>
                   </Box>
                 </Box>
