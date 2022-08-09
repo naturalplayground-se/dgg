@@ -23,7 +23,7 @@ export default function Index() {
 
   const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
   const [selectedFields, setSelectedFields] = React.useState([]);
-  const [selectedFieldsNames, setSelectedFieldsNames] = React.useState([]);
+  // const [selectedFieldsNames, setSelectedFieldsNames] = React.useState([]);
 
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
@@ -240,36 +240,36 @@ export default function Index() {
     }
   };
 
-  const dggGeneratePositions = (i, direction) => {
-    const groupArray = [];
+  // const dggGeneratePositions = (i, direction) => {
+  //   const groupArray = [];
 
-    const allFields = selectedFields;
+  //   const allFields = selectedFields;
 
-    // for (let i = 0; i < row.layoutObject.groups; i++) {
-    if (direction === "column") {
-      Object.values(allFields).forEach((field) => {
-        field.name == row.layoutObject.master
-          ? ((field.y = yPositionsColumn(i, selectedFieldsNames[i - 1])),
-            (field.x = xPositionsColumn(i, selectedFieldsNames)))
-          : "rrr";
-      });
+  //   // for (let i = 0; i < row.layoutObject.groups; i++) {
+  //   if (direction === "column") {
+  //     Object.values(allFields).forEach((field) => {
+  //       field.name == row.layoutObject.master
+  //         ? ((field.y = yPositionsColumn(i, selectedFieldsNames[i - 1])),
+  //           (field.x = xPositionsColumn(i, selectedFieldsNames)))
+  //         : "rrr";
+  //     });
 
-      groupArray.push("test");
-    }
-    if (direction === "row") {
-      Object.values(selectedFields).forEach((field, index) => {
-        index === keyPosition
-          ? ((field.y = yPositionsRow(i, selectedFieldsNames)),
-            (field.x = xPositionsRow(i, selectedFieldsNames[i - 1])))
-          : "";
-      });
-    } else {
-      return "";
-    }
-    // }
+  //     groupArray.push("test");
+  //   }
+  //   if (direction === "row") {
+  //     Object.values(selectedFields).forEach((field, index) => {
+  //       index === keyPosition
+  //         ? ((field.y = yPositionsRow(i, selectedFieldsNames)),
+  //           (field.x = xPositionsRow(i, selectedFieldsNames[i - 1])))
+  //         : "";
+  //     });
+  //   } else {
+  //     return "";
+  //   }
+  //   // }
 
-    return groupArray;
-  };
+  //   return groupArray;
+  // };
 
   const generateShowHide = (i, names) => {
     const hideItems = names.length - i - 1;
@@ -435,9 +435,6 @@ export default function Index() {
           return { ...newField };
         });
 
-        console.log("fieldGroup");
-        console.log(fieldGroup);
-
         groupsObject.push(fieldGroup);
       }
     } else {
@@ -445,8 +442,29 @@ export default function Index() {
     }
 
     const allGroups = groupsObject.flat();
-    console.log("allGroups");
-    console.log(allGroups);
+    const selectedFieldNames = [];
+    selectedFields.map((field) => selectedFieldNames.push(field.name));
+
+    const newFields = [];
+    const firstSelectedField = [];
+
+    designGeneratorJson[0].fields.map((field, i) =>
+      selectedFieldNames.indexOf(field.name) === -1
+        ? newFields.push(field)
+        : firstSelectedField.push(i)
+    );
+
+    newFields.splice(firstSelectedField[0], 0, ...allGroups);
+
+    // setDesignGeneratorJson();
+
+    console.log("newFields");
+    console.log(newFields);
+
+    console.log("designGeneratorJson");
+    console.log(designGeneratorJson);
+    //Put the new fields into current JSON
+
     grabJason();
 
     return "";
@@ -485,33 +503,11 @@ export default function Index() {
     setField1(event.target.value);
   }
 
-  const handleFieldCount = (event) => {
-    /^[0-9]*$/.test(event.target.value)
-      ? setFieldCountError(false)
-      : setFieldCountError(true);
-
-    setFieldCount(event.target.value);
-  };
-
-  const handleDynamicPrefix = (event) => {
-    if (event.target.value.length > 1) {
-      setDynamicPrefix(event.target.value);
-    } else {
-      setDynamicPrefix(null);
-    }
-  };
-
-  const handleSelectFields = (fields, fieldsName) => {
+  const handleSelectFields = (fields) => {
     setSelectedFields(fields);
-    setSelectedFieldsNames(fieldsName);
   };
 
   const handleAddRows = (event, length) => {
-    // const replaceStringObject = {
-    //   find: "",
-    //   replace: ""
-    // }
-
     const rowObject = {
       id: uuidv4(),
       type: "",
@@ -705,26 +701,6 @@ export default function Index() {
             }
           />
         </FormControl>
-        {jsonSuccess && (
-          <Box
-            sx={{
-              width: "100%",
-              pointerEvents: "none",
-              position: "absolute",
-              right: -78,
-              bottom: 105,
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <img
-              src={jason ? "/brandon2.png" : "/brandon1.png"}
-              width="145px"
-              height="145px"
-              alt=""
-            />
-          </Box>
-        )}
       </Box>
       {jsonSuccess && (
         <Box sx={{ position: "relative", width: "1000px" }}>
