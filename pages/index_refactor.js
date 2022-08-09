@@ -16,7 +16,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { v4 as uuidv4 } from "uuid";
 import SelectFields from "../components/form/selectFields";
 import Fab from "@mui/material/Fab";
-
+import { OutlinedInput } from "@mui/material";
 export default function Index() {
   const [type, setType] = React.useState("");
   const [typeArray, setTypeArray] = React.useState([]);
@@ -80,9 +80,9 @@ export default function Index() {
   const [grabJson, setGrabJson] = React.useState([]);
 
   const typeItems = [
-    { value: "replaceString", label: "Replace" },
+    // { value: "replaceString", label: "Replace" },
     { value: "repetition", label: "Repetition" },
-    { value: "showHide", label: "Generate Show/Hide" },
+    { value: "generateFontSizes", label: "Generate font sizes" },
   ];
 
   // React.useEffect(() => {}, [functionalityArray]);
@@ -323,6 +323,9 @@ export default function Index() {
   };
 
   const generateJSON = () => {
+    console.log("functionalityArray  in generate Json");
+    console.log(functionalityArray);
+
     let groupsObject = [];
 
     const layoutIndex = functionalityArray.findIndex((object) => {
@@ -334,6 +337,7 @@ export default function Index() {
     if (layoutIndex !== -1) {
       const layoutObject = functionalityArray[layoutIndex].layoutObject;
       const regex = new RegExp(`${layoutObject.prefix}`, "g");
+      const regexNumber = new RegExp(`${layoutObject.numbering}`, "g");
 
       //  Construct a mastername array
       for (let index = 0; index < layoutObject.groups; index++) {
@@ -349,47 +353,58 @@ export default function Index() {
       for (let index = 0; index < layoutObject.groups; index++) {
         const fieldGroup = layoutObject.selectedFields.map((obj, i) => {
           const newField = { ...obj };
-          newField.name = obj.name.replace(regex, `${alphabet[index]}_`);
 
-          if (obj.name === layoutObject.master) {
-            if (layoutObject.direction === "row") {
-              (newField.y = yPositionsRow(
+          //Transform field to string
+          const stringField = JSON.stringify(newField);
+          //Replace prefix
+          const prefixReplacementField = stringField.replace(
+            regex,
+            `${alphabet[index]}_`
+          );
+          //Replace numbering
+          const numberReplacementField = prefixReplacementField.replace(
+            regexNumber,
+            `${index + 1}`
+          );
+          //Transform field to Json
+          const jsonField = JSON.parse(numberReplacementField);
+
+          if (
+            layoutObject.direction === "row" &&
+            obj.name === layoutObject.master
+          ) {
+            (jsonField.y = yPositionsRow(
+              index,
+              layoutObject,
+              obj.y,
+              masterNames
+            )),
+              (jsonField.x = xPositionsRow(
                 index,
                 layoutObject,
-                obj.y,
+                obj.x,
                 masterNames
-              )),
-                (newField.x = xPositionsRow(
-                  index,
-                  layoutObject,
-                  obj.x,
-                  masterNames
-                ));
-            }
-            if (layoutObject.direction === "column") {
-              (newField.y = yPositionsColumn(
+              ));
+          }
+          if (
+            layoutObject.direction === "column" &&
+            obj.name === layoutObject.master
+          ) {
+            (jsonField.y = yPositionsColumn(
+              index,
+              layoutObject,
+              obj.y,
+              masterNames
+            )),
+              (jsonField.x = xPositionsColumn(
                 index,
                 layoutObject,
-                obj.y,
+                obj.x,
                 masterNames
-              )),
-                (newField.x = xPositionsColumn(
-                  index,
-                  layoutObject,
-                  obj.x,
-                  masterNames
-                ));
-            }
+              ));
           }
-          if (obj.name !== layoutObject.master) {
-            const stringField = JSON.stringify(newField);
-            const replacedField = stringField.replace(
-              regex,
-              `${alphabet[index]}_`
-            );
-            const jsonField = JSON.parse(replacedField);
-            newField = jsonField;
-          }
+
+          newField = jsonField;
 
           return { ...newField };
         });
@@ -429,13 +444,7 @@ export default function Index() {
 
     // grabJason();
 
-    console.log("grabJson");
-    console.log(grabJson[0].fields);
-
-    console.log("grabJson.x");
-    console.log(grabJson[0].fields[5].x);
-
-    return JSON.stringify(grabJson);
+    return JSON.stringify(newDesignGeneratorJson);
   };
 
   function IsJsonString(str) {
@@ -886,7 +895,9 @@ export default function Index() {
                     />
                   </Box>
                   <FormControl sx={{ width: "145px" }}>
-                    <InputLabel id="master">Master</InputLabel>
+                    <InputLabel size="normal" id="master">
+                      Master
+                    </InputLabel>
                     <Select
                       id="master"
                       value={val.layoutObject.master}
@@ -976,7 +987,7 @@ export default function Index() {
                             }
                           />
                         }
-                        label="Dynamic width - Space X"
+                        label="Space X from right side of Master element"
                       />
                       <FormControlLabel
                         disabled={val.layoutObject.spaceY !== "" ? false : true}
@@ -992,7 +1003,7 @@ export default function Index() {
                             }
                           />
                         }
-                        label="Dynamic height - Space Y"
+                        label="Space Y from bottom position of Master element"
                       />
                     </FormGroup>
                   </Box>

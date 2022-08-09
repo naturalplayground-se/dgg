@@ -73,7 +73,7 @@ export default function SelectFields({
   return (
     <div>
       <FormControl sx={{ width: "100%" }}>
-        <InputLabel id="demo-multiple-chip-label">Select Fields</InputLabel>
+        <InputLabel>Select Fields to group</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
