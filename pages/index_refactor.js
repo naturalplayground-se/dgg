@@ -22,8 +22,6 @@ export default function Index() {
   const [typeArray, setTypeArray] = React.useState([]);
 
   const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
-  const [selectedFields, setSelectedFields] = React.useState([]);
-  // const [selectedFieldsNames, setSelectedFieldsNames] = React.useState([]);
 
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
@@ -41,29 +39,20 @@ export default function Index() {
   const [keyPosition, setKeyPosition] = React.useState(null);
 
   //Replace
-  const [replaceType, setReplaceType] = React.useState("");
+  // const [replaceType, setReplaceType] = React.useState("");
 
-  const [replaceType1, setReplaceType1] = React.useState([]);
-  const [replaceFind, setReplaceFind] = React.useState(null);
+  // const [replaceType1, setReplaceType1] = React.useState([]);
+  // const [replaceFind, setReplaceFind] = React.useState(null);
 
-  const [findString, setFindString] = React.useState(null);
+  // const [findString, setFindString] = React.useState(null);
   const [alphabetical, setAlphabetical] = React.useState(null);
   const [numerical, setNumerical] = React.useState("");
 
-  const [xPos, setXPos] = React.useState(null);
-  const [yPos, setYPos] = React.useState(null);
-  const [distance, setDistance] = React.useState(null);
-  const [maxItems, setMaxItems] = React.useState(null);
-  const [spaceX, setspaceX] = React.useState(null);
-  const [spaceY, setspaceY] = React.useState(null);
   const [rows, setRows] = React.useState([]);
-  const [rowArray, setRowArray] = React.useState([]);
+  const [functionalityArray, setFunctionalityArray] = React.useState([]);
 
   const [hasPosition, setHasPosition] = React.useState(false);
   const [showHide, setShowHide] = React.useState(false);
-  // const [showHideNameArray, setShowHideNameArray] = React.useState([]);
-
-  // const [showHideOptions, setShowHideOptions] = React.useState({});
 
   const data = [
     {
@@ -87,7 +76,8 @@ export default function Index() {
   const [dynamicSpaceX, setDynamicSpaceX] = React.useState(false);
   const [dynamicSpaceY, setDynamicSpaceY] = React.useState(false);
 
-  const [jason, setJason] = React.useState(false);
+  // const [jason, setJason] = React.useState(false);
+  const [grabJson, setGrabJson] = React.useState([]);
 
   const typeItems = [
     { value: "replaceString", label: "Replace" },
@@ -95,18 +85,7 @@ export default function Index() {
     { value: "showHide", label: "Generate Show/Hide" },
   ];
 
-  // React.useEffect(() => {
-  //   typeArray.length === 0 ? setTypeArray([type]) : "";
-  // }, [type]);
-
-  React.useEffect(() => {
-    let timer1 = setTimeout(() => setJason(false), 4000);
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [jason]);
-
-  React.useEffect(() => {}, [rowArray]);
+  // React.useEffect(() => {}, [functionalityArray]);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -128,7 +107,9 @@ export default function Index() {
 
   React.useEffect(() => {
     if (typeArray.length > 0) {
-      const string1 = Object.values(rowArray).map((val) => val.type)[0];
+      const string1 = Object.values(functionalityArray).map(
+        (val) => val.type
+      )[0];
       setHasPosition(string1 === "repetition");
     } else {
       setHasPosition(false);
@@ -240,37 +221,6 @@ export default function Index() {
     }
   };
 
-  // const dggGeneratePositions = (i, direction) => {
-  //   const groupArray = [];
-
-  //   const allFields = selectedFields;
-
-  //   // for (let i = 0; i < row.layoutObject.groups; i++) {
-  //   if (direction === "column") {
-  //     Object.values(allFields).forEach((field) => {
-  //       field.name == row.layoutObject.master
-  //         ? ((field.y = yPositionsColumn(i, selectedFieldsNames[i - 1])),
-  //           (field.x = xPositionsColumn(i, selectedFieldsNames)))
-  //         : "rrr";
-  //     });
-
-  //     groupArray.push("test");
-  //   }
-  //   if (direction === "row") {
-  //     Object.values(selectedFields).forEach((field, index) => {
-  //       index === keyPosition
-  //         ? ((field.y = yPositionsRow(i, selectedFieldsNames)),
-  //           (field.x = xPositionsRow(i, selectedFieldsNames[i - 1])))
-  //         : "";
-  //     });
-  //   } else {
-  //     return "";
-  //   }
-  //   // }
-
-  //   return groupArray;
-  // };
-
   const generateShowHide = (i, names) => {
     const hideItems = names.length - i - 1;
     const last = i === names.length - 1;
@@ -337,7 +287,6 @@ export default function Index() {
 
   const xPositionsRow = (i, layoutObject, x, masterNames) => {
     const maxItems = parseInt(layoutObject.maxItems);
-    // const name = selectedFieldsNames[i];
     const name = masterNames[i - 1];
 
     if (
@@ -376,19 +325,19 @@ export default function Index() {
   const generateJSON = () => {
     let groupsObject = [];
 
-    const layoutIndex = rowArray.findIndex((object) => {
+    const layoutIndex = functionalityArray.findIndex((object) => {
       return object.type === "repetition";
     });
 
     const masterNames = [];
 
     if (layoutIndex !== -1) {
-      const layoutObject = rowArray[layoutIndex].layoutObject;
+      const layoutObject = functionalityArray[layoutIndex].layoutObject;
       const regex = new RegExp(`${layoutObject.prefix}`, "g");
 
       //  Construct a mastername array
       for (let index = 0; index < layoutObject.groups; index++) {
-        selectedFields.map((obj, i) => {
+        layoutObject.selectedFields.map((obj, i) => {
           if (obj.name === layoutObject.master) {
             masterNames.push(obj.name.replace(regex, `${alphabet[index]}_`));
           }
@@ -398,7 +347,7 @@ export default function Index() {
       // Loops ("Number of groups") and if the field has been selected as master, applies new positions.
 
       for (let index = 0; index < layoutObject.groups; index++) {
-        const fieldGroup = selectedFields.map((obj, i) => {
+        const fieldGroup = layoutObject.selectedFields.map((obj, i) => {
           const newField = { ...obj };
           newField.name = obj.name.replace(regex, `${alphabet[index]}_`);
 
@@ -432,6 +381,16 @@ export default function Index() {
                 ));
             }
           }
+          if (obj.name !== layoutObject.master) {
+            const stringField = JSON.stringify(newField);
+            const replacedField = stringField.replace(
+              regex,
+              `${alphabet[index]}_`
+            );
+            const jsonField = JSON.parse(replacedField);
+            newField = jsonField;
+          }
+
           return { ...newField };
         });
 
@@ -443,7 +402,9 @@ export default function Index() {
 
     const allGroups = groupsObject.flat();
     const selectedFieldNames = [];
-    selectedFields.map((field) => selectedFieldNames.push(field.name));
+    layoutObject.selectedFields.map((field) =>
+      selectedFieldNames.push(field.name)
+    );
 
     const newFields = [];
     const firstSelectedField = [];
@@ -456,18 +417,25 @@ export default function Index() {
 
     newFields.splice(firstSelectedField[0], 0, ...allGroups);
 
-    // setDesignGeneratorJson();
+    const newDesignGeneratorJson = designGeneratorJson.map((obj) => {
+      if (obj.fields) {
+        return { ...obj, fields: newFields };
+      }
 
-    console.log("newFields");
-    console.log(newFields);
+      return obj;
+    });
 
-    console.log("designGeneratorJson");
-    console.log(designGeneratorJson);
-    //Put the new fields into current JSON
+    setGrabJson(newDesignGeneratorJson);
 
-    grabJason();
+    // grabJason();
 
-    return "";
+    console.log("grabJson");
+    console.log(grabJson[0].fields);
+
+    console.log("grabJson.x");
+    console.log(grabJson[0].fields[5].x);
+
+    return JSON.stringify(grabJson);
   };
 
   function IsJsonString(str) {
@@ -503,8 +471,9 @@ export default function Index() {
     setField1(event.target.value);
   }
 
-  const handleSelectFields = (fields) => {
-    setSelectedFields(fields);
+  const handleSelectFields = (fields, id) => {
+    handleFunctionality(fields, id, "selectedFields");
+    // setSelectedFields(fields);
   };
 
   const handleAddRows = (event, length) => {
@@ -513,6 +482,7 @@ export default function Index() {
       type: "",
       replaceStringObject: { type: "", input1: "", input2: "" },
       layoutObject: {
+        selectedFields: {},
         groups: "",
         master: "",
         direction: "",
@@ -529,8 +499,8 @@ export default function Index() {
       showHideObject: { input1: "", input2: "", input3: "" },
     };
 
-    const oldArray = rowArray;
-    setRowArray([rowObject, ...oldArray]);
+    const oldArray = functionalityArray;
+    setFunctionalityArray([rowObject, ...oldArray]);
     setRows([...rows, length]);
   };
 
@@ -542,111 +512,116 @@ export default function Index() {
         ? elementsRef.current[i].current.id
         : "0";
 
-    if (rowArray.length > 0) {
-      rowArray.map((val, index) => {
+    if (functionalityArray.length > 0) {
+      functionalityArray.map((val, index) => {
         if (val.id === rowId) {
           // if (val.id === `row-${i + 1}`) {
-          const array = [...rowArray];
+          const array = [...functionalityArray];
           array.splice(index, 1);
-          setRowArray(array);
+          setFunctionalityArray(array);
         }
       });
     }
   };
 
   const handleUpdateRows = (event, id, cat) => {
-    const index = rowArray.findIndex((object) => {
+    const index = functionalityArray.findIndex((object) => {
       return object.id === id;
     });
 
-    let newArray = [...rowArray];
-    let thisObject = { ...rowArray[index] };
+    let newArray = [...functionalityArray];
+    let thisObject = { ...functionalityArray[index] };
 
     if (cat === "updateRow") {
       if (index !== -1) {
         newArray[index].type = event.target.value;
-        setRowArray(newArray);
+        setFunctionalityArray(newArray);
       } else {
         newArray[0].type = event.target.value;
-        setRowArray(newArray);
+        setFunctionalityArray(newArray);
       }
     }
     if (cat === "replaceString") {
       if (index !== -1) {
         newArray[index].replaceStringObject.type = event.target.value;
-        setRowArray(newArray);
+        setFunctionalityArray(newArray);
       } else {
         newArray[0].replaceStringObject.type = event.target.value;
-        setRowArray(newArray);
+        setFunctionalityArray(newArray);
       }
     }
   };
 
-  const grabJason = () => {
-    setJason(true);
-  };
+  // const grabJason = () => {
+  //   setJason(true);
+  // };
 
   const handleReplace = (event, id, type) => {
-    let newArray = [...rowArray];
+    let newArray = [...functionalityArray];
 
-    const index = rowArray.findIndex((object) => {
+    const index = functionalityArray.findIndex((object) => {
       return object.id === id;
     });
 
     if (type === "find") {
       newArray[index].replaceStringObject.input1 = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "replace") {
       newArray[index].replaceStringObject.input2 = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "alphabetical" || type === "numerical") {
       newArray[index].replaceStringObject.input1 = event.target.value;
       newArray[index].replaceStringObject.input2 = "";
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
   };
 
-  const handleLayout = (event, id, type) => {
-    let newArray = [...rowArray];
+  const handleFunctionality = (event, id, type) => {
+    let newArray = [...functionalityArray];
 
-    const index = rowArray.findIndex((object) => {
+    const index = functionalityArray.findIndex((object) => {
       return object.id === id;
     });
 
+    if (type === "selectedFields") {
+      newArray[index].layoutObject.selectedFields = event;
+      setFunctionalityArray(newArray);
+    }
+
     if (type === "groups") {
       newArray[index].layoutObject.groups = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
 
     if (type === "master") {
       newArray[index].layoutObject.master = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "direction") {
       newArray[index].layoutObject.direction = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "startX") {
       newArray[index].layoutObject.startX = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "startY") {
       newArray[index].layoutObject.startY = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "maxItems") {
       newArray[index].layoutObject.maxItems = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "spaceX") {
       newArray[index].layoutObject.spaceX = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "spaceY") {
       newArray[index].layoutObject.spaceY = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "dynamicWidthSpaceX") {
       if (newArray[index].layoutObject.dynamicWidthSpaceX) {
@@ -654,7 +629,7 @@ export default function Index() {
       } else {
         newArray[index].layoutObject.dynamicWidthSpaceX = true;
       }
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "dynamicHeightSpaceY") {
       if (newArray[index].layoutObject.dynamicHeightSpaceY) {
@@ -662,20 +637,20 @@ export default function Index() {
       } else {
         newArray[index].layoutObject.dynamicHeightSpaceY = true;
       }
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "numbering") {
       newArray[index].layoutObject.numbering = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
     if (type === "prefix") {
       newArray[index].layoutObject.prefix = event.target.value;
-      setRowArray(newArray);
+      setFunctionalityArray(newArray);
     }
   };
 
-  console.log("rowArray");
-  console.log(rowArray);
+  console.log("functionalityArray");
+  console.log(functionalityArray);
 
   return (
     <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>
@@ -702,7 +677,7 @@ export default function Index() {
           />
         </FormControl>
       </Box>
-      {jsonSuccess && (
+      {/* {jsonSuccess && (
         <Box sx={{ position: "relative", width: "1000px" }}>
           <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
             2. Select Fields
@@ -712,7 +687,7 @@ export default function Index() {
             designGeneratorJson={designGeneratorJson[0].fields}
           />
         </Box>
-      )}
+      )} */}
       <Box
         sx={{
           mt: 10,
@@ -723,7 +698,7 @@ export default function Index() {
         }}
       >
         <Typography variant="h4" component="p" gutterBottom sx={{ mb: 1 }}>
-          3. Add functionality to selected fields
+          Add functionality
         </Typography>
         <Box sx={{ "& > :not(style)": { m: 1 } }}>
           <Fab
@@ -736,8 +711,8 @@ export default function Index() {
         </Box>
       </Box>
 
-      {rowArray &&
-        rowArray.map((val, i) => {
+      {functionalityArray &&
+        functionalityArray.map((val, i) => {
           return (
             <Box
               key={i}
@@ -774,12 +749,12 @@ export default function Index() {
                 <InputLabel id="type">Category</InputLabel>
                 <Select
                   value={
-                    rowArray.length
-                      ? rowArray.length <= i
+                    functionalityArray.length
+                      ? functionalityArray.length <= i
                         ? type !== null
                           ? ""
                           : ""
-                        : rowArray[i].type
+                        : functionalityArray[i].type
                       : type !== null
                       ? ""
                       : ""
@@ -896,6 +871,20 @@ export default function Index() {
                     width: "650px",
                   }}
                 >
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      pb: "2rem",
+                      pr: "10px",
+                    }}
+                  >
+                    <SelectFields
+                      id={val.id}
+                      handleSelectFields={handleSelectFields}
+                      designGeneratorJson={designGeneratorJson[0].fields}
+                    />
+                  </Box>
                   <FormControl sx={{ width: "145px" }}>
                     <InputLabel id="master">Master</InputLabel>
                     <Select
@@ -903,14 +892,16 @@ export default function Index() {
                       value={val.layoutObject.master}
                       label="Type"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "master")
+                        handleFunctionality(event, val.id, "master")
                       }
                     >
-                      {selectedFields.map((a, i) => (
-                        <MenuItem key={i} value={a.name} data-id={i}>
-                          {a.name}
-                        </MenuItem>
-                      ))}
+                      {val.layoutObject.selectedFields.length > 0
+                        ? val.layoutObject.selectedFields.map((a, i) => (
+                            <MenuItem key={i} value={a.name} data-id={i}>
+                              {a.name}
+                            </MenuItem>
+                          ))
+                        : ""}
                     </Select>
                   </FormControl>
                   <FormControl sx={{ width: "145px" }}>
@@ -919,7 +910,7 @@ export default function Index() {
                       label="Number of groups"
                       variant="outlined"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "groups")
+                        handleFunctionality(event, val.id, "groups")
                       }
                     />
                   </FormControl>
@@ -931,7 +922,7 @@ export default function Index() {
                       value={val.layoutObject.direction}
                       label="Type"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "direction")
+                        handleFunctionality(event, val.id, "direction")
                       }
                     >
                       <MenuItem value={"column"}>Column</MenuItem>
@@ -944,7 +935,7 @@ export default function Index() {
                       label={`Max groups in ${val.layoutObject.direction}`}
                       variant="outlined"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "maxItems")
+                        handleFunctionality(event, val.id, "maxItems")
                       }
                     />
                   </FormControl>
@@ -955,7 +946,7 @@ export default function Index() {
                       label="Space X"
                       variant="outlined"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "spaceX")
+                        handleFunctionality(event, val.id, "spaceX")
                       }
                     />
                   </FormControl>
@@ -965,7 +956,7 @@ export default function Index() {
                       label="Space Y"
                       variant="outlined"
                       onChange={(event) =>
-                        handleLayout(event, val.id, "spaceY")
+                        handleFunctionality(event, val.id, "spaceY")
                       }
                     />
                   </FormControl>
@@ -977,7 +968,11 @@ export default function Index() {
                           <Checkbox
                             checked={val.layoutObject.dynamicWidthSpaceX}
                             onChange={(event) =>
-                              handleLayout(event, val.id, "dynamicWidthSpaceX")
+                              handleFunctionality(
+                                event,
+                                val.id,
+                                "dynamicWidthSpaceX"
+                              )
                             }
                           />
                         }
@@ -989,7 +984,11 @@ export default function Index() {
                           <Checkbox
                             checked={val.layoutObject.dynamicHeightSpaceY}
                             onChange={(event) =>
-                              handleLayout(event, val.id, "dynamicHeightSpaceY")
+                              handleFunctionality(
+                                event,
+                                val.id,
+                                "dynamicHeightSpaceY"
+                              )
                             }
                           />
                         }
@@ -1005,7 +1004,7 @@ export default function Index() {
                           label="Prefix replacement"
                           variant="outlined"
                           onChange={(event) =>
-                            handleLayout(event, val.id, "prefix")
+                            handleFunctionality(event, val.id, "prefix")
                           }
                         />
                       </FormControl>
@@ -1015,7 +1014,7 @@ export default function Index() {
                           label="Number replacement"
                           variant="outlined"
                           onChange={(event) =>
-                            handleLayout(event, val.id, "numbering")
+                            handleFunctionality(event, val.id, "numbering")
                           }
                         />
                       </FormControl>
@@ -1109,7 +1108,7 @@ export default function Index() {
         )} */}
 
         <Button
-          disabled={jsonSuccess && rowArray.length > 0 ? false : true}
+          disabled={jsonSuccess && functionalityArray.length > 0 ? false : true}
           sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
             navigator.clipboard.writeText(generateJSON());

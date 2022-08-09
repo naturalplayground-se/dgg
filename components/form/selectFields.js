@@ -45,6 +45,7 @@ function getStyles(name, fieldName, theme) {
 }
 
 export default function SelectFields({
+  id,
   handleSelectFields,
   designGeneratorJson,
 }) {
@@ -65,14 +66,14 @@ export default function SelectFields({
         selectedFieldNamesArray.push(field.name);
       }
     });
-    handleSelectFields(selectedFieldArray, selectedFieldNamesArray);
+    handleSelectFields(selectedFieldArray, id);
     setFieldName(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
     <div>
-      <FormControl sx={{ width: 600 }}>
-        <InputLabel id="demo-multiple-chip-label">Fields</InputLabel>
+      <FormControl sx={{ width: "100%" }}>
+        <InputLabel id="demo-multiple-chip-label">Select Fields</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
