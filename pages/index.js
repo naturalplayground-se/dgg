@@ -13,10 +13,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
+import { v4 as uuidv4 } from "uuid";
+import SelectFields from "../components/form/selectFields";
+import Fab from "@mui/material/Fab";
+import { OutlinedInput } from "@mui/material";
 export default function Index() {
   const [type, setType] = React.useState("");
   const [typeArray, setTypeArray] = React.useState([]);
+
+  const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
+
   const [field1, setField1] = React.useState("");
   const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
@@ -33,50 +39,53 @@ export default function Index() {
   const [keyPosition, setKeyPosition] = React.useState(null);
 
   //Replace
-  const [replaceType, setReplaceType] = React.useState("");
-  const [replaceFind, setReplaceFind] = React.useState(null);
+  // const [replaceType, setReplaceType] = React.useState("");
 
-  const [findString, setFindString] = React.useState(null);
-  const [alphabetical, setAlpabetical] = React.useState(null);
+  // const [replaceType1, setReplaceType1] = React.useState([]);
+  // const [replaceFind, setReplaceFind] = React.useState(null);
+
+  // const [findString, setFindString] = React.useState(null);
+  const [alphabetical, setAlphabetical] = React.useState(null);
   const [numerical, setNumerical] = React.useState("");
 
-  const [xPos, setXPos] = React.useState(null);
-  const [yPos, setYPos] = React.useState(null);
-  const [distance, setDistance] = React.useState(null);
-  const [maxItems, setMaxItems] = React.useState(null);
-  const [spaceX, setspaceX] = React.useState(null);
-  const [spaceY, setspaceY] = React.useState(null);
   const [rows, setRows] = React.useState([]);
-  const rowRefs = React.useRef(new Array());
+  const [functionalityArray, setFunctionalityArray] = React.useState([]);
+
   const [hasPosition, setHasPosition] = React.useState(false);
   const [showHide, setShowHide] = React.useState(false);
-  // const [showHideNameArray, setShowHideNameArray] = React.useState([]);
 
-  // const [showHideOptions, setShowHideOptions] = React.useState({});
+  const data = [
+    {
+      text: "one",
+    },
+    {
+      text: "two",
+    },
+    {
+      text: "three",
+    },
+    {
+      text: "four",
+    },
+  ];
+
+  const elementsRef = React.useRef(data.map(() => React.createRef()));
 
   const [showHideField, setShowHideField] = React.useState([]);
 
   const [dynamicSpaceX, setDynamicSpaceX] = React.useState(false);
   const [dynamicSpaceY, setDynamicSpaceY] = React.useState(false);
 
-  const [jason, setJason] = React.useState(false);
+  // const [jason, setJason] = React.useState(false);
+  const [grabJson, setGrabJson] = React.useState([]);
 
   const typeItems = [
-    { value: "replace", label: "Replace string" },
-    { value: "position", label: "Positioning" },
-    { value: "showHide", label: "Generate Show/Hide" },
+    // { value: "replaceString", label: "Replace" },
+    { value: "repetition", label: "Repetition" },
+    { value: "generateFontSizes", label: "Generate font sizes" },
   ];
 
-  // React.useEffect(() => {
-  //   typeArray.length === 0 ? setTypeArray([type]) : "";
-  // }, [type]);
-
-  React.useEffect(() => {
-    let timer1 = setTimeout(() => setJason(false), 4000);
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [jason]);
+  // React.useEffect(() => {}, [functionalityArray]);
 
   React.useEffect(() => {
     if (jsonSuccess) {
@@ -98,14 +107,16 @@ export default function Index() {
 
   React.useEffect(() => {
     if (typeArray.length > 0) {
-      const string1 = Object.values(typeArray).map((val) => val.name)[0];
-      setHasPosition(string1 === "position");
+      const string1 = Object.values(functionalityArray).map(
+        (val) => val.type
+      )[0];
+      setHasPosition(string1 === "repetition");
     } else {
       setHasPosition(false);
     }
   }, [typeArray, rows]);
 
-  const prefix = [
+  const alphabet = [
     "A",
     "B",
     "C",
@@ -143,26 +154,30 @@ export default function Index() {
     "ZJ",
   ];
 
+  const prefixer = (index, name, prefix1) => {
+    if (prefix1 !== "") {
+      const newName = name.replace(prefix1, `${alphabet[index]}_`);
+
+      return newName;
+    } else {
+      return name;
+    }
+  };
+
   const arrayNames = [];
   const arrayNames2 = [];
-  let newOptionArray = [];
 
   const dynamicTextfield = (i) => {
     if (textField !== null) {
       const regex = new RegExp(dynamicPrefix, "g");
       const replaced = textField.replace(regex, `${prefix[i]}_`);
 
-      // const alphabeticalRegex = alphabetical
-      //   ? new RegExp(alphabetical, "g")
-      //   : "";
-      // const alphabeticalFilter = alphabetical
-      //   ? textField.replace(alphabeticalRegex, `${[i + 1]}`)
-      //   : textField;
-
-      // const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      // const numericalFilter = numerical
-      //   ? alphabeticalFilter.replace(numericalRegex, `${[i + 1]}`)
-      //   : alphabeticalFilter;
+      const alphabeticalRegex = alphabetical
+        ? new RegExp(alphabetical, "g")
+        : "";
+      const alphabeticalFilter = alphabetical
+        ? textField.replace(alphabeticalRegex, `${prefix[i]}`)
+        : textField;
 
       const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
       const replacedSecond = numerical
@@ -201,48 +216,6 @@ export default function Index() {
     }
   };
 
-  const dynamicTextfield2 = (i) => {
-    if (textField !== null) {
-      const regex = new RegExp(dynamicPrefix, "g");
-      const replaced = textField.replace(regex, `${prefix[i]}_`);
-
-      const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      const replacedSecond = numerical
-        ? replaced.replace(numericalRegex, `${[i + 1]}`)
-        : replaced;
-
-      const parsed = JSON.parse(`[${replacedSecond}]`);
-
-      Object.values(parsed).forEach((field, index) => {
-        index === keyPosition ? arrayNames2.push(field.name) : "";
-      });
-
-      if (masterPosition !== null) {
-        if (layout === "column") {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsColumn(i, arrayNames2[i - 1])),
-                (field.x = xPositionsColumn(i, arrayNames2)))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        } else {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsRow(i, arrayNames2)),
-                (field.x = xPositionsRow(i, arrayNames2[i - 1])))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        }
-      }
-
-      return parsed;
-    } else {
-      return "";
-    }
-  };
-
   const generateShowHide = (i, names) => {
     const hideItems = names.length - i - 1;
     const last = i === names.length - 1;
@@ -252,28 +225,44 @@ export default function Index() {
 
     const showArray = [];
     showNames.slice(0, i + 1).map((val) => {
-      showArray.push(`${val},`);
+      // const str = '"' + val + '"';
+      showArray.push(val);
     });
 
     const hideArray = [];
     hideNames.slice(-hideItems).map((val) => {
-      hideArray.push(`${val},`);
+      // var str = "" + val;
+      hideArray.push(val);
     });
 
     const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
     const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
 
+    // const dropdownObject = {
+    //   title: `${i + 1}`,
+    //   selected: i === 0 ? true : false,
+    //   show: [showArrayStripped],
+    //   hide: last ? ["fieldX"] : [hideArrayStripped],
+    // };
+
+    const showArrayFlat = showArray.flat();
+    const hideArrayFlat = hideArray.flat();
+
     const dropdownObject = {
       title: `${i + 1}`,
       selected: i === 0 ? true : false,
-      show: [showArrayStripped],
-      hide: last ? ["fieldX"] : [hideArrayStripped],
+      show: showArrayFlat,
+      hide: last ? ["fieldX"] : hideArrayFlat,
     };
 
     return dropdownObject;
   };
 
-  const yPositionsColumn = (i, name) => {
+  const yPositionsColumn = (i, layoutObject, y, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - 1];
+    // const name = masterNames[i - maxItems];
+
     if (
       i === 0 ||
       i === maxItems ||
@@ -282,128 +271,244 @@ export default function Index() {
       i === maxItems * 4 ||
       i === maxItems * 5
     ) {
-      return yPos;
+      return y;
     } else
-      return `${name}.${dynamicSpaceY ? "bottom" : "top"} + ${
-        spaceY ? spaceY : 200
+      return `${name}.${
+        layoutObject.dynamicHeightSpaceY ? "bottom" : "top"
+      } + ${layoutObject.spaceY ? layoutObject.spaceY : 200}`;
+  };
+
+  const xPositionsColumn = (i, layoutObject, x, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - maxItems];
+
+    if (i <= maxItems - 1) {
+      return x;
+    }
+    if (i > maxItems - 1) {
+      return `${name}.${layoutObject.dynamicWidthSpaceX ? "right" : "left"} + ${
+        layoutObject.spaceX ? layoutObject.spaceX : 200
       }`;
-  };
-
-  const xPositionsColumn = (i, arrayNames) => {
-    const newMaxItems = maxItems ? maxItems : 200;
-
-    if (xPos !== null) {
-      if (i <= newMaxItems - 1) {
-        return xPos;
-      }
-      if (i > newMaxItems - 1) {
-        return `${arrayNames[i - newMaxItems]}.${
-          dynamicSpaceX ? "right" : "left"
-        } + ${spaceX ? spaceX : 200}`;
-      }
     }
   };
 
-  const xPositionsRow = (i, name) => {
-    if (xPos !== null) {
-      if (
-        i === 0 ||
-        i === maxItems ||
-        i === maxItems * 2 ||
-        i === maxItems * 3 ||
-        i === maxItems * 4 ||
-        i === maxItems * 5 ||
-        i === maxItems * 6 ||
-        i === maxItems * 7 ||
-        i === maxItems * 8
-      ) {
-        return xPos;
-      } else {
-        return `${name}.${dynamicSpaceX ? "right" : "left"} + ${
-          spaceX ? spaceX : 200
-        }`;
+  const xPositionsRow = (i, layoutObject, x, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - 1];
+
+    if (
+      i === 0 ||
+      i === maxItems ||
+      i === maxItems * 2 ||
+      i === maxItems * 3 ||
+      i === maxItems * 4 ||
+      i === maxItems * 5 ||
+      i === maxItems * 6 ||
+      i === maxItems * 7 ||
+      i === maxItems * 8
+    ) {
+      return x;
+    } else {
+      return `${name}.${layoutObject.dynamicWidthSpaceX ? "right" : "left"} + ${
+        layoutObject.spaceX ? layoutObject.spaceX : 200
+      }`;
+    }
+  };
+
+  const yPositionsRow = (i, layoutObject, y, masterNames) => {
+    const maxItems = parseInt(layoutObject.maxItems);
+    const name = masterNames[i - maxItems];
+
+    if (i <= maxItems - 1) {
+      return y;
+    }
+    if (i > maxItems - 1) {
+      return `${name}.${
+        layoutObject.dynamicHeightSpaceY ? "bottom" : "top"
+      } + ${layoutObject.spaceY ? layoutObject.spaceY : 200}`;
+    }
+  };
+
+  const generateJSON = () => {
+    let groupsObject = [];
+
+    const layoutIndex = functionalityArray.findIndex((object) => {
+      return object.type === "repetition";
+    });
+
+    const masterNames = [];
+
+    if (layoutIndex !== -1) {
+      const layoutObject = functionalityArray[layoutIndex].layoutObject;
+      const regex = new RegExp(`${layoutObject.prefix}`, "g");
+      const regexNumber = new RegExp(`${layoutObject.numbering}`, "g");
+
+      //  Construct a mastername array
+      for (let index = 0; index < layoutObject.groups; index++) {
+        layoutObject.selectedFields.map((obj, i) => {
+          if (obj.name === layoutObject.master) {
+            masterNames.push(obj.name.replace(regex, `${alphabet[index]}_`));
+          }
+        });
+      }
+
+      // Loops ("Number of groups") and if the field has been selected as master, applies new positions.
+
+      for (let index = 0; index < layoutObject.groups; index++) {
+        const fieldGroup = layoutObject.selectedFields.map((obj, i) => {
+          const newField = { ...obj };
+
+          //Transform field to string
+          const stringField = JSON.stringify(newField);
+          //Replace prefix
+          const prefixReplacementField =
+            layoutObject.prefix !== ""
+              ? stringField.replace(regex, `${alphabet[index]}_`)
+              : stringField;
+
+          //Replace numbering
+          const numberReplacementField =
+            layoutObject.numbering !== ""
+              ? prefixReplacementField.replace(regexNumber, `${index + 1}`)
+              : prefixReplacementField;
+
+          //Transform field to Json again
+          const jsonField = JSON.parse(numberReplacementField);
+
+          //If the field are a master-field, adjust postioning
+          if (
+            layoutObject.direction === "row" &&
+            obj.name === layoutObject.master
+          ) {
+            (jsonField.y = yPositionsRow(
+              index,
+              layoutObject,
+              obj.y,
+              masterNames
+            )),
+              (jsonField.x = xPositionsRow(
+                index,
+                layoutObject,
+                obj.x,
+                masterNames
+              ));
+          }
+          if (
+            layoutObject.direction === "column" &&
+            obj.name === layoutObject.master
+          ) {
+            (jsonField.y = yPositionsColumn(
+              index,
+              layoutObject,
+              obj.y,
+              masterNames
+            )),
+              (jsonField.x = xPositionsColumn(
+                index,
+                layoutObject,
+                obj.x,
+                masterNames
+              ));
+          }
+
+          newField = jsonField;
+          return { ...newField };
+        });
+
+        groupsObject.push(fieldGroup);
       }
     } else {
-      return 666;
-    }
-  };
-
-  const yPositionsRow = (i, arrayNames) => {
-    const newMaxItems = maxItems ? maxItems : 200;
-    if (yPos !== null) {
-      if (i <= newMaxItems - 1) {
-        return yPos;
-      }
-      if (i > newMaxItems - 1) {
-        return `${arrayNames[i - newMaxItems]}.${
-          dynamicSpaceY ? "bottom" : "top"
-        } + ${spaceY ? spaceY : 200}`;
-      }
-    } else {
-      return 666;
-    }
-  };
-
-  const generateClusters = () => {
-    let clusters = [];
-    let clusterObject = [];
-
-    for (let i = 0; i < fieldCount; i++) {
-      const obj = dynamicTextfield(i);
-      const stringObject = `${JSON.stringify(obj).substring(1).slice(0, -1)},`;
-
-      clusters.push(stringObject);
-      clusterObject.push(obj);
+      return "";
     }
 
-    const clusterNames = [];
-
-    clusterObject.map((val, i) =>
-      clusterNames.push(val.map((value) => `"${value.name}"`))
+    const allGroups = groupsObject.flat();
+    const selectedFieldNames = [];
+    layoutObject.selectedFields.map((field) =>
+      selectedFieldNames.push(field.name)
     );
 
-    const clusterOptions = [];
-    for (let i = 0; i < fieldCount; i++) {
-      clusterOptions.push(generateShowHide(i, clusterNames));
+    const newFields = [];
+    const firstSelectedField = [];
+
+    designGeneratorJson[0].fields.map((field, i) =>
+      selectedFieldNames.indexOf(field.name) === -1
+        ? newFields.push(field)
+        : firstSelectedField.push(i)
+    );
+
+    // Dropdown - number of groups visible
+
+    const allFieldNames = [];
+    groupsObject.map((val, i) =>
+      allFieldNames.push(val.map((value) => `${value.name}`))
+    );
+
+    const groupsVisibilityArray = [];
+    for (let i = 0; i < allFieldNames.length; i++) {
+      groupsVisibilityArray.push(generateShowHide(i, allFieldNames));
     }
 
-    console.log("clusterOptions");
-    console.log(clusterOptions);
+    const groupsVisibilityArrayString = JSON.stringify(
+      groupsVisibilityArray
+    ).replace(/\\/g, "");
 
-    const showHideObject = {
+    // const groupsVisibilityArrayJson = JSON.parse(groupsVisibilityArray).replace(
+    //   /\\/g,
+    //   ""
+    // );
+
+    const groupsVisibilityField = {
       name: "select",
-      title: "Antal",
+      title: "Välj antal",
       type: "select",
-      options: clusterOptions,
+      options: groupsVisibilityArray,
       editui: "selectlist",
       editable: true,
     };
 
-    const showHideObjectString = JSON.stringify(showHideObject).replace(
-      /\\/g,
-      ""
+    console.log("XXX---groupsVisibilityField");
+    console.log(groupsVisibilityField);
+
+    // console.log("groupsVisibilityField");
+    // console.log(groupsVisibilityField);
+
+    newFields.splice(
+      firstSelectedField[0],
+      0,
+      groupsVisibilityField,
+      ...allGroups
     );
 
-    setShowHideField(showHideObjectString);
-    const mergedWithShowHide = [showHideField].concat(clusters.join(""));
+    const newDesignGeneratorJson = designGeneratorJson.map((obj) => {
+      if (obj.fields) {
+        return { ...obj, fields: newFields };
+      }
 
-    const merged = clusters.join("");
-    grabJason();
+      return obj;
+    });
 
-    // return showHide ? mergedWithShowHide : merged;
-    return merged;
+    console.log("newDesignGeneratorJson");
+    console.log(newDesignGeneratorJson);
+
+    setGrabJson(newDesignGeneratorJson);
+
+    // grabJason();
+    return JSON.stringify(newDesignGeneratorJson);
+    // return JSON.stringify(newDesignGeneratorJson).replace(/\\/g, "");
   };
 
   function IsJsonString(str) {
-    const withBrackets1 = `[${str}]`;
-
     try {
-      JSON.parse(withBrackets1);
+      JSON.parse(str);
     } catch (e) {
       return false;
     }
 
-    return true;
+    const designGeneratorJson = JSON.parse(str)[0].pagenr === 1;
+
+    designGeneratorJson ? setDesignGeneratorJson(JSON.parse(str)) : "";
+
+    return designGeneratorJson ? true : false;
   }
 
   async function handleField(event) {
@@ -417,7 +522,6 @@ export default function Index() {
       } else {
         setTextField(null);
         setTextAreaError(true);
-
         setJsonSuccess(false);
       }
     } else {
@@ -426,123 +530,202 @@ export default function Index() {
     setField1(event.target.value);
   }
 
-  const handleFieldCount = (event) => {
-    /^[0-9]*$/.test(event.target.value)
-      ? setFieldCountError(false)
-      : setFieldCountError(true);
-
-    setFieldCount(event.target.value);
-  };
-
-  const handleDynamicPrefix = (event) => {
-    if (event.target.value.length > 1) {
-      setDynamicPrefix(event.target.value);
-    } else {
-      setDynamicPrefix(null);
-    }
-  };
-
-  const handleType = (event, i) => {
-    let selectedTypes = [...typeArray];
-    let thisType = { ...typeArray[i] };
-    thisType.name = `${event.target.value}`;
-    selectedTypes[i] = thisType;
-    setTypeArray(selectedTypes);
-
-    setType(event.target.value);
-  };
-
-  const handleMasterPosition = (event) => {
-    setMasterPosition(event.target.value);
-    // setMasterPositionId(event.target.value[0].index);
-  };
-
-  const handleLayout = (event) => {
-    setLayout(event.target.value);
-  };
-
-  const handleXPos = (event) => {
-    setXPos(parseInt(event.target.value));
-  };
-
-  const handleYPos = (event) => {
-    setYPos(parseInt(event.target.value));
-  };
-
-  const handleMaxItems = (event) => {
-    setMaxItems(parseInt(event.target.value));
-  };
-
-  const handlespaceX = (event) => {
-    setspaceX(parseInt(event.target.value));
-  };
-  const handlespaceY = (event) => {
-    setspaceY(parseInt(event.target.value));
-  };
-
-  const handleDynamicSpaceX = (event) => {
-    setDynamicSpaceX(!dynamicSpaceX);
-  };
-
-  const handleDynamicSpaceY = (event) => {
-    setDynamicSpaceY(!dynamicSpaceY);
+  const handleSelectFields = (fields, id) => {
+    handleFunctionality(fields, id, "selectedFields");
+    // setSelectedFields(fields);
   };
 
   const handleAddRows = (event, length) => {
+    const rowObject = {
+      id: uuidv4(),
+      type: "",
+      replaceStringObject: { type: "", input1: "", input2: "" },
+      layoutObject: {
+        selectedFields: {},
+        groups: "",
+        master: "",
+        direction: "",
+        startX: "",
+        startY: "",
+        maxItems: "",
+        spaceX: "",
+        spaceY: "",
+        dynamicWidthSpaceX: false,
+        dynamicHeightSpaceY: false,
+        groupsVisibility: false,
+        prefix: "",
+        numbering: "",
+      },
+      showHideObject: { input1: "", input2: "", input3: "" },
+    };
+
+    const oldArray = functionalityArray;
+    setFunctionalityArray([rowObject, ...oldArray]);
     setRows([...rows, length]);
-    // if (typeArray.length === 0) {
-    //   setTypeArray([`${type}`]);
-    // }
   };
 
   const handleRemoveRow = (event, i) => {
-    const array = [...rows];
-    array.splice(i, 1);
-    setRows(array);
-    const newTypearray = [...typeArray];
-    newTypearray.splice(i, 1);
-    setTypeArray(newTypearray);
+    const getRow = 8;
+
+    const rowId =
+      elementsRef.current[0].current !== null
+        ? elementsRef.current[i].current.id
+        : "0";
+
+    if (functionalityArray.length > 0) {
+      functionalityArray.map((val, index) => {
+        if (val.id === rowId) {
+          // if (val.id === `row-${i + 1}`) {
+          const array = [...functionalityArray];
+          array.splice(index, 1);
+          setFunctionalityArray(array);
+        }
+      });
+    }
   };
 
-  const grabJason = () => {
-    setJason(true);
-  };
-  const handleReplaceType = (event) => {
-    setReplaceType(event.target.value);
+  const handleUpdateRows = (event, id, cat) => {
+    const index = functionalityArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    let newArray = [...functionalityArray];
+    let thisObject = { ...functionalityArray[index] };
+
+    if (cat === "updateRow") {
+      if (index !== -1) {
+        newArray[index].type = event.target.value;
+        setFunctionalityArray(newArray);
+      } else {
+        newArray[0].type = event.target.value;
+        setFunctionalityArray(newArray);
+      }
+    }
+    if (cat === "replaceString") {
+      if (index !== -1) {
+        newArray[index].replaceStringObject.type = event.target.value;
+        setFunctionalityArray(newArray);
+      } else {
+        newArray[0].replaceStringObject.type = event.target.value;
+        setFunctionalityArray(newArray);
+      }
+    }
   };
 
-  const handleReplaceFind = (event) => {
-    setReplaceFind(event.target.value);
-    if (replaceType === "string") {
-      setFindString(event.target.value);
-      setAlpabetical(null);
-      setNumerical(null);
+  const handleReplace = (event, id, type) => {
+    let newArray = [...functionalityArray];
+
+    const index = functionalityArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    if (type === "find") {
+      newArray[index].replaceStringObject.input1 = event.target.value;
+      setFunctionalityArray(newArray);
     }
-    if (replaceType === "alphabetical") {
-      setAlpabetical(event.target.value);
-      setFindString(null);
-      setNumerical(null);
+    if (type === "replace") {
+      newArray[index].replaceStringObject.input2 = event.target.value;
+      setFunctionalityArray(newArray);
     }
-    if (replaceType === "numerical") {
-      setNumerical(event.target.value);
-      setAlpabetical(null);
-      setFindString(null);
-    } else {
-      return "";
+    if (type === "alphabetical" || type === "numerical") {
+      newArray[index].replaceStringObject.input1 = event.target.value;
+      newArray[index].replaceStringObject.input2 = "";
+      setFunctionalityArray(newArray);
     }
   };
+
+  const handleFunctionality = (event, id, type) => {
+    let newArray = [...functionalityArray];
+
+    const index = functionalityArray.findIndex((object) => {
+      return object.id === id;
+    });
+
+    if (type === "groupsVisibility") {
+      newArray[index].layoutObject.groupsVisibility
+        ? (newArray[index].layoutObject.groupsVisibility = false)
+        : (newArray[index].layoutObject.groupsVisibility = true);
+      setFunctionalityArray(newArray);
+    }
+
+    if (type === "selectedFields") {
+      newArray[index].layoutObject.selectedFields = event;
+      setFunctionalityArray(newArray);
+    }
+
+    if (type === "groups") {
+      newArray[index].layoutObject.groups = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+
+    if (type === "master") {
+      newArray[index].layoutObject.master = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "direction") {
+      newArray[index].layoutObject.direction = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "startX") {
+      newArray[index].layoutObject.startX = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "startY") {
+      newArray[index].layoutObject.startY = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "maxItems") {
+      newArray[index].layoutObject.maxItems = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "spaceX") {
+      newArray[index].layoutObject.spaceX = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "spaceY") {
+      newArray[index].layoutObject.spaceY = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "dynamicWidthSpaceX") {
+      if (newArray[index].layoutObject.dynamicWidthSpaceX) {
+        newArray[index].layoutObject.dynamicWidthSpaceX = false;
+      } else {
+        newArray[index].layoutObject.dynamicWidthSpaceX = true;
+      }
+      setFunctionalityArray(newArray);
+    }
+    if (type === "dynamicHeightSpaceY") {
+      if (newArray[index].layoutObject.dynamicHeightSpaceY) {
+        newArray[index].layoutObject.dynamicHeightSpaceY = false;
+      } else {
+        newArray[index].layoutObject.dynamicHeightSpaceY = true;
+      }
+      setFunctionalityArray(newArray);
+    }
+    if (type === "numbering") {
+      newArray[index].layoutObject.numbering = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+    if (type === "prefix") {
+      newArray[index].layoutObject.prefix = event.target.value;
+      setFunctionalityArray(newArray);
+    }
+  };
+
+  console.log("functionalityArray");
+  console.log(functionalityArray);
 
   return (
-    <Box sx={{ p: 10, my: 4, width: "300px", color: "black" }}>
-      <Typography variant="h3" component="p" gutterBottom sx={{ mb: 10 }}>
-        Designgenerator Generator [WIP]
+    <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>
+      <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
+        1. Paste Designgenerator JSON
       </Typography>
       <Box sx={{ position: "relative", width: "1000px" }}>
         <FormControl sx={{ width: "100%", mb: 10 }}>
           <TextField
             onChange={handleField}
             fullWidth
-            label="Paste JSON fields from Designgeneratorn (no square brackets)."
+            label="Paste JSON here"
             multiline
             rows={12}
             error={textAreaError}
@@ -556,49 +739,48 @@ export default function Index() {
             }
           />
         </FormControl>
-        {jsonSuccess && (
-          <Box
-            sx={{
-              width: "100%",
-              pointerEvents: "none",
-              position: "absolute",
-              right: -78,
-              bottom: 105,
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <img
-              src={jason ? "/brandon2.png" : "/brandon1.png"}
-              width="200px"
-              height="200px"
-              alt=""
-            />
-          </Box>
-        )}
       </Box>
-
+      {/* {jsonSuccess && (
+        <Box sx={{ position: "relative", width: "1000px" }}>
+          <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
+            2. Select Fields
+          </Typography>
+          <SelectFields
+            handleSelectFields={handleSelectFields}
+            designGeneratorJson={designGeneratorJson[0].fields}
+          />
+        </Box>
+      )} */}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-end",
+          mt: 10,
+          mb: 10,
           width: "1000px",
-          mb: 4,
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        <IconButton
-          aria-label="Add row"
-          onClick={(event) => handleAddRows(event, rows.length)}
-        >
-          <AddIcon fontSize="large" />
-        </IconButton>
+        <Typography variant="h4" component="p" gutterBottom sx={{ mb: 1 }}>
+          Add functionality
+        </Typography>
+        <Box sx={{ "& > :not(style)": { m: 1 } }}>
+          <Fab
+            color="success"
+            aria-label="add"
+            onClick={(event) => handleAddRows(event, rows.length)}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       </Box>
 
-      {rows &&
-        rows.map((val, i) => {
+      {functionalityArray &&
+        functionalityArray.map((val, i) => {
           return (
             <Box
               key={i}
+              id={val.id}
+              ref={elementsRef.current[i]}
               sx={{
                 position: "relative",
                 width: "1000px",
@@ -618,6 +800,7 @@ export default function Index() {
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </Box>
+
               <Typography
                 sx={{ pr: 6, color: "#686868de", mt: -2 }}
                 variant="body1"
@@ -625,255 +808,303 @@ export default function Index() {
               >
                 {i + 1}
               </Typography>
-
-              <FormControl sx={{ width: "200px" }}>
-                <InputLabel id="type">Type</InputLabel>
+              <FormControl sx={{ minWidth: "200px" }}>
+                <InputLabel id="type">Category</InputLabel>
                 <Select
                   value={
-                    typeArray.length
-                      ? typeArray.length <= i
+                    functionalityArray.length
+                      ? functionalityArray.length <= i
                         ? type !== null
                           ? ""
                           : ""
-                        : typeArray[i].name
+                        : functionalityArray[i].type
                       : type !== null
                       ? ""
                       : ""
                   }
                   name={type}
                   label="Type"
-                  onChange={(event) => handleType(event, i)}
+                  onChange={(event) =>
+                    handleUpdateRows(event, val.id, "updateRow")
+                  }
                 >
                   {typeItems.map((item, i) => (
-                    //   /* prettier-ignore */
-                    //   (Object.values(item)[0] === "position") ? (
-                    //   hasPosition ? "" :   <MenuItem key={i} value={Object.values(item)[0]}>
-                    //   {Object.values(item)[1]}
-                    // </MenuItem>
-                    //   ) : (
                     <MenuItem key={i} value={Object.values(item)[0]}>
                       {Object.values(item)[1]}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-
               {/* Add group index */}
-
               {type === "index" && (
                 <>
-                  <FormControl sx={{ width: "200px", ml: 3 }}>
-                    <TextField
-                      // onChange={handleDynamicPrefix}
-                      id="outlined-basic"
-                      label="Prefix"
-                      variant="outlined"
-                    />
+                  <FormControl sx={{ width: "145px", ml: 3 }}>
+                    <TextField id="index" label="Prefix" variant="outlined" />
                   </FormControl>
                 </>
               )}
-
-              {/* Replace String */}
-
-              {typeArray[i] !== undefined && typeArray[i].name === "replace" && (
+              {/* Replace */}
+              {val.type === "replaceString" && (
                 <>
-                  <FormControl sx={{ width: "200px", ml: 3 }}>
+                  <FormControl sx={{ width: "145px", ml: 3 }}>
                     <InputLabel id="replace-string-type">Type</InputLabel>
                     <Select
-                      value={replaceType}
-                      name={type}
-                      label="Type"
-                      onChange={(event) => handleReplaceType(event)}
+                      value={val.replaceStringObject.type}
+                      onChange={(event) =>
+                        handleUpdateRows(event, val.id, "replaceString")
+                      }
                     >
-                      <MenuItem value="alphabetical">
+                      <MenuItem value={`alphabetical`}>
                         Incremental Alphabetical
                       </MenuItem>
-                      <MenuItem value="numerical">
+                      <MenuItem value={`numerical`}>
                         Incremental Numerical
                       </MenuItem>
-                      <MenuItem value="string">String</MenuItem>
+                      <MenuItem value={`string`}>String</MenuItem>
                     </Select>
                   </FormControl>
 
-                  {replaceType !== "" && (
-                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                  {val.replaceStringObject.type === "alphabetical" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
                       <TextField
-                        id="outlined-basic"
+                        id="Alphabetical-input1"
                         label="Find"
                         variant="outlined"
-                        value={replaceFind}
-                        name={replaceFind}
-                        onChange={(event) => handleReplaceFind(event)}
+                        value={val.replaceStringObject.input1}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "alphabetical")
+                        }
                       />
                     </FormControl>
                   )}
 
-                  {replaceType === "string" && (
-                    <FormControl sx={{ width: "200px", ml: 3 }}>
+                  {val.replaceStringObject.type === "numerical" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
                       <TextField
-                        id="outlined-basic"
-                        label="String"
+                        id="Alphabetical-input1"
+                        label="Find"
                         variant="outlined"
+                        value={val.replaceStringObject.input1}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "numerical")
+                        }
+                      />
+                    </FormControl>
+                  )}
+
+                  {val.replaceStringObject.type === "string" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="Find-input1"
+                        label="Find"
+                        variant="outlined"
+                        value={val.replaceStringObject.input1}
+                        // name={replaceFind}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "find")
+                        }
+                      />
+                    </FormControl>
+                  )}
+
+                  {val.replaceStringObject.type === "string" && (
+                    <FormControl sx={{ width: "145px", ml: 3 }}>
+                      <TextField
+                        id="Replace-input2"
+                        label="Replace"
+                        variant="outlined"
+                        value={val.replaceStringObject.input2}
+                        onChange={(event) =>
+                          handleReplace(event, val.id, "replace")
+                        }
                       />
                     </FormControl>
                   )}
                 </>
               )}
-
-              {/* Master position */}
-
-              {typeArray[i] !== undefined &&
-                typeArray[i].name === "position" &&
-                parsedTextField !== null && (
+              {/* Layout */}
+              {val.type === "repetition" && parsedTextField !== null && (
+                <Box
+                  sx={{
+                    ml: "20px",
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: "20px 20px",
+                    width: "650px",
+                  }}
+                >
                   <Box
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <FormControl sx={{ width: "250px", ml: 3 }}>
-                      <InputLabel id="demo-simple-select-label">
-                        Master
-                      </InputLabel>
-                      <Select
-                        labelId="masterPos3"
-                        id="masterPos"
-                        value={masterPosition ? masterPosition : ""}
-                        label="Type"
-                        onChange={handleMasterPosition}
-                      >
-                        {parsedTextField.map((a, i) => (
-                          <MenuItem key={a.name} value={a.name} data-id={i}>
-                            {a.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <FormControl sx={{ width: "150px", ml: 3, mb: 3 }}>
-                        <InputLabel id="layout1">Layout</InputLabel>
-                        <Select
-                          labelId="demo-layout"
-                          id="dgg-layout"
-                          value={layout}
-                          label="Type"
-                          onChange={handleLayout}
-                        >
-                          <MenuItem value={"column"}>Column</MenuItem>
-                          <MenuItem value={"row"}>Row</MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Start X"
-                          variant="outlined"
-                          onChange={handleXPos}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Start Y"
-                          variant="outlined"
-                          onChange={handleYPos}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label={`Max items in ${layout}`}
-                          variant="outlined"
-                          onChange={handleMaxItems}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Space X"
-                          variant="outlined"
-                          onChange={handlespaceX}
-                        />
-                      </FormControl>
-                      <FormControl sx={{ width: "150px", ml: 3 }}>
-                        <TextField
-                          // onChange={handleDynamicPrefix}
-                          id="outlined-basic"
-                          label="Space Y"
-                          variant="outlined"
-                          onChange={handlespaceY}
-                        />
-                      </FormControl>
-                      <Box sx={{ width: "300px", mt: 3, ml: 3 }}>
-                        <FormGroup>
-                          <FormControlLabel
-                            disabled={spaceX ? false : true}
-                            control={
-                              <Checkbox
-                                checked={dynamicSpaceX}
-                                onChange={handleDynamicSpaceX}
-                              />
-                            }
-                            label="Dynamic width - Space X"
-                          />
-                          <FormControlLabel
-                            disabled={spaceY ? false : true}
-                            control={
-                              <Checkbox
-                                checked={dynamicSpaceY}
-                                onChange={handleDynamicSpaceY}
-                              />
-                            }
-                            label="Dynamic height - Space Y"
-                          />
-                        </FormGroup>
-                      </Box>
-                    </Box>
-                  </Box>
-                )}
-              {typeArray[i] !== undefined &&
-                typeArray[i].name === "showHide" &&
-                parsedTextField !== null &&
-                showHideField.length > 0 && (
-                  <Box
-                    sx={{
+                      position: "relative",
                       width: "100%",
-                      display: "flex",
-                      justifyContent: "flex-end",
+                      pb: "2rem",
+                      pr: "10px",
                     }}
                   >
-                    <Button
-                      disabled={
-                        jsonSuccess &&
-                        !fieldCountError &&
-                        dynamicPrefix !== null
-                          ? false
-                          : true
-                      }
-                      sx={{ p: 1.85, mr: 3 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(showHideField);
-                      }}
-                      color="success"
-                      variant="text"
-                      size="large"
-                    >
-                      Grab "Show/Hide" field
-                    </Button>
+                    <SelectFields
+                      id={val.id}
+                      handleSelectFields={handleSelectFields}
+                      designGeneratorJson={designGeneratorJson[0].fields}
+                    />
                   </Box>
-                )}
+                  <FormControl sx={{ width: "145px" }}>
+                    <InputLabel size="normal" id="master">
+                      Master
+                    </InputLabel>
+                    <Select
+                      id="master"
+                      value={val.layoutObject.master}
+                      label="Type"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "master")
+                      }
+                    >
+                      {val.layoutObject.selectedFields.length > 0
+                        ? val.layoutObject.selectedFields.map((a, i) => (
+                            <MenuItem key={i} value={a.name} data-id={i}>
+                              {a.name}
+                            </MenuItem>
+                          ))
+                        : ""}
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="groups"
+                      label="Number of groups"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "groups")
+                      }
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ width: "145px" }}>
+                    <InputLabel id="layout1">Direction</InputLabel>
+                    <Select
+                      id="direction"
+                      value={val.layoutObject.direction}
+                      label="Type"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "direction")
+                      }
+                    >
+                      <MenuItem value={"column"}>Column</MenuItem>
+                      <MenuItem value={"row"}>Row</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="maxItems"
+                      label={`Max groups in ${val.layoutObject.direction}`}
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "maxItems")
+                      }
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="spaceX"
+                      label="Space X"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "spaceX")
+                      }
+                    />
+                  </FormControl>
+                  <FormControl sx={{ width: "145px" }}>
+                    <TextField
+                      id="spaceY"
+                      label="Space Y"
+                      variant="outlined"
+                      onChange={(event) =>
+                        handleFunctionality(event, val.id, "spaceY")
+                      }
+                    />
+                  </FormControl>
+                  <Box sx={{ width: "650px" }}>
+                    <FormGroup>
+                      <FormControlLabel
+                        disabled={val.layoutObject.spaceX !== "" ? false : true}
+                        control={
+                          <Checkbox
+                            checked={val.layoutObject.dynamicWidthSpaceX}
+                            onChange={(event) =>
+                              handleFunctionality(
+                                event,
+                                val.id,
+                                "dynamicWidthSpaceX"
+                              )
+                            }
+                          />
+                        }
+                        label="Space X from right side of Master element"
+                      />
+                      <FormControlLabel
+                        disabled={val.layoutObject.spaceY !== "" ? false : true}
+                        control={
+                          <Checkbox
+                            checked={val.layoutObject.dynamicHeightSpaceY}
+                            onChange={(event) =>
+                              handleFunctionality(
+                                event,
+                                val.id,
+                                "dynamicHeightSpaceY"
+                              )
+                            }
+                          />
+                        }
+                        label="Space Y from bottom position of Master element"
+                      />
+                    </FormGroup>
+                  </Box>
+                  <Box sx={{ width: "650px" }}>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControl sx={{ width: "145px", mr: 3 }}>
+                        <TextField
+                          id="prefix"
+                          label="Prefix replacement"
+                          variant="outlined"
+                          onChange={(event) =>
+                            handleFunctionality(event, val.id, "prefix")
+                          }
+                        />
+                      </FormControl>
+                      <FormControl sx={{ width: "145px" }}>
+                        <TextField
+                          id="numbering"
+                          label="Number replacement"
+                          variant="outlined"
+                          onChange={(event) =>
+                            handleFunctionality(event, val.id, "numbering")
+                          }
+                        />
+                      </FormControl>
+                    </FormGroup>
+                  </Box>
+                  <Box sx={{ width: "650px" }}>
+                    <FormControlLabel
+                      disabled={val.layoutObject.groups < 2 ? true : false}
+                      control={
+                        <Checkbox
+                          checked={val.layoutObject.groupsVisibility}
+                          onChange={(event) =>
+                            handleFunctionality(
+                              event,
+                              val.id,
+                              "groupsVisibility"
+                            )
+                          }
+                        />
+                      }
+                      label="Dropdown - number of groups visible"
+                    />
+                  </Box>
+                </Box>
+              )}
             </Box>
           );
         })}
@@ -890,58 +1121,11 @@ export default function Index() {
         noValidate
         autoComplete="off"
       >
-        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
-          <TextField
-            disabled={jsonSuccess ? false : true}
-            onChange={handleFieldCount}
-            id="outlined-basic"
-            label="Number of groups"
-            variant="outlined"
-            helperText={fieldCountError ? `Please, type in a number` : ""}
-            color={fieldCountError ? "error" : "success"}
-          />
-        </FormControl>
-        <FormControl sx={{ width: "200px", mr: 3, ml: 3 }}>
-          <TextField
-            disabled={
-              jsonSuccess && !fieldCountError && fieldCount.length > 0
-                ? false
-                : true
-            }
-            onChange={handleDynamicPrefix}
-            id="outlined-basic"
-            label="String"
-            variant="outlined"
-          />
-        </FormControl>
-        {/* {showHide && (
-          <Button
-            disabled={
-              jsonSuccess && !fieldCountError && dynamicPrefix !== null
-                ? false
-                : true
-            }
-            sx={{ p: 1.85, mb: 20, mr: 3 }}
-            onClick={() => {
-              navigator.clipboard.writeText(generateClusters());
-            }}
-            color="info"
-            variant="contained"
-            size="large"
-          >
-            Grab Show Hide
-          </Button>
-        )} */}
-
         <Button
-          disabled={
-            jsonSuccess && !fieldCountError && dynamicPrefix !== null
-              ? false
-              : true
-          }
+          disabled={jsonSuccess && functionalityArray.length > 0 ? false : true}
           sx={{ p: 1.85, mb: 20 }}
           onClick={() => {
-            navigator.clipboard.writeText(generateClusters());
+            navigator.clipboard.writeText(generateJSON());
             // setShowHide(true);
           }}
           color="success"

@@ -16,19 +16,13 @@ import Checkbox from "@mui/material/Checkbox";
 import { v4 as uuidv4 } from "uuid";
 import SelectFields from "../components/form/selectFields";
 import Fab from "@mui/material/Fab";
-import { OutlinedInput } from "@mui/material";
+
 export default function Index() {
   const [type, setType] = React.useState("");
-  const [typeArray, setTypeArray] = React.useState([]);
 
   const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
-
-  const [field1, setField1] = React.useState("");
-  const [fieldCount, setFieldCount] = React.useState("");
   const [fieldCountError, setFieldCountError] = React.useState(false);
   const [dynamicPrefix, setDynamicPrefix] = React.useState(null);
-
-  const [textAreaFieldCount, setTextAreaFieldCount] = React.useState([1]);
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [textField, setTextField] = React.useState(null);
@@ -37,14 +31,6 @@ export default function Index() {
   const [masterPosition, setMasterPosition] = React.useState(null);
   const [masterPositionId, setMasterPositionId] = React.useState(null);
   const [keyPosition, setKeyPosition] = React.useState(null);
-
-  //Replace
-  // const [replaceType, setReplaceType] = React.useState("");
-
-  // const [replaceType1, setReplaceType1] = React.useState([]);
-  // const [replaceFind, setReplaceFind] = React.useState(null);
-
-  // const [findString, setFindString] = React.useState(null);
   const [alphabetical, setAlphabetical] = React.useState(null);
   const [numerical, setNumerical] = React.useState("");
 
@@ -52,7 +38,6 @@ export default function Index() {
   const [functionalityArray, setFunctionalityArray] = React.useState([]);
 
   const [hasPosition, setHasPosition] = React.useState(false);
-  const [showHide, setShowHide] = React.useState(false);
 
   const data = [
     {
@@ -79,11 +64,13 @@ export default function Index() {
   // const [jason, setJason] = React.useState(false);
   const [grabJson, setGrabJson] = React.useState([]);
 
-  const typeItems = [
-    // { value: "replaceString", label: "Replace" },
-    { value: "repetition", label: "Repetition" },
-    { value: "generateFontSizes", label: "Generate font sizes" },
-  ];
+  // const typeItems = [
+  //   // { value: "replaceString", label: "Replace" },
+  //   { value: "repetition", label: "Repetition" },
+  //   { value: "generateFontSizes", label: "Generate font sizes" },
+  // ];
+
+  const typeItems = ["Repetition", "Generate font-sizes"];
 
   // React.useEffect(() => {}, [functionalityArray]);
 
@@ -104,17 +91,6 @@ export default function Index() {
       setKeyPosition(indexMaster);
     }
   }, [masterPosition]);
-
-  React.useEffect(() => {
-    if (typeArray.length > 0) {
-      const string1 = Object.values(functionalityArray).map(
-        (val) => val.type
-      )[0];
-      setHasPosition(string1 === "repetition");
-    } else {
-      setHasPosition(false);
-    }
-  }, [typeArray, rows]);
 
   const alphabet = [
     "A",
@@ -179,6 +155,11 @@ export default function Index() {
         ? textField.replace(alphabeticalRegex, `${prefix[i]}`)
         : textField;
 
+      // const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
+      // const numericalFilter = numerical
+      //   ? alphabeticalFilter.replace(numericalRegex, `${[i + 1]}`)
+      //   : alphabeticalFilter;
+
       const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
       const replacedSecond = numerical
         ? replaced.replace(numericalRegex, `${[i + 1]}`)
@@ -225,34 +206,22 @@ export default function Index() {
 
     const showArray = [];
     showNames.slice(0, i + 1).map((val) => {
-      // const str = '"' + val + '"';
-      showArray.push(val);
+      showArray.push(`${val},`);
     });
 
     const hideArray = [];
     hideNames.slice(-hideItems).map((val) => {
-      // var str = "" + val;
-      hideArray.push(val);
+      hideArray.push(`${val},`);
     });
 
     const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
     const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
 
-    // const dropdownObject = {
-    //   title: `${i + 1}`,
-    //   selected: i === 0 ? true : false,
-    //   show: [showArrayStripped],
-    //   hide: last ? ["fieldX"] : [hideArrayStripped],
-    // };
-
-    const showArrayFlat = showArray.flat();
-    const hideArrayFlat = hideArray.flat();
-
     const dropdownObject = {
       title: `${i + 1}`,
       selected: i === 0 ? true : false,
-      show: showArrayFlat,
-      hide: last ? ["fieldX"] : hideArrayFlat,
+      show: [showArrayStripped],
+      hide: last ? ["fieldX"] : [hideArrayStripped],
     };
 
     return dropdownObject;
@@ -330,10 +299,13 @@ export default function Index() {
   };
 
   const generateJSON = () => {
+    console.log("functionalityArray  in generate Json");
+    console.log(functionalityArray);
+
     let groupsObject = [];
 
     const layoutIndex = functionalityArray.findIndex((object) => {
-      return object.type === "repetition";
+      return object.type === "Repetition";
     });
 
     const masterNames = [];
@@ -361,21 +333,18 @@ export default function Index() {
           //Transform field to string
           const stringField = JSON.stringify(newField);
           //Replace prefix
-          const prefixReplacementField =
-            layoutObject.prefix !== ""
-              ? stringField.replace(regex, `${alphabet[index]}_`)
-              : stringField;
-
+          const prefixReplacementField = stringField.replace(
+            regex,
+            `${alphabet[index]}_`
+          );
           //Replace numbering
-          const numberReplacementField =
-            layoutObject.numbering !== ""
-              ? prefixReplacementField.replace(regexNumber, `${index + 1}`)
-              : prefixReplacementField;
-
-          //Transform field to Json again
+          const numberReplacementField = prefixReplacementField.replace(
+            regexNumber,
+            `${index + 1}`
+          );
+          //Transform field to Json
           const jsonField = JSON.parse(numberReplacementField);
 
-          //If the field are a master-field, adjust postioning
           if (
             layoutObject.direction === "row" &&
             obj.name === layoutObject.master
@@ -412,6 +381,7 @@ export default function Index() {
           }
 
           newField = jsonField;
+
           return { ...newField };
         });
 
@@ -436,48 +406,7 @@ export default function Index() {
         : firstSelectedField.push(i)
     );
 
-    // Dropdown - number of groups visible
-
-    const allFieldNames = [];
-    groupsObject.map((val, i) =>
-      allFieldNames.push(val.map((value) => `${value.name}`))
-    );
-
-    const groupsVisibilityArray = [];
-    for (let i = 0; i < allFieldNames.length; i++) {
-      groupsVisibilityArray.push(generateShowHide(i, allFieldNames));
-    }
-
-    const groupsVisibilityArrayString = JSON.stringify(
-      groupsVisibilityArray
-    ).replace(/\\/g, "");
-
-    // const groupsVisibilityArrayJson = JSON.parse(groupsVisibilityArray).replace(
-    //   /\\/g,
-    //   ""
-    // );
-
-    const groupsVisibilityField = {
-      name: "select",
-      title: "Välj antal",
-      type: "select",
-      options: groupsVisibilityArray,
-      editui: "selectlist",
-      editable: true,
-    };
-
-    console.log("XXX---groupsVisibilityField");
-    console.log(groupsVisibilityField);
-
-    // console.log("groupsVisibilityField");
-    // console.log(groupsVisibilityField);
-
-    newFields.splice(
-      firstSelectedField[0],
-      0,
-      groupsVisibilityField,
-      ...allGroups
-    );
+    newFields.splice(firstSelectedField[0], 0, ...allGroups);
 
     const newDesignGeneratorJson = designGeneratorJson.map((obj) => {
       if (obj.fields) {
@@ -487,14 +416,11 @@ export default function Index() {
       return obj;
     });
 
-    console.log("newDesignGeneratorJson");
-    console.log(newDesignGeneratorJson);
-
     setGrabJson(newDesignGeneratorJson);
 
     // grabJason();
+
     return JSON.stringify(newDesignGeneratorJson);
-    // return JSON.stringify(newDesignGeneratorJson).replace(/\\/g, "");
   };
 
   function IsJsonString(str) {
@@ -527,7 +453,7 @@ export default function Index() {
     } else {
       setTextAreaError(false);
     }
-    setField1(event.target.value);
+    // setField1(event.target.value);
   }
 
   const handleSelectFields = (fields, id) => {
@@ -541,7 +467,7 @@ export default function Index() {
       type: "",
       replaceStringObject: { type: "", input1: "", input2: "" },
       layoutObject: {
-        selectedFields: {},
+        selectedFields: [],
         groups: "",
         master: "",
         direction: "",
@@ -552,7 +478,6 @@ export default function Index() {
         spaceY: "",
         dynamicWidthSpaceX: false,
         dynamicHeightSpaceY: false,
-        groupsVisibility: false,
         prefix: "",
         numbering: "",
       },
@@ -612,6 +537,10 @@ export default function Index() {
     }
   };
 
+  // const grabJason = () => {
+  //   setJason(true);
+  // };
+
   const handleReplace = (event, id, type) => {
     let newArray = [...functionalityArray];
 
@@ -640,13 +569,6 @@ export default function Index() {
     const index = functionalityArray.findIndex((object) => {
       return object.id === id;
     });
-
-    if (type === "groupsVisibility") {
-      newArray[index].layoutObject.groupsVisibility
-        ? (newArray[index].layoutObject.groupsVisibility = false)
-        : (newArray[index].layoutObject.groupsVisibility = true);
-      setFunctionalityArray(newArray);
-    }
 
     if (type === "selectedFields") {
       newArray[index].layoutObject.selectedFields = event;
@@ -715,6 +637,10 @@ export default function Index() {
   console.log("functionalityArray");
   console.log(functionalityArray);
 
+  const repetitionExists = functionalityArray.some((i) =>
+    i.type.includes("Repetition")
+  );
+
   return (
     <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>
       <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
@@ -740,17 +666,6 @@ export default function Index() {
           />
         </FormControl>
       </Box>
-      {/* {jsonSuccess && (
-        <Box sx={{ position: "relative", width: "1000px" }}>
-          <Typography variant="h4" component="p" gutterBottom sx={{ mb: 10 }}>
-            2. Select Fields
-          </Typography>
-          <SelectFields
-            handleSelectFields={handleSelectFields}
-            designGeneratorJson={designGeneratorJson[0].fields}
-          />
-        </Box>
-      )} */}
       <Box
         sx={{
           mt: 10,
@@ -811,119 +726,39 @@ export default function Index() {
               <FormControl sx={{ minWidth: "200px" }}>
                 <InputLabel id="type">Category</InputLabel>
                 <Select
-                  value={
-                    functionalityArray.length
-                      ? functionalityArray.length <= i
-                        ? type !== null
-                          ? ""
-                          : ""
-                        : functionalityArray[i].type
-                      : type !== null
-                      ? ""
-                      : ""
-                  }
-                  name={type}
+                  value={functionalityArray[i].type}
+                  name=""
                   label="Type"
                   onChange={(event) =>
                     handleUpdateRows(event, val.id, "updateRow")
                   }
                 >
-                  {typeItems.map((item, i) => (
+                  {/* {typeItems.map((item, i) => 
+                    functionalityArray.some(i => i.type.includes('Repetition')) ? return (
                     <MenuItem key={i} value={Object.values(item)[0]}>
                       {Object.values(item)[1]}
+                    </MenuItem>):""
+                  )} */}
+
+                  {/* {typeItems.map((item, i) => {
+                    repetitionExists ?
+                    return (
+                      <MenuItem key={i} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })} */}
+
+                  {typeItems.map((item, i) => (
+                    <MenuItem key={i} value={item}>
+                      {item}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              {/* Add group index */}
-              {type === "index" && (
-                <>
-                  <FormControl sx={{ width: "145px", ml: 3 }}>
-                    <TextField id="index" label="Prefix" variant="outlined" />
-                  </FormControl>
-                </>
-              )}
-              {/* Replace */}
-              {val.type === "replaceString" && (
-                <>
-                  <FormControl sx={{ width: "145px", ml: 3 }}>
-                    <InputLabel id="replace-string-type">Type</InputLabel>
-                    <Select
-                      value={val.replaceStringObject.type}
-                      onChange={(event) =>
-                        handleUpdateRows(event, val.id, "replaceString")
-                      }
-                    >
-                      <MenuItem value={`alphabetical`}>
-                        Incremental Alphabetical
-                      </MenuItem>
-                      <MenuItem value={`numerical`}>
-                        Incremental Numerical
-                      </MenuItem>
-                      <MenuItem value={`string`}>String</MenuItem>
-                    </Select>
-                  </FormControl>
 
-                  {val.replaceStringObject.type === "alphabetical" && (
-                    <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="Alphabetical-input1"
-                        label="Find"
-                        variant="outlined"
-                        value={val.replaceStringObject.input1}
-                        onChange={(event) =>
-                          handleReplace(event, val.id, "alphabetical")
-                        }
-                      />
-                    </FormControl>
-                  )}
-
-                  {val.replaceStringObject.type === "numerical" && (
-                    <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="Alphabetical-input1"
-                        label="Find"
-                        variant="outlined"
-                        value={val.replaceStringObject.input1}
-                        onChange={(event) =>
-                          handleReplace(event, val.id, "numerical")
-                        }
-                      />
-                    </FormControl>
-                  )}
-
-                  {val.replaceStringObject.type === "string" && (
-                    <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="Find-input1"
-                        label="Find"
-                        variant="outlined"
-                        value={val.replaceStringObject.input1}
-                        // name={replaceFind}
-                        onChange={(event) =>
-                          handleReplace(event, val.id, "find")
-                        }
-                      />
-                    </FormControl>
-                  )}
-
-                  {val.replaceStringObject.type === "string" && (
-                    <FormControl sx={{ width: "145px", ml: 3 }}>
-                      <TextField
-                        id="Replace-input2"
-                        label="Replace"
-                        variant="outlined"
-                        value={val.replaceStringObject.input2}
-                        onChange={(event) =>
-                          handleReplace(event, val.id, "replace")
-                        }
-                      />
-                    </FormControl>
-                  )}
-                </>
-              )}
-              {/* Layout */}
-              {val.type === "repetition" && parsedTextField !== null && (
+              {/* Repetition */}
+              {val.type === "Repetition" && parsedTextField !== null && (
                 <Box
                   sx={{
                     ml: "20px",
@@ -1103,6 +938,21 @@ export default function Index() {
                       label="Dropdown - number of groups visible"
                     />
                   </Box>
+                </Box>
+              )}
+              {/* Generate fontsizes */}
+              {val.type === "Generate font-sizes" && (
+                <Box
+                  sx={{
+                    ml: "20px",
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: "20px 20px",
+                    width: "650px",
+                  }}
+                >
+                  Generate font sizes [WIP]
                 </Box>
               )}
             </Box>
