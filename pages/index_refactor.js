@@ -179,11 +179,6 @@ export default function Index() {
         ? textField.replace(alphabeticalRegex, `${prefix[i]}`)
         : textField;
 
-      // const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      // const numericalFilter = numerical
-      //   ? alphabeticalFilter.replace(numericalRegex, `${[i + 1]}`)
-      //   : alphabeticalFilter;
-
       const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
       const replacedSecond = numerical
         ? replaced.replace(numericalRegex, `${[i + 1]}`)
@@ -230,22 +225,34 @@ export default function Index() {
 
     const showArray = [];
     showNames.slice(0, i + 1).map((val) => {
-      showArray.push(`${val},`);
+      // const str = '"' + val + '"';
+      showArray.push(val);
     });
 
     const hideArray = [];
     hideNames.slice(-hideItems).map((val) => {
-      hideArray.push(`${val},`);
+      // var str = "" + val;
+      hideArray.push(val);
     });
 
     const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
     const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
 
+    // const dropdownObject = {
+    //   title: `${i + 1}`,
+    //   selected: i === 0 ? true : false,
+    //   show: [showArrayStripped],
+    //   hide: last ? ["fieldX"] : [hideArrayStripped],
+    // };
+
+    const showArrayFlat = showArray.flat();
+    const hideArrayFlat = hideArray.flat();
+
     const dropdownObject = {
       title: `${i + 1}`,
       selected: i === 0 ? true : false,
-      show: [showArrayStripped],
-      hide: last ? ["fieldX"] : [hideArrayStripped],
+      show: showArrayFlat,
+      hide: last ? ["fieldX"] : hideArrayFlat,
     };
 
     return dropdownObject;
@@ -323,9 +330,6 @@ export default function Index() {
   };
 
   const generateJSON = () => {
-    console.log("functionalityArray  in generate Json");
-    console.log(functionalityArray);
-
     let groupsObject = [];
 
     const layoutIndex = functionalityArray.findIndex((object) => {
@@ -357,18 +361,21 @@ export default function Index() {
           //Transform field to string
           const stringField = JSON.stringify(newField);
           //Replace prefix
-          const prefixReplacementField = stringField.replace(
-            regex,
-            `${alphabet[index]}_`
-          );
+          const prefixReplacementField =
+            layoutObject.prefix !== ""
+              ? stringField.replace(regex, `${alphabet[index]}_`)
+              : stringField;
+
           //Replace numbering
-          const numberReplacementField = prefixReplacementField.replace(
-            regexNumber,
-            `${index + 1}`
-          );
-          //Transform field to Json
+          const numberReplacementField =
+            layoutObject.numbering !== ""
+              ? prefixReplacementField.replace(regexNumber, `${index + 1}`)
+              : prefixReplacementField;
+
+          //Transform field to Json again
           const jsonField = JSON.parse(numberReplacementField);
 
+          //If the field are a master-field, adjust postioning
           if (
             layoutObject.direction === "row" &&
             obj.name === layoutObject.master
@@ -405,7 +412,6 @@ export default function Index() {
           }
 
           newField = jsonField;
-
           return { ...newField };
         });
 
@@ -430,7 +436,48 @@ export default function Index() {
         : firstSelectedField.push(i)
     );
 
-    newFields.splice(firstSelectedField[0], 0, ...allGroups);
+    // Dropdown - number of groups visible
+
+    const allFieldNames = [];
+    groupsObject.map((val, i) =>
+      allFieldNames.push(val.map((value) => `${value.name}`))
+    );
+
+    const groupsVisibilityArray = [];
+    for (let i = 0; i < allFieldNames.length; i++) {
+      groupsVisibilityArray.push(generateShowHide(i, allFieldNames));
+    }
+
+    const groupsVisibilityArrayString = JSON.stringify(
+      groupsVisibilityArray
+    ).replace(/\\/g, "");
+
+    // const groupsVisibilityArrayJson = JSON.parse(groupsVisibilityArray).replace(
+    //   /\\/g,
+    //   ""
+    // );
+
+    const groupsVisibilityField = {
+      name: "select",
+      title: "Välj antal",
+      type: "select",
+      options: groupsVisibilityArray,
+      editui: "selectlist",
+      editable: true,
+    };
+
+    console.log("XXX---groupsVisibilityField");
+    console.log(groupsVisibilityField);
+
+    // console.log("groupsVisibilityField");
+    // console.log(groupsVisibilityField);
+
+    newFields.splice(
+      firstSelectedField[0],
+      0,
+      groupsVisibilityField,
+      ...allGroups
+    );
 
     const newDesignGeneratorJson = designGeneratorJson.map((obj) => {
       if (obj.fields) {
@@ -440,11 +487,14 @@ export default function Index() {
       return obj;
     });
 
+    console.log("newDesignGeneratorJson");
+    console.log(newDesignGeneratorJson);
+
     setGrabJson(newDesignGeneratorJson);
 
     // grabJason();
-
     return JSON.stringify(newDesignGeneratorJson);
+    // return JSON.stringify(newDesignGeneratorJson).replace(/\\/g, "");
   };
 
   function IsJsonString(str) {
@@ -502,6 +552,7 @@ export default function Index() {
         spaceY: "",
         dynamicWidthSpaceX: false,
         dynamicHeightSpaceY: false,
+        groupsVisibility: false,
         prefix: "",
         numbering: "",
       },
@@ -561,10 +612,6 @@ export default function Index() {
     }
   };
 
-  // const grabJason = () => {
-  //   setJason(true);
-  // };
-
   const handleReplace = (event, id, type) => {
     let newArray = [...functionalityArray];
 
@@ -593,6 +640,13 @@ export default function Index() {
     const index = functionalityArray.findIndex((object) => {
       return object.id === id;
     });
+
+    if (type === "groupsVisibility") {
+      newArray[index].layoutObject.groupsVisibility
+        ? (newArray[index].layoutObject.groupsVisibility = false)
+        : (newArray[index].layoutObject.groupsVisibility = true);
+      setFunctionalityArray(newArray);
+    }
 
     if (type === "selectedFields") {
       newArray[index].layoutObject.selectedFields = event;
@@ -1031,32 +1085,24 @@ export default function Index() {
                       </FormControl>
                     </FormGroup>
                   </Box>
-                </Box>
-              )}
-              {val.type === "showHide" && parsedTextField !== null && (
-                <Box
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Button
-                    disabled={
-                      jsonSuccess && !fieldCountError && dynamicPrefix !== null
-                        ? false
-                        : true
-                    }
-                    sx={{ p: 1.85, mr: 3 }}
-                    onClick={() => {
-                      navigator.clipboard.writeText(showHideField);
-                    }}
-                    color="success"
-                    variant="text"
-                    size="large"
-                  >
-                    Grab "Show/Hide" field
-                  </Button>
+                  <Box sx={{ width: "650px" }}>
+                    <FormControlLabel
+                      disabled={val.layoutObject.groups < 2 ? true : false}
+                      control={
+                        <Checkbox
+                          checked={val.layoutObject.groupsVisibility}
+                          onChange={(event) =>
+                            handleFunctionality(
+                              event,
+                              val.id,
+                              "groupsVisibility"
+                            )
+                          }
+                        />
+                      }
+                      label="Dropdown - number of groups visible"
+                    />
+                  </Box>
                 </Box>
               )}
             </Box>
@@ -1075,49 +1121,6 @@ export default function Index() {
         noValidate
         autoComplete="off"
       >
-        {/* <FormControl sx={{ width: "145px", mr: 3, ml: 3 }}>
-          <TextField
-            disabled={jsonSuccess ? false : true}
-            onChange={handleFieldCount}
-            id="outlined-basic"
-            label="Number of groups"
-            variant="outlined"
-            helperText={fieldCountError ? `Please, type in a number` : ""}
-            color={fieldCountError ? "error" : "success"}
-          />
-        </FormControl> */}
-        {/* <FormControl sx={{ width: "145px", mr: 3, ml: 3 }}>
-          <TextField
-            disabled={
-              jsonSuccess && !fieldCountError && fieldCount.length > 0
-                ? false
-                : true
-            }
-            onChange={handleDynamicPrefix}
-            id="outlined-basic"
-            label="String"
-            variant="outlined"
-          />
-        </FormControl> */}
-        {/* {showHide && (
-          <Button
-            disabled={
-              jsonSuccess && !fieldCountError && dynamicPrefix !== null
-                ? false
-                : true
-            }
-            sx={{ p: 1.85, mb: 20, mr: 3 }}
-            onClick={() => {
-              navigator.clipboard.writeText(generateJSON());
-            }}
-            color="info"
-            variant="contained"
-            size="large"
-          >
-            Grab Show Hide
-          </Button>
-        )} */}
-
         <Button
           disabled={jsonSuccess && functionalityArray.length > 0 ? false : true}
           sx={{ p: 1.85, mb: 20 }}

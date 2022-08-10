@@ -367,6 +367,9 @@ export default function Index() {
       clusterOptions.push(generateShowHide(i, clusterNames));
     }
 
+    console.log("clusterOptions");
+    console.log(clusterOptions);
+
     const showHideObject = {
       name: "select",
       title: "Antal",

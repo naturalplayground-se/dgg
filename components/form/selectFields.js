@@ -83,9 +83,8 @@ export default function SelectFields({
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
+              {selected !== undefined &&
+                selected.map((value) => <Chip key={value} label={value} />)}
             </Box>
           )}
           MenuProps={MenuProps}
