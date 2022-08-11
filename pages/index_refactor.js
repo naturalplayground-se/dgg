@@ -18,26 +18,19 @@ import SelectFields from "../components/form/selectFields";
 import Fab from "@mui/material/Fab";
 
 export default function Index() {
-  const [type, setType] = React.useState("");
-
   const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
-  const [fieldCountError, setFieldCountError] = React.useState(false);
-  const [dynamicPrefix, setDynamicPrefix] = React.useState(null);
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
-  const [textField, setTextField] = React.useState(null);
   const [parsedTextField, setParsedTextField] = React.useState(null);
-  const [layout, setLayout] = React.useState("column");
-  const [masterPosition, setMasterPosition] = React.useState(null);
-  const [masterPositionId, setMasterPositionId] = React.useState(null);
   const [keyPosition, setKeyPosition] = React.useState(null);
-  const [alphabetical, setAlphabetical] = React.useState(null);
-  const [numerical, setNumerical] = React.useState("");
-
   const [rows, setRows] = React.useState([]);
   const [functionalityArray, setFunctionalityArray] = React.useState([]);
+  const [grabJson, setGrabJson] = React.useState([]);
 
-  const [hasPosition, setHasPosition] = React.useState(false);
+  const elementsRef = React.useRef(data.map(() => React.createRef()));
+
+  console.log("jsonSuccess");
+  console.log(jsonSuccess);
 
   const data = [
     {
@@ -54,43 +47,7 @@ export default function Index() {
     },
   ];
 
-  const elementsRef = React.useRef(data.map(() => React.createRef()));
-
-  const [showHideField, setShowHideField] = React.useState([]);
-
-  const [dynamicSpaceX, setDynamicSpaceX] = React.useState(false);
-  const [dynamicSpaceY, setDynamicSpaceY] = React.useState(false);
-
-  // const [jason, setJason] = React.useState(false);
-  const [grabJson, setGrabJson] = React.useState([]);
-
-  // const typeItems = [
-  //   // { value: "replaceString", label: "Replace" },
-  //   { value: "repetition", label: "Repetition" },
-  //   { value: "generateFontSizes", label: "Generate font sizes" },
-  // ];
-
   const typeItems = ["Repetition", "Generate font-sizes"];
-
-  // React.useEffect(() => {}, [functionalityArray]);
-
-  React.useEffect(() => {
-    if (jsonSuccess) {
-      const isParsed = JSON.parse(`[${textField}]`);
-      setParsedTextField(isParsed);
-    } else {
-      setParsedTextField(null);
-    }
-  }, [textField]);
-
-  React.useEffect(() => {
-    if (parsedTextField !== null) {
-      const indexMaster = parsedTextField.findIndex(
-        (textField) => textField.name == `${masterPosition}`
-      );
-      setKeyPosition(indexMaster);
-    }
-  }, [masterPosition]);
 
   const alphabet = [
     "A",
@@ -130,107 +87,9 @@ export default function Index() {
     "ZJ",
   ];
 
-  const prefixer = (index, name, prefix1) => {
-    if (prefix1 !== "") {
-      const newName = name.replace(prefix1, `${alphabet[index]}_`);
-
-      return newName;
-    } else {
-      return name;
-    }
-  };
-
-  const arrayNames = [];
-  const arrayNames2 = [];
-
-  const dynamicTextfield = (i) => {
-    if (textField !== null) {
-      const regex = new RegExp(dynamicPrefix, "g");
-      const replaced = textField.replace(regex, `${prefix[i]}_`);
-
-      const alphabeticalRegex = alphabetical
-        ? new RegExp(alphabetical, "g")
-        : "";
-      const alphabeticalFilter = alphabetical
-        ? textField.replace(alphabeticalRegex, `${prefix[i]}`)
-        : textField;
-
-      // const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      // const numericalFilter = numerical
-      //   ? alphabeticalFilter.replace(numericalRegex, `${[i + 1]}`)
-      //   : alphabeticalFilter;
-
-      const numericalRegex = numerical ? new RegExp(numerical, "g") : "";
-      const replacedSecond = numerical
-        ? replaced.replace(numericalRegex, `${[i + 1]}`)
-        : replaced;
-
-      const parsed = JSON.parse(`[${replacedSecond}]`);
-
-      Object.values(parsed).forEach((field, index) => {
-        index === keyPosition ? arrayNames.push(field.name) : "";
-      });
-
-      if (masterPosition !== null) {
-        if (layout === "column") {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsColumn(i, arrayNames[i - 1])),
-                (field.x = xPositionsColumn(i, arrayNames)))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        } else {
-          Object.values(parsed).forEach((field, index) => {
-            index === keyPosition
-              ? ((field.y = yPositionsRow(i, arrayNames)),
-                (field.x = xPositionsRow(i, arrayNames[i - 1])))
-              : // arrayNames.push(field.name))
-                "";
-          });
-        }
-      }
-
-      return parsed;
-    } else {
-      return "";
-    }
-  };
-
-  const generateShowHide = (i, names) => {
-    const hideItems = names.length - i - 1;
-    const last = i === names.length - 1;
-
-    const showNames = names;
-    const hideNames = names;
-
-    const showArray = [];
-    showNames.slice(0, i + 1).map((val) => {
-      showArray.push(`${val},`);
-    });
-
-    const hideArray = [];
-    hideNames.slice(-hideItems).map((val) => {
-      hideArray.push(`${val},`);
-    });
-
-    const showArrayStripped = showArray.join("").substring(1).slice(0, -2);
-    const hideArrayStripped = hideArray.join("").substring(1).slice(0, -2);
-
-    const dropdownObject = {
-      title: `${i + 1}`,
-      selected: i === 0 ? true : false,
-      show: [showArrayStripped],
-      hide: last ? ["fieldX"] : [hideArrayStripped],
-    };
-
-    return dropdownObject;
-  };
-
   const yPositionsColumn = (i, layoutObject, y, masterNames) => {
     const maxItems = parseInt(layoutObject.maxItems);
     const name = masterNames[i - 1];
-    // const name = masterNames[i - maxItems];
 
     if (
       i === 0 ||
@@ -299,9 +158,6 @@ export default function Index() {
   };
 
   const generateJSON = () => {
-    console.log("functionalityArray  in generate Json");
-    console.log(functionalityArray);
-
     let groupsObject = [];
 
     const layoutIndex = functionalityArray.findIndex((object) => {
@@ -417,9 +273,6 @@ export default function Index() {
     });
 
     setGrabJson(newDesignGeneratorJson);
-
-    // grabJason();
-
     return JSON.stringify(newDesignGeneratorJson);
   };
 
@@ -453,12 +306,10 @@ export default function Index() {
     } else {
       setTextAreaError(false);
     }
-    // setField1(event.target.value);
   }
 
   const handleSelectFields = (fields, id) => {
     handleFunctionality(fields, id, "selectedFields");
-    // setSelectedFields(fields);
   };
 
   const handleAddRows = (event, length) => {
@@ -490,8 +341,6 @@ export default function Index() {
   };
 
   const handleRemoveRow = (event, i) => {
-    const getRow = 8;
-
     const rowId =
       elementsRef.current[0].current !== null
         ? elementsRef.current[i].current.id
@@ -500,7 +349,6 @@ export default function Index() {
     if (functionalityArray.length > 0) {
       functionalityArray.map((val, index) => {
         if (val.id === rowId) {
-          // if (val.id === `row-${i + 1}`) {
           const array = [...functionalityArray];
           array.splice(index, 1);
           setFunctionalityArray(array);
@@ -534,32 +382,6 @@ export default function Index() {
         newArray[0].replaceStringObject.type = event.target.value;
         setFunctionalityArray(newArray);
       }
-    }
-  };
-
-  // const grabJason = () => {
-  //   setJason(true);
-  // };
-
-  const handleReplace = (event, id, type) => {
-    let newArray = [...functionalityArray];
-
-    const index = functionalityArray.findIndex((object) => {
-      return object.id === id;
-    });
-
-    if (type === "find") {
-      newArray[index].replaceStringObject.input1 = event.target.value;
-      setFunctionalityArray(newArray);
-    }
-    if (type === "replace") {
-      newArray[index].replaceStringObject.input2 = event.target.value;
-      setFunctionalityArray(newArray);
-    }
-    if (type === "alphabetical" || type === "numerical") {
-      newArray[index].replaceStringObject.input1 = event.target.value;
-      newArray[index].replaceStringObject.input2 = "";
-      setFunctionalityArray(newArray);
     }
   };
 
@@ -636,10 +458,6 @@ export default function Index() {
 
   console.log("functionalityArray");
   console.log(functionalityArray);
-
-  const repetitionExists = functionalityArray.some((i) =>
-    i.type.includes("Repetition")
-  );
 
   return (
     <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>

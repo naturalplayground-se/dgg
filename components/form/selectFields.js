@@ -48,9 +48,16 @@ export default function SelectFields({
   id,
   handleSelectFields,
   designGeneratorJson,
+  selectedFields,
 }) {
   const theme = useTheme();
-  const [fieldName, setFieldName] = React.useState([]);
+  const fieldNames = [];
+  selectedFields.map((val) => {
+    fieldNames.push(val.name);
+  });
+
+  const fieldName =
+    typeof fieldNames === "string" ? fieldNames.split(",") : fieldNames;
 
   const handleChange = (event) => {
     const {
@@ -58,22 +65,18 @@ export default function SelectFields({
     } = event;
 
     const selectedFieldArray = [];
-    const selectedFieldNamesArray = [];
-
     designGeneratorJson.map((field) => {
       if (value.includes(field.name)) {
         selectedFieldArray.push(field);
-        selectedFieldNamesArray.push(field.name);
       }
     });
     handleSelectFields(selectedFieldArray, id);
-    setFieldName(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
     <div>
       <FormControl sx={{ width: "100%" }}>
-        <InputLabel>Select Fields to group</InputLabel>
+        <InputLabel>Select Fields</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
@@ -90,11 +93,7 @@ export default function SelectFields({
           MenuProps={MenuProps}
         >
           {designGeneratorJson.map((field, i) => (
-            <MenuItem
-              key={i}
-              value={field.name}
-              //   style={getStyles(field.name, fieldName, theme)}
-            >
+            <MenuItem key={i} value={field.name}>
               {field.name}
             </MenuItem>
           ))}
