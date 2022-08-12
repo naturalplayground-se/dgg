@@ -61,8 +61,8 @@ export default function Index() {
     hasSelectedFields;
   }, [functionalityArray]);
 
-  console.log("filteredTextboxFields");
-  console.log(filteredTextboxFields);
+  // console.log("filteredTextboxFields");
+  // console.log(filteredTextboxFields);
 
   /**
    *  Prefix array
@@ -406,11 +406,15 @@ export default function Index() {
       type: "",
       replaceStringObject: { type: "", input1: "", input2: "" },
       generateFontSizes: {
-        selectedFields: [],
-        numberOfFontSizes: "",
-        defaultFontSize: "",
-        defaultLineHeight: "",
-        fontNumber: "",
+        textboxFieldArray: [
+          {
+            selectedField: [],
+            numberOfFontSizes: "",
+            defaultFontSize: "",
+            defaultLineHeight: "",
+            fontNumber: "",
+          },
+        ],
       },
       layoutObject: {
         selectedFields: [],
@@ -491,6 +495,7 @@ export default function Index() {
 
     if (type === "numberOfFontSizes") {
       newArray[index].generateFontSizes.numberOfFontSizes = event.target.value;
+
       setFunctionalityArray(newArray);
     }
 
@@ -572,8 +577,8 @@ export default function Index() {
   // console.log("designGeneratorJson[0].fields");
   // console.log(designGeneratorJson[0].fields);
 
-  // console.log("filteredTextBlockFields");
-  // console.log(filteredTextBlockFields);
+  // console.log("SettingsArray");
+  // console.log(functionalityArray[0]);
 
   return (
     <Box sx={{ p: 10, my: 4, width: "1000px", color: "black" }}>
@@ -709,6 +714,7 @@ export default function Index() {
                       handleSelectFields={handleSelectFields}
                       designGeneratorJson={designGeneratorJson[0].fields}
                       selectedFields={val.layoutObject.selectedFields}
+                      type="repetition"
                     />
                   </Box>
                   <FormControl sx={{ width: "145px" }}>
@@ -875,7 +881,6 @@ export default function Index() {
                 </Box>
               )}
               {/* Generate Font-sizes */}
-
               {val.type === "generateFontSizes" && (
                 <Box
                   sx={{
@@ -887,12 +892,14 @@ export default function Index() {
                     width: "650px",
                   }}
                 >
+                  {/* textboxarray row */}
                   <Box
                     sx={{
                       position: "relative",
                       width: "100%",
                       pb: "2rem",
                       pr: "10px",
+                      backgroundColor: "red",
                     }}
                   >
                     <SelectFields
@@ -901,50 +908,56 @@ export default function Index() {
                       // designGeneratorJson={filteredTextBlockFields}
                       designGeneratorJson={designGeneratorJson[0].fields}
                       selectedFields={val.layoutObject.selectedFields}
+                      type="generateFontSizes"
                     />
-                  </Box>
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      pb: "2rem",
-                      pr: "10px",
-                    }}
-                  >
-                    <FormControl sx={{ width: "200px", pr: "20px" }}>
-                      <InputLabel size="normal" id="number">
-                        Number of font sizes
-                      </InputLabel>
-                      <Select
-                        id="numberOfFontSizes"
-                        value={val.generateFontSizes.numberOfFontSizes}
-                        label="Type"
-                        onChange={(event) =>
-                          handleFunctionality(
-                            event,
-                            val.id,
-                            "numberOfFontSizes"
-                          )
-                        }
-                      >
-                        {["3", "5", "7", "9", "11"].map((a, i) => (
-                          <MenuItem key={i} value={a} data-id={i}>
-                            {a}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <FormControl sx={{ width: "145px" }}>
-                      <TextField
-                        id="defaultFontSize"
-                        label="Default Size"
-                        variant="outlined"
-                        value={val.generateFontSizes.defaultFontSize}
-                        onChange={(event) =>
-                          handleFunctionality(event, val.id, "defaultFontSize")
-                        }
-                      />
-                    </FormControl>
+                    <Box
+                      sx={{
+                        mt: "30px",
+                        position: "relative",
+                        width: "100%",
+                        pb: "2rem",
+                        pr: "10px",
+                      }}
+                    >
+                      <FormControl sx={{ width: "200px", pr: "20px" }}>
+                        <InputLabel size="normal" id="number">
+                          Number of font sizes
+                        </InputLabel>
+                        <Select
+                          id="numberOfFontSizes"
+                          value={val.generateFontSizes.numberOfFontSizes}
+                          label="Type"
+                          onChange={(event) =>
+                            handleFunctionality(
+                              event,
+                              val.id,
+                              "numberOfFontSizes"
+                            )
+                          }
+                        >
+                          {["3", "5", "7", "9", "11"].map((a, i) => (
+                            <MenuItem key={i} value={a} data-id={i}>
+                              {a}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <FormControl sx={{ width: "145px" }}>
+                        <TextField
+                          id="defaultFontSize"
+                          label="Default Size"
+                          variant="outlined"
+                          value={val.generateFontSizes.defaultFontSize}
+                          onChange={(event) =>
+                            handleFunctionality(
+                              event,
+                              val.id,
+                              "defaultFontSize"
+                            )
+                          }
+                        />
+                      </FormControl>
+                    </Box>
                   </Box>
                 </Box>
               )}

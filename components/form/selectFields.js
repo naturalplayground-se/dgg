@@ -49,6 +49,7 @@ export default function SelectFields({
   handleSelectFields,
   designGeneratorJson,
   selectedFields,
+  type,
 }) {
   const theme = useTheme();
   const fieldNames = [];
@@ -73,10 +74,12 @@ export default function SelectFields({
     handleSelectFields(selectedFieldArray, id);
   };
 
+  const labelByType = type === "generateFontSizes" ? "field" : "fields";
+
   return (
     <div>
       <FormControl sx={{ width: "100%" }}>
-        <InputLabel>Select Fields</InputLabel>
+        <InputLabel>{labelByType}</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
