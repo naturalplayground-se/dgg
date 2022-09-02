@@ -41,7 +41,7 @@ export default function Index() {
    */
   const typeItems = [
     { value: "repetition", label: "Repetition" },
-    { value: "generateFontSizes", label: "Generate font sizes" },
+    { value: "generateFontSizes", label: "Generate font sizes [WIP]" },
   ];
 
   /**
