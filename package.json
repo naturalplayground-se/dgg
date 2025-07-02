@@ -29,5 +29,8 @@
     "@playwright/test": "^1.22.2",
     "eslint": "latest",
     "eslint-config-next": "latest"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
