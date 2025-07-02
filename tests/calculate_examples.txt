@@ -1,0 +1,11 @@
+If field name is "Bleed" or "Margin" - do nothing
+
+Examples that should be calculated: 
+
+Ternary operator:
+
+Image_Small.visible ? State_Top.visible ? 10 : 20 : State_Top.visible ? 10 : 20
+
+should be
+
+Image_Small.visible ? State_Top.visible ? 95 : 296 : State_Top.visible ? 95 : 410
