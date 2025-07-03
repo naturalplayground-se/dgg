@@ -41,6 +41,19 @@ export default function Home() {
         "Preserves proportional calculations",
       ],
     },
+    {
+      title: "Import",
+      description:
+        "Import IDML (InDesign Markup Language) files and automatically convert them to your structured JSON format. Transform InDesign layouts into web-to-print templates effortlessly.",
+      route: "/import",
+      color: "#f57c00",
+      features: [
+        "IDML file parsing and extraction",
+        "Automatic field type detection",
+        "Color and font extraction",
+        "Complete JSON structure generation",
+      ],
+    },
   ];
 
   return (

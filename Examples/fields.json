@@ -1,0 +1,344 @@
+[
+  {
+    "pagenr": 1,
+    "fields": [
+      {
+        "name": "DocScale",
+        "type": "shape",
+        "shape": "rect",
+        "x": 1,
+        "y": 1,
+        "w": 0.71,
+        "h": 0.71,
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": "72 * DocScale.width",
+        "y": "72 * DocScale.height",
+        "w": "page.width - (2* (72 * DocScale.width))",
+        "h": "page.height - (2* (72 * DocScale.width))",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Image",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 144,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "Margin.left",
+        "y": "Margin.top",
+        "w": "Margin.width",
+        "h": "320* DocScale.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/0771f48ab2fd3531b9f2672051218be8/Default_Images_A5_Infoblad.pdf",
+        "options": [
+          {
+            "displayDPI": 72,
+            "thumbnail": "https://assets.mediaflowpro.com/a/a80b3d2f7f94d1a9b8a30fb8ffee56d8/Default_Images_Thumbnails7.jpg",
+            "dpi": 300,
+            "selected": true,
+            "srcpdf": "https://assets.mediaflowpro.com/a/0771f48ab2fd3531b9f2672051218be8/Default_Images_A5_Infoblad.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "Heading",
+        "title": "Rubrik",
+        "type": "textblock",
+        "contents": "Informationsblad\ni A4 format",
+        "textareaheight": 40,
+        "x": "Margin.left - (4 * DocScale.width)",
+        "y": "Image.bottom + (20 * DocScale.width)",
+        "w": "Margin.width + (8 * DocScale.width)",
+        "h": "auto",
+        "maxw": "Margin.width",
+        "maxRows": 2,
+        "align": 1,
+        "fontNr": 0,
+        "fontSize": 43,
+        "lineHeight": 48,
+        "color": 4,
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "Paragraph",
+        "title": "Brödtext",
+        "allowUnicode": true,
+        "type": "textblock",
+        "contents": "#Lorem ipsum dolor\nCurabitur scelerisque, dui vitae porta rutrum, nibh erat lobortis tellus, a volutpat neque eros at odio. Nam odio mauris, sollicitudin nec rutrum in, venenatis id eros. Cras hendrerit euismod augue, quis consectetur urna aliquam malesuada\n\nCurabitur scelerisque, dui vitae porta rutrum, nibh erat lobortis tellus, a volutpat neque eros at odio. Nam odio mauris, sollicitudin nec rutrum in, venenatis id eros. Cras hendrerit euismod augue, quis consectetur urna aliquam malesuada Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "textareaheight": 50,
+        "x": "Margin.left ",
+        "y": "Heading.bottom + (20 * DocScale.height)",
+        "w": "Margin.width",
+        "styles": [0, 1],
+        "h": "auto",
+        "maxh": "Margin.bottom - Heading.bottom - (130 * DocScale.height) - (QR_Bg.visible ? 92 * DocScale.height : 0)",
+        "maxw": "Margin.width",
+        "align": 1,
+        "fontNr": 2,
+        "fontSize": 16,
+        "lineHeight": 19,
+        "color": 0,
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "QR_Bg",
+        "type": "shape",
+        "shape": "rect",
+        "x": "Margin.left",
+        "y": "Paragraph.bottom + DocScale.width * 26",
+        "w": "DocScale.width * 80",
+        "h": "DocScale.width * 80",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "QR_Image",
+        "title": "QR-kod",
+        "type": "fleximage",
+        "hideGroup": ["QR_Bg"],
+        "dpi": 300,
+        "displayDPI": 300,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": true,
+        "editui": "browse",
+        "size": "contain",
+        "x": "QR_Bg.left ",
+        "y": "QR_Bg.top",
+        "w": "QR_Bg.width",
+        "h": "QR_Bg.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/39f29e2c02d005bf1f0bccbb276ef750/Startsidawebb.pdf",
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/2937de3a210ae11adb3ff3871b3e1732/Startsidawebb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/39f29e2c02d005bf1f0bccbb276ef750/Startsidawebb.pdf",
+            "fit": true
+          }
+        ]
+      },
+      {
+        "name": "Select_Logo",
+        "title": "Välj logotyp",
+        "type": "select",
+        "options": [
+          {
+            "title": "Hyresgästföreningen liggande logotyp",
+            "selected": true,
+            "show": ["Logo_Small", "Co_Logo_Small", "Select_Co_Logo_Small"],
+            "hide": ["Logo_Large", "Co_Logo_Large", "Select_Co_Logo_Large"]
+          },
+          {
+            "title": "Hyresgästföreningen stående logotyp",
+            "show": ["Logo_Large", "Co_Logo_Large", "Select_Co_Logo_Large"],
+            "hide": ["Logo_Small", "Co_Logo_Small", "Select_Co_Logo_Small"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "Logo_Small",
+        "title": "Liggande logotyp",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "dontCrop": true,
+        "valign": "bottom",
+        "halign": "left",
+        "size": "contain",
+        "x": "Margin.left",
+        "y": "Margin.bottom - Logo_Small.height",
+        "w": "155 * (1.43)",
+        "h": "21* (1.43)",
+        "srcpdf": "https://assets.mediaflowpro.com/a/bf6057c7ef5b1121e6c72cdcb02f83ac/hyresgastforeningen_logo_svart_CMYK.pdf"
+      },
+      {
+        "name": "Logo_Large",
+        "title": "Stående logotyp",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "dontCrop": true,
+        "valign": "bottom",
+        "halign": "left",
+        "size": "contain",
+        "x": "Margin.left",
+        "y": "Margin.bottom - Logo_Large.height",
+        "w": "45.8  * (1.43)",
+        "h": "38  * (1.43)",
+        "srcpdf": "https://assets.mediaflowpro.com/a/19b7de6f49857b5d35894dba3c45854a/Logo_ABF_Big.pdf"
+      },
+      {
+        "name": "Cooperation_Text",
+        "title": "Text",
+        "type": "textline",
+        "editui": "text",
+        "contents": "I samarbete med",
+        "x": "Co_Logo_1.left",
+        "y": "Logo_Small.visible ? Co_Logo_1.top -20 : Co_Logo_1.top -10",
+        "w": 300,
+        "maxw": "Cooperation_Text.width",
+        "h": "auto",
+        "hideable": true,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 1,
+        "fontSize": 10,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "Select_Co_Logo",
+        "title": "Antal samarbetslogotyper",
+        "type": "select",
+        "options": [
+          {
+            "title": "Utan samarbetslogotyper",
+            "selected": true,
+            "show": [""],
+            "hide": ["Co_Logo_1", "Co_Logo_2", "Co_Logo_3", "Cooperation_Text"]
+          },
+          {
+            "title": "En logotyp",
+            "selected": false,
+            "show": ["Co_Logo_1", "Cooperation_Text"],
+            "hide": ["Co_Logo_2", "Co_Logo_3"]
+          },
+          {
+            "title": "Två logotyper",
+            "selected": false,
+            "show": ["Co_Logo_1", "Co_Logo_2", "Cooperation_Text"],
+            "hide": ["Co_Logo_3"]
+          },
+          {
+            "title": "Tre logotyper",
+            "selected": false,
+            "show": ["Co_Logo_1", "Co_Logo_2", "Co_Logo_3", "Cooperation_Text"],
+            "hide": []
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "Co_Logo_1",
+        "title": "Samarbetslogotyp 1",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "dontCrop": true,
+        "valign": "bottom",
+        "halign": "left",
+        "size": "contain",
+        "x": "Logo_Large.visible ? Logo_Large.right  + 30  * (1.23) : Co_Logo_3.visible ? Image.right - (Co_Logo_1.width + 10) - (Co_Logo_2.width +10) - (Co_Logo_3.width +5)   * (1.23): Co_Logo_2.visible ? Image.right - (Co_Logo_1.width+5) - (Co_Logo_2.width +5)   * (1.23): Image.right - (Co_Logo_1.width + 20) - (Co_Logo_2.width +10) - (Co_Logo_3.width +10)  * (1.23)",
+        "y": "Logo_Large.visible ? Logo_Large.bottom - Co_Logo_1.height-2 : Logo_Small.bottom - Co_Logo_1.height ",
+        "w": "42.279  * (1.43)",
+        "h": "34.576  * (1.43)",
+        "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+        "options": [
+          {
+            "selected": true,
+            "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+            "fit": true
+          }
+        ]
+      },
+      {
+        "name": "Co_Logo_2",
+        "title": "Samarbetslogotyp 2",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "dontCrop": true,
+        "valign": "bottom",
+        "halign": "left",
+        "size": "contain",
+        "x": "Logo_Large.visible ? Co_Logo_1.right +30  * (1.23) : Co_Logo_1.right + 15  * (1.23)",
+        "y": "Logo_Large.visible ? Logo_Large.bottom - Co_Logo_2.height-2 : Logo_Small.bottom - Co_Logo_2.height",
+        "w": "42.279  * (1.43)",
+        "h": "34.576  * (1.43)",
+        "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+        "options": [
+          {
+            "selected": true,
+            "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+            "fit": true
+          }
+        ]
+      },
+      {
+        "name": "Co_Logo_3",
+        "title": "Samarbetslogotyp 3",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "dontCrop": true,
+        "valign": "bottom",
+        "halign": "left",
+        "size": "contain",
+        "x": "Logo_Large.visible ? Co_Logo_2.right +30  * (1.23) : Co_Logo_2.right + 15  * (1.23)",
+        "y": "Logo_Large.visible ? Logo_Large.bottom - Co_Logo_3.height -2 : Logo_Small.bottom - Co_Logo_3.height",
+        "w": "42.279  * (1.43)",
+        "h": "34.576  * (1.43)",
+        "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+        "options": [
+          {
+            "selected": true,
+            "srcpdf": "https://assets.mediaflowpro.com/a/77afaa2b2969273a70623a002b79785e/placehold_images_Logo2.pdf",
+            "fit": true
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,46 +1,138 @@
-# Next.js example
+# Design Generator Tools
 
-## How to use
+Professional tools for generating, scaling, and repeating design elements in JSON templates, plus importing from IDML files.
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+## Features
 
-<!-- #default-branch-switch -->
+### 1. Repetition Tool
 
-```sh
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/nextjs
-cd nextjs
-```
+Generate multiple variations of design elements with automatic positioning and naming. Perfect for creating layouts with repeated elements like product cards, team members, or gallery items.
 
-Install it and run:
+- Automatic positioning (row/column layouts)
+- Smart naming with prefix/suffix options
+- Dropdown visibility controls
+- Master element relationships
 
-```sh
+### 2. Scaling Tool
+
+Scale your designs between different paper sizes or custom dimensions. All elements, fonts, and spacing are proportionally adjusted while preserving design integrity.
+
+- A4 ↔ A3 paper size scaling
+- Custom dimension scaling
+- Smart value targeting (+ and - only)
+- Preserves proportional calculations
+
+### 3. **NEW: IDML Import Tool**
+
+Import IDML (InDesign Markup Language) files and automatically convert them to your structured JSON format. Transform InDesign layouts into web-to-print templates effortlessly.
+
+- IDML file parsing and extraction
+- Automatic field type detection
+- Color and font extraction
+- Complete JSON structure generation
+
+## IDML Import Process
+
+The IDML Import tool converts Adobe InDesign files into four JSON files required for web-to-print systems:
+
+### Generated Files:
+
+1. **fields.json** - Contains all layout elements (text, images, shapes) with positioning and properties
+2. **pages.json** - Defines page dimensions and properties
+3. **styles.json** - Includes colors, fonts, and text styles from your design
+4. **templates.json** - Template configuration for print settings
+
+### How It Works:
+
+1. **Upload IDML File**: Select an IDML file exported from Adobe InDesign
+2. **Parse Structure**: The tool extracts XML structure from the IDML package
+3. **Extract Elements**: Identifies text frames, image frames, and shapes
+4. **Map to JSON**: Converts InDesign elements to your field types:
+   - Text blocks → `textblock` or `textline` fields
+   - Images → `fleximage` fields
+   - Rectangles/shapes → `shape` fields
+   - Colors → colors array
+   - Fonts → fonts array
+5. **Download**: Get all four JSON files ready for your web-to-print system
+
+### Supported Elements:
+
+- **Text Frames** → Textblock fields with positioning and styling
+- **Image Frames** → Fleximage fields with dimensions and settings
+- **Rectangles** → Shape fields with rect type
+- **Circles/Ovals** → Shape fields with circle type
+- **Colors** → Color definitions extracted from document swatches
+- **Fonts** → Font definitions with family names and properties
+
+## Installation
+
+```bash
 npm install
 npm run dev
 ```
 
-or:
+## Usage
 
-<!-- #default-branch-switch -->
+1. Navigate to the application in your browser
+2. Choose the tool you need:
+   - **Repetition**: For creating repeated elements
+   - **Scaling**: For resizing designs proportionally
+   - **Import**: For converting IDML files to JSON
+3. Follow the step-by-step interface for each tool
 
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/nextjs)
+## Technical Details
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui/material-ui/tree/master/examples/nextjs)
+### IDML Structure
 
-## The idea behind the example
+IDML files are ZIP archives containing XML files that describe:
 
-The project uses [Next.js](https://github.com/vercel/next.js), which is a framework for server-rendered React apps.
-It includes `@mui/material` and its peer dependencies, including `emotion`, the default style engine in MUI v5.
-If you prefer, you can [use styled-components instead](https://mui.com/guides/interoperability/#styled-components).
+- Document structure (`designmap.xml`)
+- Spreads and pages (`Spreads/`)
+- Text content (`Stories/`)
+- Styles and formatting (`Resources/Styles.xml`)
+- Colors and fonts (`Resources/`)
 
-## The link component
+### Field Type Mapping
 
-Next.js has [a custom Link component](https://nextjs.org/docs/api-reference/next/link).
-The example folder provides adapters for usage with MUI.
-More information [in the documentation](https://mui.com/guides/routing/#next-js).
+The import tool automatically maps InDesign elements to your field types:
 
-## What's next?
+```javascript
+// Text Frame → Textblock
+{
+  "name": "Text_1",
+  "type": "textblock",
+  "x": 100, "y": 200, "w": 300, "h": 150,
+  "fontSize": 12,
+  "editable": true
+}
 
-<!-- #default-branch-switch -->
+// Image Frame → Fleximage
+{
+  "name": "Image_1",
+  "type": "fleximage",
+  "x": 50, "y": 50, "w": 200, "h": 200,
+  "dpi": 300,
+  "editable": true
+}
 
-You now have a working example project.
-You can head back to the documentation, continuing browsing it from the [templates](https://mui.com/getting-started/templates/) section.
+// Rectangle → Shape
+{
+  "name": "Shape_1",
+  "type": "shape",
+  "shape": "rect",
+  "x": 0, "y": 0, "w": 100, "h": 100
+}
+```
+
+## Examples
+
+See the `/Examples` folder for sample JSON structures and an example IDML file (`TestIndesign.idml`) to test the import functionality.
+
+## Development
+
+Built with:
+
+- Next.js
+- Material-UI
+- JSZip (for IDML parsing)
+- DOMParser (for XML parsing)
