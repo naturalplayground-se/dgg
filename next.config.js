@@ -17,9 +17,6 @@ module.exports = {
     }
     return config;
   },
-  experimental: {
-    optimizeCss: true,
-  },
   poweredByHeader: false,
   generateEtags: false,
 };
