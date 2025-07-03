@@ -1,0 +1,245 @@
+[
+  {
+    "id": "business-card",
+    "name": "Business Card",
+    "description": "Professional business card template",
+    "preview": "/previews/business-card.png",
+    "elements": [
+      {
+        "type": "textblock",
+        "name": "Company_Name",
+        "x": 20,
+        "y": 20,
+        "width": 300,
+        "height": 40,
+        "fontSize": 24,
+        "fontFamily": "Arial",
+        "color": "#2c3e50",
+        "text": "Your Company",
+        "fontWeight": "bold"
+      },
+      {
+        "type": "textblock",
+        "name": "Name",
+        "x": 20,
+        "y": 70,
+        "width": 300,
+        "height": 30,
+        "fontSize": 18,
+        "fontFamily": "Arial",
+        "color": "#34495e",
+        "text": "John Doe"
+      },
+      {
+        "type": "textblock",
+        "name": "Title",
+        "x": 20,
+        "y": 100,
+        "width": 300,
+        "height": 25,
+        "fontSize": 14,
+        "fontFamily": "Arial",
+        "color": "#7f8c8d",
+        "text": "Senior Developer"
+      },
+      {
+        "type": "shape",
+        "name": "Logo_Background",
+        "x": 320,
+        "y": 20,
+        "width": 60,
+        "height": 60,
+        "color": "#3498db",
+        "shape": "circle"
+      },
+      {
+        "type": "textblock",
+        "name": "Contact_Info",
+        "x": 20,
+        "y": 140,
+        "width": 300,
+        "height": 60,
+        "fontSize": 12,
+        "fontFamily": "Arial",
+        "color": "#7f8c8d",
+        "text": "email@company.com\n+1 (555) 123-4567\nwww.company.com"
+      }
+    ]
+  },
+  {
+    "id": "flyer",
+    "name": "Event Flyer",
+    "description": "Eye-catching event flyer template",
+    "preview": "/previews/flyer.png",
+    "elements": [
+      {
+        "type": "shape",
+        "name": "Header_Background",
+        "x": 0,
+        "y": 0,
+        "width": 400,
+        "height": 120,
+        "color": "#e74c3c",
+        "shape": "rect"
+      },
+      {
+        "type": "textblock",
+        "name": "Event_Title",
+        "x": 20,
+        "y": 30,
+        "width": 360,
+        "height": 60,
+        "fontSize": 32,
+        "fontFamily": "Arial",
+        "color": "#ffffff",
+        "text": "SUMMER FESTIVAL",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      },
+      {
+        "type": "fleximage",
+        "name": "Main_Image",
+        "x": 50,
+        "y": 140,
+        "width": 300,
+        "height": 200,
+        "placeholder": "Event Image"
+      },
+      {
+        "type": "textblock",
+        "name": "Date_Time",
+        "x": 20,
+        "y": 360,
+        "width": 360,
+        "height": 40,
+        "fontSize": 18,
+        "fontFamily": "Arial",
+        "color": "#2c3e50",
+        "text": "June 15-17, 2024\n2:00 PM - 10:00 PM",
+        "textAlign": "center"
+      },
+      {
+        "type": "textblock",
+        "name": "Location",
+        "x": 20,
+        "y": 420,
+        "width": 360,
+        "height": 30,
+        "fontSize": 16,
+        "fontFamily": "Arial",
+        "color": "#34495e",
+        "text": "Central Park, New York",
+        "textAlign": "center"
+      },
+      {
+        "type": "textblock",
+        "name": "Description",
+        "x": 20,
+        "y": 470,
+        "width": 360,
+        "height": 80,
+        "fontSize": 14,
+        "fontFamily": "Arial",
+        "color": "#7f8c8d",
+        "text": "Join us for an unforgettable summer experience with live music, food trucks, art installations, and family-friendly activities. Free admission!"
+      }
+    ]
+  },
+  {
+    "id": "poster",
+    "name": "Product Poster",
+    "description": "Modern product showcase poster",
+    "preview": "/previews/poster.png",
+    "elements": [
+      {
+        "type": "shape",
+        "name": "Background",
+        "x": 0,
+        "y": 0,
+        "width": 400,
+        "height": 600,
+        "color": "#ecf0f1",
+        "shape": "rect"
+      },
+      {
+        "type": "fleximage",
+        "name": "Product_Image",
+        "x": 100,
+        "y": 100,
+        "width": 200,
+        "height": 200,
+        "placeholder": "Product Image"
+      },
+      {
+        "type": "textblock",
+        "name": "Product_Name",
+        "x": 40,
+        "y": 320,
+        "width": 320,
+        "height": 50,
+        "fontSize": 28,
+        "fontFamily": "Arial",
+        "color": "#2c3e50",
+        "text": "Amazing Product",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      },
+      {
+        "type": "textblock",
+        "name": "Tagline",
+        "x": 40,
+        "y": 380,
+        "width": 320,
+        "height": 30,
+        "fontSize": 16,
+        "fontFamily": "Arial",
+        "color": "#e74c3c",
+        "text": "Innovation meets design",
+        "textAlign": "center"
+      },
+      {
+        "type": "textblock",
+        "name": "Features",
+        "x": 40,
+        "y": 430,
+        "width": 320,
+        "height": 100,
+        "fontSize": 14,
+        "fontFamily": "Arial",
+        "color": "#34495e",
+        "text": "• Premium quality materials\n• Innovative design\n• Eco-friendly production\n• 2-year warranty"
+      },
+      {
+        "type": "shape",
+        "name": "Price_Background",
+        "x": 150,
+        "y": 550,
+        "width": 100,
+        "height": 40,
+        "color": "#27ae60",
+        "shape": "rect"
+      },
+      {
+        "type": "textblock",
+        "name": "Price",
+        "x": 150,
+        "y": 560,
+        "width": 100,
+        "height": 20,
+        "fontSize": 18,
+        "fontFamily": "Arial",
+        "color": "#ffffff",
+        "text": "$99.99",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      }
+    ]
+  },
+  {
+    "id": "blank",
+    "name": "Blank Canvas",
+    "description": "Start from scratch with an empty canvas",
+    "preview": "/previews/blank.png",
+    "elements": []
+  }
+]

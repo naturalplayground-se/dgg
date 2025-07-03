@@ -7,6 +7,7 @@ import {
   CardActions,
   Button,
   Container,
+  Chip,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
@@ -15,6 +16,20 @@ export default function Home() {
   const router = useRouter();
 
   const features = [
+    {
+      title: "Studio",
+      description:
+        "Visual template builder with drag-and-drop functionality. Create stunning designs by dragging text blocks, images, shapes, and other elements directly onto the canvas. Export as structured JSON templates.",
+      route: "/studio",
+      color: "#9c27b0",
+      isNew: true,
+      features: [
+        "Drag-and-drop visual builder",
+        "Interactive canvas with Fabric.js",
+        "Real-time element positioning",
+        "Complete JSON template export",
+      ],
+    },
     {
       title: "Repetition",
       description:
@@ -88,6 +103,7 @@ export default function Home() {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
+                  position: "relative",
                   transition:
                     "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
                   "&:hover": {
@@ -96,6 +112,20 @@ export default function Home() {
                   },
                 }}
               >
+                {feature.isNew && (
+                  <Chip
+                    label="New"
+                    color="secondary"
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 16,
+                      right: 16,
+                      zIndex: 1,
+                      fontWeight: "bold",
+                    }}
+                  />
+                )}
                 <CardContent sx={{ flexGrow: 1, p: 4 }}>
                   <Typography
                     variant="h4"
