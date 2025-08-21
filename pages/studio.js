@@ -34,6 +34,7 @@ import {
   Image as ImageIcon,
   CropSquare as RectangleIcon,
   Circle as CircleIcon,
+  Remove as LineIcon,
   Download as DownloadIcon,
   Upload as UploadIcon,
   Delete as DeleteIcon,
@@ -57,6 +58,12 @@ export default function Studio() {
   const [showTemplateDialog, setShowTemplateDialog] = React.useState(false);
   const [generatedJson, setGeneratedJson] = React.useState("");
   const [starterTemplates, setStarterTemplates] = React.useState([]);
+  const [documentPages, setDocumentPages] = React.useState([
+    { id: 1, name: "Page 1" },
+  ]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [fieldTypesExamples, setFieldTypesExamples] = React.useState([]);
+  const [pageElements, setPageElements] = React.useState({ 1: [] }); // Store elements per page
 
   // Element properties
   const [elementProps, setElementProps] = React.useState({
@@ -91,15 +98,21 @@ export default function Studio() {
     "#808000",
   ];
 
-  // Load starter templates
+  // Load starter templates and field types
   React.useEffect(() => {
-    const loadTemplates = async () => {
+    const loadData = async () => {
       try {
-        const response = await fetch("/starter-templates.json");
-        const templates = await response.json();
+        // Load starter templates
+        const templatesResponse = await fetch("/starter-templates.json");
+        const templates = await templatesResponse.json();
         setStarterTemplates(templates);
+
+        // Load field types examples
+        const fieldTypesResponse = await fetch("/field-types-examples.json");
+        const fieldTypes = await fieldTypesResponse.json();
+        setFieldTypesExamples(fieldTypes);
       } catch (error) {
-        console.error("Error loading starter templates:", error);
+        console.error("Error loading data:", error);
         // Fallback templates
         setStarterTemplates([
           {
@@ -109,9 +122,11 @@ export default function Studio() {
             elements: [],
           },
         ]);
+        // Fallback field types
+        setFieldTypesExamples([]);
       }
     };
-    loadTemplates();
+    loadData();
   }, []);
 
   // Initialize Fabric.js canvas
@@ -361,6 +376,27 @@ export default function Studio() {
     }
   };
 
+  // Add line
+  const addLine = async () => {
+    if (canvas && typeof window !== "undefined") {
+      try {
+        const fabric = await import("fabric");
+
+        const line = new fabric.Line([50, 50, 200, 50], {
+          stroke: "#000000",
+          strokeWidth: 2,
+        });
+
+        line.elementType = "shape";
+        line.shapeType = "line";
+        canvas.add(line);
+        canvas.setActiveObject(line);
+      } catch (error) {
+        console.error("Error adding line:", error);
+      }
+    }
+  };
+
   // Update selected element property
   const updateProperty = (property, value) => {
     if (selectedElement && canvas) {
@@ -386,20 +422,422 @@ export default function Studio() {
     }
   };
 
+  // Add document element (Margin, Bleed, etc.)
+  const addDocumentElement = async (elementType) => {
+    if (!canvas || typeof window === "undefined") return;
+
+    const fieldExample = fieldTypesExamples.find(
+      (field) => field.text.toLowerCase() === elementType.toLowerCase()
+    );
+
+    if (!fieldExample) {
+      console.error(`Field type "${elementType}" not found`);
+      return;
+    }
+
+    try {
+      const fabric = await import("fabric");
+      const fieldData = fieldExample.value;
+
+      let fabricObject;
+
+      // Handle different field types
+      switch (fieldData.type) {
+        case "shape":
+          if (fieldData.shape === "rect") {
+            // Calculate actual dimensions for expressions like "page.width"
+            const width =
+              typeof fieldData.w === "string" &&
+              fieldData.w.includes("page.width")
+                ? canvasWidth
+                : fieldData.w || 100;
+            const height =
+              typeof fieldData.h === "string" &&
+              fieldData.h.includes("page.height")
+                ? canvasHeight
+                : fieldData.h || 100;
+
+            fabricObject = new fabric.Rect({
+              left: fieldData.x || 0,
+              top: fieldData.y || 0,
+              width: width,
+              height: height,
+              fill: fieldData.color === 1 ? "#cccccc" : "#000000",
+              opacity:
+                elementType.toLowerCase() === "margin" ||
+                elementType.toLowerCase() === "bleed"
+                  ? 0.3
+                  : 1,
+              stroke: "#666666",
+              strokeWidth: 1,
+              strokeDashArray:
+                elementType.toLowerCase() === "margin" ||
+                elementType.toLowerCase() === "bleed"
+                  ? [5, 5]
+                  : [],
+            });
+          } else if (fieldData.shape === "circle") {
+            fabricObject = new fabric.Circle({
+              left: fieldData.x || 0,
+              top: fieldData.y || 0,
+              radius: Math.min(fieldData.w || 50, fieldData.h || 50) / 2,
+              fill: fieldData.color === 1 ? "#cccccc" : "#000000",
+            });
+          } else if (fieldData.shape === "line") {
+            fabricObject = new fabric.Line(
+              [
+                fieldData.x || 0,
+                fieldData.y || 0,
+                (fieldData.x || 0) + (fieldData.w || 100),
+                fieldData.y || 0,
+              ],
+              {
+                stroke: "#000000",
+                strokeWidth: fieldData.linewidth || 1,
+              }
+            );
+          }
+          break;
+
+        case "textblock":
+          fabricObject = new fabric.Textbox(
+            fieldData.contents || "Sample Text",
+            {
+              left: fieldData.x || 0,
+              top: fieldData.y || 0,
+              width: fieldData.w || 200,
+              fontSize: fieldData.fontSize || 16,
+              fontFamily: fieldData.fontFamily || "Arial",
+              fill: fieldData.color === 0 ? "#000000" : "#666666",
+            }
+          );
+          break;
+
+        case "textline":
+          fabricObject = new fabric.Text(fieldData.contents || "Sample Text", {
+            left: fieldData.x || 0,
+            top: fieldData.y || 0,
+            fontSize: fieldData.fontSize || 16,
+            fontFamily: fieldData.fontFamily || "Arial",
+            fill: fieldData.color === 0 ? "#000000" : "#666666",
+          });
+          break;
+
+        default:
+          console.warn(`Unsupported field type: ${fieldData.type}`);
+          return;
+      }
+
+      if (fabricObject) {
+        fabricObject.elementType = fieldData.type;
+        fabricObject.documentElementType = elementType;
+        fabricObject.fieldData = fieldData;
+        canvas.add(fabricObject);
+        canvas.setActiveObject(fabricObject);
+      }
+    } catch (error) {
+      console.error(`Error adding ${elementType}:`, error);
+    }
+  };
+
+  // Save current page elements
+  const saveCurrentPageElements = () => {
+    if (canvas) {
+      const objects = canvas.getObjects();
+      const serializedObjects = objects.map((obj) => ({
+        type: obj.type,
+        elementType: obj.elementType,
+        shapeType: obj.shapeType,
+        documentElementType: obj.documentElementType,
+        fieldData: obj.fieldData,
+        left: obj.left,
+        top: obj.top,
+        width: obj.width,
+        height: obj.height,
+        scaleX: obj.scaleX,
+        scaleY: obj.scaleY,
+        fill: obj.fill,
+        stroke: obj.stroke,
+        strokeWidth: obj.strokeWidth,
+        strokeDashArray: obj.strokeDashArray,
+        opacity: obj.opacity,
+        text: obj.text,
+        fontSize: obj.fontSize,
+        fontFamily: obj.fontFamily,
+        radius: obj.radius,
+        x1: obj.x1,
+        y1: obj.y1,
+        x2: obj.x2,
+        y2: obj.y2,
+      }));
+
+      setPageElements((prev) => ({
+        ...prev,
+        [currentPage]: serializedObjects,
+      }));
+    }
+  };
+
+  // Load page elements
+  const loadPageElements = async (pageId) => {
+    if (!canvas || typeof window === "undefined") return;
+
+    try {
+      const fabric = await import("fabric");
+
+      // Clear current canvas
+      canvas.clear();
+
+      const elements = pageElements[pageId] || [];
+
+      for (const element of elements) {
+        let fabricObject;
+
+        switch (element.type) {
+          case "textbox":
+            fabricObject = new fabric.Textbox(element.text || "Sample Text", {
+              left: element.left,
+              top: element.top,
+              width: element.width,
+              fontSize: element.fontSize,
+              fontFamily: element.fontFamily,
+              fill: element.fill,
+            });
+            break;
+
+          case "text":
+            fabricObject = new fabric.Text(element.text || "Sample Text", {
+              left: element.left,
+              top: element.top,
+              fontSize: element.fontSize,
+              fontFamily: element.fontFamily,
+              fill: element.fill,
+            });
+            break;
+
+          case "rect":
+            fabricObject = new fabric.Rect({
+              left: element.left,
+              top: element.top,
+              width: element.width,
+              height: element.height,
+              fill: element.fill,
+              stroke: element.stroke,
+              strokeWidth: element.strokeWidth,
+              strokeDashArray: element.strokeDashArray,
+              opacity: element.opacity,
+            });
+            break;
+
+          case "circle":
+            fabricObject = new fabric.Circle({
+              left: element.left,
+              top: element.top,
+              radius: element.radius,
+              fill: element.fill,
+              stroke: element.stroke,
+              strokeWidth: element.strokeWidth,
+            });
+            break;
+
+          case "line":
+            fabricObject = new fabric.Line(
+              [element.x1, element.y1, element.x2, element.y2],
+              {
+                left: element.left,
+                top: element.top,
+                stroke: element.stroke,
+                strokeWidth: element.strokeWidth,
+              }
+            );
+            break;
+
+          case "group":
+            // Handle groups (like image placeholders)
+            const rect = new fabric.Rect({
+              left: 0,
+              top: 0,
+              width: element.width,
+              height: element.height,
+              fill: "#e0e0e0",
+              stroke: "#cccccc",
+              strokeWidth: 2,
+              strokeDashArray: [5, 5],
+            });
+
+            const text = new fabric.Text("Image Placeholder", {
+              left: element.width / 2,
+              top: element.height / 2,
+              fontSize: 12,
+              fill: "#666666",
+              originX: "center",
+              originY: "center",
+            });
+
+            fabricObject = new fabric.Group([rect, text], {
+              left: element.left,
+              top: element.top,
+            });
+            break;
+
+          default:
+            continue;
+        }
+
+        if (fabricObject) {
+          fabricObject.elementType = element.elementType;
+          fabricObject.shapeType = element.shapeType;
+          fabricObject.documentElementType = element.documentElementType;
+          fabricObject.fieldData = element.fieldData;
+          canvas.add(fabricObject);
+        }
+      }
+
+      canvas.renderAll();
+    } catch (error) {
+      console.error("Error loading page elements:", error);
+    }
+  };
+
+  // Add new page
+  const addPage = () => {
+    // Save current page before switching
+    saveCurrentPageElements();
+
+    const newPageId = Math.max(...documentPages.map((p) => p.id)) + 1;
+    const newPage = {
+      id: newPageId,
+      name: `Page ${newPageId}`,
+    };
+    setDocumentPages([...documentPages, newPage]);
+
+    // Initialize empty elements for new page
+    setPageElements((prev) => ({
+      ...prev,
+      [newPageId]: [],
+    }));
+
+    setCurrentPage(newPageId);
+    // Load new page (which will be empty)
+    loadPageElements(newPageId);
+  };
+
+  // Delete page
+  const deletePage = (pageId) => {
+    if (documentPages.length <= 1) return; // Don't delete the last page
+
+    const updatedPages = documentPages.filter((p) => p.id !== pageId);
+    setDocumentPages(updatedPages);
+
+    // Remove page elements
+    setPageElements((prev) => {
+      const newPageElements = { ...prev };
+      delete newPageElements[pageId];
+      return newPageElements;
+    });
+
+    if (currentPage === pageId) {
+      const newCurrentPage = updatedPages[0].id;
+      setCurrentPage(newCurrentPage);
+      loadPageElements(newCurrentPage);
+    }
+  };
+
+  // Switch page
+  const switchPage = (pageId) => {
+    if (pageId === currentPage) return;
+
+    // Save current page elements before switching
+    saveCurrentPageElements();
+
+    setCurrentPage(pageId);
+    loadPageElements(pageId);
+  };
+
   // Export to JSON
   const exportToJson = () => {
     if (!canvas) return;
 
-    const objects = canvas.getObjects();
-    const fields = [];
-    const pages = [
-      {
+    // Save current page elements before export
+    saveCurrentPageElements();
+
+    // Generate fields for all pages
+    const allPageFields = [];
+    const pages = [];
+
+    documentPages.forEach((page) => {
+      const pageObjs = pageElements[page.id] || [];
+      const fields = [];
+
+      pageObjs.forEach((obj, index) => {
+        const field = {
+          name: `Page${page.id}_Element_${index + 1}`,
+          x: Math.round(obj.left || 0),
+          y: Math.round(obj.top || 0),
+          w: Math.round((obj.width || 100) * (obj.scaleX || 1)),
+          h: Math.round((obj.height || 100) * (obj.scaleY || 1)),
+          editable: true,
+        };
+
+        // Handle different element types
+        if (obj.elementType === "textblock" || obj.type === "textbox") {
+          field.type = "textblock";
+          field.contents = obj.text || "Sample text";
+          field.fontSize = obj.fontSize || 16;
+          field.fontFamily = obj.fontFamily || "Arial";
+          field.color = obj.fill || "#000000";
+          field.align = 0; // left align
+        } else if (obj.elementType === "fleximage" || obj.type === "group") {
+          field.type = "fleximage";
+          field.dpi = 300;
+          field.displayDPI = 144;
+          field.size = "cover";
+          field.browse = true;
+          field.allowUpload = true;
+        } else if (
+          obj.elementType === "shape" ||
+          obj.type === "rect" ||
+          obj.type === "circle" ||
+          obj.type === "line"
+        ) {
+          field.type = "shape";
+          field.shape = obj.shapeType || obj.type || "rect";
+          field.color = obj.fill || obj.stroke || "#000000";
+
+          // Special handling for lines
+          if (field.shape === "line") {
+            field.linewidth = obj.strokeWidth || 1;
+          }
+        }
+
+        // Handle document elements with special properties
+        if (obj.documentElementType) {
+          if (obj.fieldData) {
+            // Use the original field data for document elements
+            Object.assign(field, obj.fieldData);
+            field.name = `Page${page.id}_${obj.documentElementType}`;
+          }
+        }
+
+        fields.push(field);
+      });
+
+      // Add page fields to all pages array
+      allPageFields.push({
+        pagenr: page.id,
+        fields: fields,
+      });
+
+      // Add page definition
+      pages.push({
+        pagenr: page.id,
         width: canvasWidth,
         height: canvasHeight,
         bleed: 0,
         margin: { top: 0, right: 0, bottom: 0, left: 0 },
-      },
-    ];
+      });
+    });
+
     const styles = {
       colors: colorPalette.map((color, index) => ({
         cmyk: "0,0,0,100",
@@ -416,13 +854,26 @@ export default function Studio() {
           lineGap: 0,
           ttfurl: "https://fonts.example.com/arial.ttf",
         },
+        {
+          name: "Helvetica",
+          style: "normal",
+          weight: 400,
+          ascender: 800,
+          descender: -200,
+          lineGap: 0,
+          ttfurl: "https://fonts.example.com/helvetica.ttf",
+        },
       ],
     };
+
     const templates = [
       {
-        name: "Studio Template",
-        description: "Created with Studio visual builder",
+        name: "Studio Multi-Page Template",
+        description: `Created with Studio visual builder - ${
+          documentPages.length
+        } page${documentPages.length > 1 ? "s" : ""}`,
         category: "custom",
+        pages: documentPages.length,
         print: {
           format: "A4",
           orientation: "portrait",
@@ -431,44 +882,11 @@ export default function Studio() {
       },
     ];
 
-    objects.forEach((obj, index) => {
-      const field = {
-        name: `Element_${index + 1}`,
-        x: Math.round(obj.left || 0),
-        y: Math.round(obj.top || 0),
-        w: Math.round((obj.width || 100) * (obj.scaleX || 1)),
-        h: Math.round((obj.height || 100) * (obj.scaleY || 1)),
-        editable: true,
-      };
-
-      if (obj.elementType === "textblock") {
-        field.type = "textblock";
-        field.contents = obj.text || "Sample text";
-        field.fontSize = obj.fontSize || 16;
-        field.fontFamily = obj.fontFamily || "Arial";
-        field.color = obj.fill || "#000000";
-        field.align = 0; // left align
-      } else if (obj.elementType === "fleximage") {
-        field.type = "fleximage";
-        field.dpi = 300;
-        field.displayDPI = 144;
-        field.size = "cover";
-        field.browse = true;
-        field.allowUpload = true;
-      } else if (obj.elementType === "shape") {
-        field.type = "shape";
-        field.shape = obj.shapeType || "rect";
-        field.color = obj.fill || "#000000";
-      }
-
-      fields.push(field);
-    });
-
     const exportData = {
-      fields: [{ pagenr: 1, fields }],
-      pages,
-      styles,
-      templates,
+      fields: allPageFields,
+      pages: pages,
+      styles: styles,
+      templates: templates,
     };
 
     setGeneratedJson(JSON.stringify(exportData, null, 2));
@@ -574,8 +992,9 @@ export default function Studio() {
     if (!generatedJson) return;
 
     const data = JSON.parse(generatedJson);
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
 
-    // Download each file separately
+    // Download each file separately with timestamps
     Object.entries(data).forEach(([key, content]) => {
       const blob = new Blob([JSON.stringify(content, null, 2)], {
         type: "application/json",
@@ -583,12 +1002,25 @@ export default function Studio() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${key}.json`;
+      a.download = `${key}_${timestamp}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
+
+    // Also download a combined file
+    const combinedBlob = new Blob([generatedJson], {
+      type: "application/json",
+    });
+    const combinedUrl = URL.createObjectURL(combinedBlob);
+    const combinedLink = document.createElement("a");
+    combinedLink.href = combinedUrl;
+    combinedLink.download = `studio_template_${timestamp}.json`;
+    document.body.appendChild(combinedLink);
+    combinedLink.click();
+    document.body.removeChild(combinedLink);
+    URL.revokeObjectURL(combinedUrl);
   };
 
   return (
@@ -704,104 +1136,256 @@ export default function Studio() {
                     Circle
                   </Button>
                 </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    startIcon={<LineIcon />}
+                    onClick={addLine}
+                    sx={{
+                      height: 60,
+                      flexDirection: "column",
+                      fontSize: "0.75rem",
+                      transition: "transform 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                      },
+                      "&:active": {
+                        transform: "scale(0.95)",
+                      },
+                    }}
+                  >
+                    Line
+                  </Button>
+                </Grid>
               </Grid>
 
               <Divider sx={{ my: 3 }} />
 
-              {/* Canvas Settings */}
+              {/* Document Settings */}
               <Typography variant="h6" gutterBottom>
-                Canvas Settings
+                Document Settings
               </Typography>
 
-              <TextField
-                label="Canvas Width (px)"
-                type="number"
-                value={canvasWidth}
-                onChange={(e) => setCanvasWidth(Number(e.target.value))}
-                fullWidth
-                size="small"
-                sx={{ mb: 2 }}
-                inputProps={{ min: 100, max: 2000 }}
-              />
+              {/* Canvas Settings */}
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="subtitle2">Canvas Settings</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    label="Canvas Width (px)"
+                    type="number"
+                    value={canvasWidth}
+                    onChange={(e) => setCanvasWidth(Number(e.target.value))}
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 2 }}
+                    inputProps={{ min: 100, max: 2000 }}
+                  />
 
-              <TextField
-                label="Canvas Height (px)"
-                type="number"
-                value={canvasHeight}
-                onChange={(e) => setCanvasHeight(Number(e.target.value))}
-                fullWidth
-                size="small"
-                sx={{ mb: 2 }}
-                inputProps={{ min: 100, max: 2000 }}
-              />
+                  <TextField
+                    label="Canvas Height (px)"
+                    type="number"
+                    value={canvasHeight}
+                    onChange={(e) => setCanvasHeight(Number(e.target.value))}
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 2 }}
+                    inputProps={{ min: 100, max: 2000 }}
+                  />
 
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ display: "block", mb: 2 }}
-              >
-                Canvas updates automatically when you change dimensions
-              </Typography>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: "block", mb: 2 }}
+                  >
+                    Canvas updates automatically when you change dimensions
+                  </Typography>
 
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Quick Presets:
-                </Typography>
-                <Grid container spacing={1}>
-                  <Grid item xs={6}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      onClick={() => {
-                        setCanvasWidth(400);
-                        setCanvasHeight(600);
-                      }}
-                    >
-                      Business Card
-                    </Button>
+                  <Box sx={{ mb: 0 }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      Quick Presets:
+                    </Typography>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() => {
+                            setCanvasWidth(400);
+                            setCanvasHeight(600);
+                          }}
+                        >
+                          Business Card
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() => {
+                            setCanvasWidth(600);
+                            setCanvasHeight(800);
+                          }}
+                        >
+                          Flyer
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() => {
+                            setCanvasWidth(800);
+                            setCanvasHeight(600);
+                          }}
+                        >
+                          Landscape
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() => {
+                            setCanvasWidth(800);
+                            setCanvasHeight(800);
+                          }}
+                        >
+                          Square
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Layout Guides */}
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="subtitle2">Layout Guides</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 2, color: "text.secondary" }}
+                  >
+                    Add professional layout guides to your design
+                  </Typography>
+
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        onClick={() => addDocumentElement("Margin")}
+                        sx={{ fontSize: "0.7rem" }}
+                      >
+                        Margin Guide
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        onClick={() => addDocumentElement("Bleed")}
+                        sx={{ fontSize: "0.7rem" }}
+                      >
+                        Bleed Area
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      onClick={() => {
-                        setCanvasWidth(600);
-                        setCanvasHeight(800);
-                      }}
-                    >
-                      Flyer
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      onClick={() => {
-                        setCanvasWidth(800);
-                        setCanvasHeight(600);
-                      }}
-                    >
-                      Landscape
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      onClick={() => {
-                        setCanvasWidth(800);
-                        setCanvasHeight(800);
-                      }}
-                    >
-                      Square
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Pages */}
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="subtitle2">
+                    Pages ({documentPages.length})
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Current Page Indicator */}
+                  <Box
+                    sx={{
+                      mb: 2,
+                      p: 1,
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Typography variant="caption" color="primary">
+                      Current:{" "}
+                      {documentPages.find((p) => p.id === currentPage)?.name ||
+                        "Page 1"}
+                    </Typography>
+                  </Box>
+
+                  {/* Page List */}
+                  <Box sx={{ maxHeight: 120, overflowY: "auto", mb: 2 }}>
+                    {documentPages.map((page) => (
+                      <Box
+                        key={page.id}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          mb: 0.5,
+                          p: 0.5,
+                          backgroundColor:
+                            page.id === currentPage ? "#e3f2fd" : "transparent",
+                          borderRadius: 1,
+                          border:
+                            page.id === currentPage
+                              ? "1px solid #2196f3"
+                              : "1px solid transparent",
+                        }}
+                      >
+                        <Button
+                          size="small"
+                          onClick={() => switchPage(page.id)}
+                          sx={{
+                            flex: 1,
+                            justifyContent: "flex-start",
+                            fontSize: "0.7rem",
+                            textTransform: "none",
+                          }}
+                        >
+                          {page.name}
+                        </Button>
+                        {documentPages.length > 1 && (
+                          <Button
+                            size="small"
+                            color="error"
+                            onClick={() => deletePage(page.id)}
+                            sx={{ minWidth: 30, fontSize: "0.7rem" }}
+                          >
+                            ×
+                          </Button>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* Add Page Button */}
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    onClick={addPage}
+                    sx={{ fontSize: "0.7rem" }}
+                  >
+                    + Add Page
+                  </Button>
+                </AccordionDetails>
+              </Accordion>
 
               <Divider sx={{ my: 3 }} />
 

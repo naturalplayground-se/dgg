@@ -1,0 +1,392 @@
+// Examples of our different types of fields, this is not correct json structure, but it is a good example of how to use the fields.
+
+[
+  {
+    "text": "Textblock",
+    "title": "Textblock",
+    "field": "fields",
+    "value": {
+      "name": "Text_Block",
+      "title": "Textblock",
+      "type": "textblock",
+      "contents": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ultrices ipsum pulvinar hendrerit sodales. In hac habitasse platea dictumst. Donec nibh nulla, faucibus sed porta ut, cursus aliquam justo.",
+      "textareaheight": 50,
+      "x": 0,
+      "y": 0,
+      "w": 200,
+      "h": "auto",
+      "maxw": "Textblock.width",
+      "maxRows": 2,
+      "align": 1,
+      "fontNr": 0,
+      "fontSize": 12,
+      "lineHeight": 14.4,
+      "fontSizes": [
+        {
+          "size": 28,
+          "name": "28",
+          "lineHeight": 33.6
+        },
+        {
+          "size": 32,
+          "name": "32",
+          "lineHeight": 38.4
+        }
+      ],
+      "color": 0,
+      "colors": [0, 1],
+      "editable": true,
+      "editui": "text",
+      "kern": true,
+      "spacing": 0,
+      "hideable": false
+    }
+  },
+  {
+    "text": "Dropdown text",
+    "title": "Dropdown with text visible in the layout",
+    "field": "fields",
+    "value": {
+      "name": "Dropdown_Text",
+      "title": "Text",
+      "type": "textline",
+      "editui": "select",
+      "contents": "SELECT1",
+      "options": [
+        {
+          "name": "SELECT...",
+          "value": ""
+        },
+        {
+          "name": "SELECT1",
+          "value": "selection 1"
+        },
+        {
+          "name": "SELECT2",
+          "value": "selection 2"
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "maxw": "textline1.width",
+      "h": "auto",
+      "hideable": false,
+      "autoShrink": true,
+      "shrinkLimit": 0.5,
+      "align": 1,
+      "fontNr": 0,
+      "fontSize": 8,
+      "color": 0,
+      "editable": true,
+      "spacing": 0,
+      "kern": true
+    }
+  },
+  {
+    "text": "Dropdown",
+    "title": "Dropdown to hide or show elements",
+    "field": "fields",
+    "value": {
+      "name": "Dropdown",
+      "title": "Select from list",
+      "type": "select",
+      "options": [
+        {
+          "title": "alt 1",
+          "selected": true,
+          "show": ["fieldY"],
+          "hide": ["fieldX"]
+        },
+        {
+          "title": "alt 2",
+          "show": ["fieldX"],
+          "hide": ["fieldY"]
+        }
+      ],
+      "editui": "selectlist",
+      "editable": true
+    }
+  },
+  {
+    "text": "Circle",
+    "title": "Circle with color options",
+    "field": "fields",
+    "value": {
+      "name": "Circle",
+      "title": "Circle",
+      "type": "shape",
+      "shape": "circle",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "color": 0,
+      "colors": [0, 1],
+      "editable": true,
+      "hideable": false,
+      "editui": "colors"
+    }
+  },
+  {
+    "text": "Rectangle",
+    "title": "Rectangle with colors",
+    "field": "fields",
+    "value": {
+      "name": "Rect",
+      "title": "Rectangle",
+      "type": "shape",
+      "shape": "rect",
+      "editui": "colors",
+      "colors": [2, 3],
+      "color": 2,
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "hideable": false,
+      "editable": true
+    }
+  },
+  {
+    "text": "Line",
+    "title": "Line",
+    "field": "fields",
+    "value": {
+      "name": "Line",
+      "type": "shape",
+      "shape": "line",
+      "x": 0,
+      "y": 100,
+      "w": "page.width",
+      "h": 0,
+      "color": 0,
+      "linewidth": 1,
+      "editable": false
+    }
+  },
+
+  {
+    "text": "Alignment Layer",
+    "title": "A transparent, full-sized PDF of the original for precise alignment of elements to ensure an exact positioning.",
+    "field": "fields",
+    "value": {
+      "name": "Align",
+      "title": "",
+      "type": "fleximage",
+      "size": "keepSize",
+      "x": 0,
+      "y": 0,
+      "w": "page.width",
+      "h": "page.height",
+      "editui": "browse",
+      "editable": true,
+      "browse": false,
+      "allowUpload": false,
+      "hidePrint": true,
+      "hideable": true,
+      "hide": false,
+      "srcpdf": "https://assets.mediaflowpro.com/a/881f15227a55a58d8c0acb39f26ca9d9/placehold_images_avlang.pdf",
+      "dpi": 300,
+      "displayDPI": 200
+    }
+  },
+
+  {
+    "text": "Bleed",
+    "title": "A reference element used to define page bleed. The values are set to a fixed 14,173 points, which is equivalent to 5mm.",
+    "field": "fields",
+    "value": {
+      "name": "Bleed",
+      "x": -8.504,
+      "y": -8.504,
+      "w": "page.width + (2 * 8.504)",
+      "h": "page.height + (2 * 8.504)",
+      "z": -100,
+      "type": "shape",
+      "shape": "rect",
+      "color": 1,
+      "editable": false,
+      "hidePrint": true
+    }
+  },
+  {
+    "text": "Margin",
+    "title": "A reference element for establishing page margins. The values are hardcoded because they cannot always be directly scaled from one page size to another.",
+    "field": "fields",
+    "value": {
+      "name": "Margin",
+      "x": 36,
+      "y": 36,
+      "w": "page.width - (2* 36)",
+      "h": "page.height - (2* 36)",
+      "z": -100,
+      "type": "shape",
+      "shape": "rect",
+      "color": 1,
+      "editable": false,
+      "hidePrint": true
+    }
+  },
+  {
+    "text": "State",
+    "title": "A boolean state, toggling between visibility (true) and hidden (false), controls element behavior based on user interactions. For example, it can be used in a dropdown menu to show or hide graphics. When set to visible (true), it influences conditional logic in field positioning, such as x: State_BgBlue.visible ? Margin.left : -1000.",
+    "field": "fields",
+    "value": {
+      "name": "State",
+      "x": -100,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "z": -100,
+      "type": "shape",
+      "shape": "rect",
+      "color": 1,
+      "editable": false
+    }
+  },
+  {
+    "text": "Instruction layer",
+    "title": "A pdf with instructions with hidePrint. Pdf from customer or made by us, InDesign template in Proffesional Services drive. ",
+    "value": {
+      "name": "Instructions",
+      "title": "Visa instruktioner",
+      "type": "fleximage",
+      "editui": "browse",
+      "x": 0,
+      "y": 0,
+      "w": "page.width",
+      "h": "page.height",
+      "z": 1000,
+      "valign": "center",
+      "halign": "center",
+      "size": "contain",
+      "editable": true,
+      "hideable": true,
+      "hide": true,
+      "hidePrint": true,
+      "browse": false,
+      "srcpdf": "https://assets.mediaflowpro.com/a/fcb6c4e864b575a70035d2c90c0401aa/Instructionlayer_InfobladA4.pdf",
+      "dpi": 300,
+      "displayDPI": 100
+    }
+  },
+  {
+    "text": "Textline",
+    "title": "One line with text",
+    "field": "fields",
+    "value": {
+      "name": "Textline",
+      "title": "Text",
+      "type": "textline",
+      "editui": "text",
+      "contents": "Lorem ipsum dolor",
+      "x": 0,
+      "y": 0,
+      "w": "page.width",
+      "maxw": "Textline.width",
+      "h": "auto",
+      "hideable": false,
+      "autoShrink": false,
+      "shrinkLimit": 0.5,
+      "align": 1,
+      "fontNr": 0,
+      "fontSize": 32,
+      "fontSizes": [
+        {
+          "size": 28,
+          "name": "S"
+        },
+        {
+          "size": 32,
+          "name": "M"
+        },
+        {
+          "size": 36,
+          "name": "L"
+        }
+      ],
+      "color": 0,
+      "colors": [0, 1],
+      "editable": true,
+      "spacing": 0,
+      "kern": true
+    }
+  },
+  {
+    "text": "Image",
+    "title": "Image with options",
+    "value": {
+      "name": "Image",
+      "title": "Bild",
+      "type": "fleximage",
+      "dpi": 300,
+      "displayDPI": 150,
+      "editable": true,
+      "browse": true,
+      "allowUpload": true,
+      "hideable": false,
+      "editui": "browse",
+      "size": "cover",
+      "x": 0,
+      "y": 0,
+      "w": "page.width",
+      "h": "page.height",
+      "srcpdf": "https://assets.mediaflowpro.com/a/527b5a94c5ae2e82c698115cf105ff4d/placehold_images_A4.pdf",
+      "fileSelectorFolderId": null,
+      "options": [
+        {
+          "selected": true,
+          "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+          "srcpdf": "https://assets.mediaflowpro.com/a/527b5a94c5ae2e82c698115cf105ff4d/placehold_images_A4.pdf",
+          "fit": false
+        }
+      ]
+    }
+  },
+  {
+    "text": "Disabled template message",
+    "title": "Show message to user that template is disabled.",
+    "value": {
+      "name": "Disabled_Message",
+      "title": "",
+      "type": "fleximage",
+      "valign": "center",
+      "halign": "center",
+      "size": "cover",
+      "editable": false,
+      "x": 0,
+      "y": 0,
+      "w": "page.width",
+      "h": "page.height",
+      "z": 100,
+      "maxw": "eval(document.documentElement.style.pointerEvents = 'none')",
+      "editui": "browse",
+      "browse": false,
+      "srcpdf": "https://assets.mediaflowpro.com/a/eded47a64ebd6dbb9a350a7ab2852baa/Ooops_A4.pdf",
+      "hideable": false,
+      "hide": false,
+      "dpi": 100,
+      "displayDPI": 200
+    }
+  },
+  {
+    "text": "QR Code",
+    "title": "New QR code function",
+    "value": {
+      "name": "QR",
+      "title": "QR-code",
+      "type": "barcode",
+      "barcode": "QR",
+      "contents": "",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "z": 1,
+      "color": 0,
+      "hideable": false,
+      "editable": true
+    }
+  }
+]
