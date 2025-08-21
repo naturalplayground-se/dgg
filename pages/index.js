@@ -69,6 +69,19 @@ export default function Home() {
         "Complete JSON structure generation",
       ],
     },
+    {
+      title: "Prefix Replacement",
+      description:
+        "Find and replace field name prefixes in your JSON templates. Convert field names across different pages with automatic alphabetical numbering or custom replacement strings.",
+      route: "/prefix",
+      color: "#e91e63",
+      features: [
+        "Smart prefix detection and replacement",
+        "Alphabetical page numbering (A_, B_, C_...)",
+        "Custom replacement strings",
+        "Automatic clipboard copying",
+      ],
+    },
   ];
 
   return (

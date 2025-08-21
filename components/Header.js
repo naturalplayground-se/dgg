@@ -10,6 +10,7 @@ export default function Header() {
     { label: "Repetition", path: "/repetition" },
     { label: "Scaling", path: "/scaling" },
     { label: "Import", path: "/import" },
+    { label: "Prefix", path: "/prefix" },
   ];
 
   return (
