@@ -16,11 +16,16 @@ import Header from "../components/Header";
 export default function Prefix() {
   const router = useRouter();
   const [designGeneratorJson, setDesignGeneratorJson] = React.useState([]);
+  const [stylesJson, setStylesJson] = React.useState({});
   const [textAreaError, setTextAreaError] = React.useState(false);
+  const [stylesTextAreaError, setStylesTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
+  const [stylesJsonSuccess, setStylesJsonSuccess] = React.useState(false);
   const [jsonInputValue, setJsonInputValue] = React.useState("");
+  const [stylesJsonInputValue, setStylesJsonInputValue] = React.useState("");
   const [hasStoredJson, setHasStoredJson] = React.useState(false);
   const [generatedJson, setGeneratedJson] = React.useState("");
+  const [generatedStylesJson, setGeneratedStylesJson] = React.useState("");
 
   // Prefix settings - now supporting multiple replacements
   const [replacements, setReplacements] = React.useState([
@@ -70,6 +75,28 @@ export default function Prefix() {
     } catch (error) {
       setTextAreaError(true);
       setJsonSuccess(false);
+    }
+  };
+
+  const handleStylesJsonInputChange = (event) => {
+    const value = event.target.value;
+    setStylesJsonInputValue(value);
+
+    if (value.trim() === "") {
+      setStylesTextAreaError(false);
+      setStylesJsonSuccess(false);
+      setStylesJson({});
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(value);
+      setStylesJson(parsed);
+      setStylesTextAreaError(false);
+      setStylesJsonSuccess(true);
+    } catch (error) {
+      setStylesTextAreaError(true);
+      setStylesJsonSuccess(false);
     }
   };
 
@@ -181,6 +208,136 @@ export default function Prefix() {
     return processedJson;
   };
 
+  // Process styles.json to create new styles for fields with updated names
+  const processStylesJson = (stylesJson, processedFieldsJson, replacements) => {
+    if (!stylesJson.styles || !Array.isArray(stylesJson.styles)) {
+      return stylesJson;
+    }
+
+    const newStyles = [...stylesJson.styles];
+    let nextStyleIndex = newStyles.length;
+
+    // Create a deep copy of the processed fields JSON to avoid mutating the original
+    const processedFieldsCopy = JSON.parse(JSON.stringify(processedFieldsJson));
+
+    // Process each page
+    processedFieldsCopy.forEach((page) => {
+      if (page.pagenr && page.fields) {
+        const pageAlpha = numberToAlpha(page.pagenr);
+
+        // Find fields with styles in this page
+        page.fields.forEach((field) => {
+          if (field.styles && Array.isArray(field.styles)) {
+            // For each replacement, create new styles if needed
+            replacements.forEach((replacement) => {
+              if (
+                replacement.findPrefix &&
+                replacement.replaceType === "page_number"
+              ) {
+                // Check if this field name was changed by looking for the page prefix
+                if (field.name && field.name.startsWith(`${pageAlpha}_`)) {
+                  // Process styles for this field
+                  field.styles.forEach((styleIndex, styleArrayIndex) => {
+                    if (styleIndex < newStyles.length) {
+                      const originalStyle = newStyles[styleIndex];
+
+                      // Check if a style with this colorFrom already exists
+                      const existingStyleIndex = newStyles.findIndex(
+                        (style) => style.colorFrom === field.name
+                      );
+
+                      if (existingStyleIndex !== -1) {
+                        // Style already exists, just update the field to reference it
+                        field.styles[styleArrayIndex] = existingStyleIndex;
+                      } else {
+                        // Create new style - only add colorFrom if original had it
+                        const newStyle = {
+                          ...originalStyle,
+                          info: originalStyle.info
+                            ? `Page ${page.pagenr} - ${originalStyle.info}`
+                            : `Page ${page.pagenr} - Style ${styleIndex}`,
+                        };
+
+                        // Only add colorFrom if the original style had it
+                        if (originalStyle.colorFrom) {
+                          newStyle.colorFrom = field.name; // Use the actual field name
+                        }
+
+                        newStyles.push(newStyle);
+
+                        // Update the field's styles array to reference the new style
+                        field.styles[styleArrayIndex] = nextStyleIndex;
+                        console.log(
+                          `Updated field "${field.name}" style index from ${styleIndex} to ${nextStyleIndex}`
+                        );
+                        nextStyleIndex++;
+                      }
+                    }
+                  });
+                }
+              } else if (
+                replacement.findPrefix &&
+                replacement.replaceType === "custom" &&
+                replacement.customReplace
+              ) {
+                // Check if this field name was changed by looking for the custom prefix
+                if (
+                  field.name &&
+                  field.name.startsWith(replacement.customReplace)
+                ) {
+                  // Process styles for this field
+                  field.styles.forEach((styleIndex, styleArrayIndex) => {
+                    if (styleIndex < newStyles.length) {
+                      const originalStyle = newStyles[styleIndex];
+
+                      // Check if a style with this colorFrom already exists
+                      const existingStyleIndex = newStyles.findIndex(
+                        (style) => style.colorFrom === field.name
+                      );
+
+                      if (existingStyleIndex !== -1) {
+                        // Style already exists, just update the field to reference it
+                        field.styles[styleArrayIndex] = existingStyleIndex;
+                      } else {
+                        // Create new style - only add colorFrom if original had it
+                        const newStyle = {
+                          ...originalStyle,
+                          info: originalStyle.info
+                            ? `Custom - ${originalStyle.info}`
+                            : `Custom - Style ${styleIndex}`,
+                        };
+
+                        // Only add colorFrom if the original style had it
+                        if (originalStyle.colorFrom) {
+                          newStyle.colorFrom = field.name; // Use the actual field name
+                        }
+
+                        newStyles.push(newStyle);
+
+                        // Update the field's styles array to reference the new style
+                        field.styles[styleArrayIndex] = nextStyleIndex;
+                        console.log(
+                          `Updated field "${field.name}" style index from ${styleIndex} to ${nextStyleIndex}`
+                        );
+                        nextStyleIndex++;
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+
+    return {
+      ...stylesJson,
+      styles: newStyles,
+      updatedFieldsJson: processedFieldsCopy,
+    };
+  };
+
   const handleGenerate = () => {
     if (!designGeneratorJson || designGeneratorJson.length === 0) {
       alert("Please provide valid JSON first");
@@ -230,14 +387,33 @@ export default function Prefix() {
         );
       }
 
-      const jsonString = JSON.stringify(processedJson, null, 2);
+      // Process styles.json if provided
+      let processedStylesJson = null;
+      let updatedFieldsJson = processedJson;
+      if (stylesJsonSuccess && Object.keys(stylesJson).length > 0) {
+        const result = processStylesJson(
+          stylesJson,
+          processedJson,
+          validReplacements
+        );
+        processedStylesJson = result;
+        // Get the updated fields JSON with corrected style indexes
+        updatedFieldsJson = result.updatedFieldsJson || processedJson;
+      }
+
+      const jsonString = JSON.stringify(updatedFieldsJson, null, 2);
       setGeneratedJson(jsonString);
+
+      if (processedStylesJson) {
+        const stylesJsonString = JSON.stringify(processedStylesJson, null, 2);
+        setGeneratedStylesJson(stylesJsonString);
+      }
 
       // Copy to clipboard
       navigator.clipboard
         .writeText(jsonString)
         .then(() => {
-          alert("Modified JSON copied to clipboard!");
+          alert("Modified Fields JSON copied to clipboard!");
         })
         .catch((err) => {
           console.error("Failed to copy to clipboard:", err);
@@ -320,6 +496,43 @@ export default function Prefix() {
           />
         </Box>
 
+        {/* Styles JSON Input Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            2. Input Styles JSON (Optional)
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Paste your styles.json to automatically update style references when
+            field names change. This ensures that styles with "colorFrom"
+            references continue to work after prefix replacements.
+          </Typography>
+
+          <TextField
+            label="Paste your styles.json here (optional)"
+            multiline
+            rows={8}
+            value={stylesJsonInputValue}
+            onChange={handleStylesJsonInputChange}
+            variant="outlined"
+            fullWidth
+            error={stylesTextAreaError}
+            helperText={
+              stylesTextAreaError
+                ? "Invalid JSON format"
+                : stylesJsonSuccess
+                ? "✓ Valid styles JSON detected"
+                : "Paste your styles.json here to update style references"
+            }
+            sx={{
+              fontFamily: "monospace",
+              "& .MuiInputBase-input": {
+                fontFamily: "monospace",
+                fontSize: "0.875rem",
+              },
+            }}
+          />
+        </Box>
+
         {/* Prefix Settings */}
         <Box sx={{ mb: 4 }}>
           <Box
@@ -331,7 +544,7 @@ export default function Prefix() {
             }}
           >
             <Typography variant="h5">
-              2. Configure Prefix Replacements
+              3. Configure Prefix Replacements
             </Typography>
             <Button
               variant="outlined"
@@ -478,17 +691,54 @@ export default function Prefix() {
           </Button>
         </Box>
 
-        {/* Output */}
+        {/* Fields Output */}
         {generatedJson && (
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5" gutterBottom>
-              3. Generated JSON
+              4. Generated Fields JSON
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Updated fields.json with corrected style indexes that reference
+              the new styles. Field names have been updated with prefixes and
+              style references point to the correct new style indexes.
             </Typography>
             <TextField
-              label="Generated JSON (copied to clipboard)"
+              label="Generated Fields JSON (copied to clipboard)"
               multiline
               rows={12}
               value={generatedJson}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+              sx={{
+                fontFamily: "monospace",
+                "& .MuiInputBase-input": {
+                  fontFamily: "monospace",
+                  fontSize: "0.875rem",
+                },
+              }}
+            />
+          </Box>
+        )}
+
+        {/* Styles Output */}
+        {generatedStylesJson && (
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" gutterBottom>
+              5. Generated Styles JSON
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Updated styles.json with new style entries for fields that had
+              their names changed. Each new style includes updated "colorFrom"
+              references and descriptive "info" text.
+            </Typography>
+            <TextField
+              label="Generated Styles JSON"
+              multiline
+              rows={12}
+              value={generatedStylesJson}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -522,7 +772,10 @@ export default function Prefix() {
             <strong>1. Paste JSON:</strong> Input your design JSON that contains
             string values with prefixes
             <br />
-            <strong>2. Configure:</strong>
+            <strong>2. Paste Styles JSON (Optional):</strong> Input your
+            styles.json to automatically update style references
+            <br />
+            <strong>3. Configure:</strong>
             <ul style={{ margin: "8px 0", paddingLeft: "20px" }}>
               <li>
                 <strong>Multiple Replacements:</strong> Add multiple prefix
@@ -542,8 +795,21 @@ export default function Prefix() {
                 sensitive
               </li>
             </ul>
-            <strong>3. Generate:</strong> Click to process and automatically
-            copy the result to your clipboard
+            <strong>4. Generate:</strong> Click to process and get three
+            separate outputs:
+            <ul style={{ margin: "8px 0", paddingLeft: "20px" }}>
+              <li>
+                <strong>Fields JSON:</strong> Updated fields.json with corrected
+                style indexes
+              </li>
+              <li>
+                <strong>Styles JSON:</strong> Updated styles.json with new
+                styles
+              </li>
+              <li>
+                <strong>Combined:</strong> Complete processed design JSON
+              </li>
+            </ul>
           </Typography>
 
           <Box
@@ -561,6 +827,27 @@ export default function Prefix() {
               <br />
               <strong>Note:</strong> Processes multiple replacements in one
               operation (case sensitive)
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{ mt: 2, p: 2, backgroundColor: "#d1ecf1", borderRadius: 1 }}
+          >
+            <Typography variant="body2">
+              <strong>Styles Processing:</strong> When you provide styles.json:
+              <br />
+              • Automatically creates new style entries for fields with changed
+              names
+              <br />
+              • Updates "colorFrom" references to point to new field names
+              <br />
+              • Adds descriptive "info" text with page context (e.g., "Page 1 -
+              Black")
+              <br />
+              • Ensures color inheritance continues to work after prefix
+              replacements
+              <br />• Provides three separate outputs: Fields JSON, Styles JSON,
+              and Combined JSON
             </Typography>
           </Box>
         </Box>

@@ -88,6 +88,11 @@ export default function Scaling() {
           return match;
         }
 
+        // Skip divide-by-2 patterns used for centering (e.g. height / 2)
+        if (parseFloat(number) === 2 && /\/\s*$/.test(beforeMatch)) {
+          return match;
+        }
+
         // Skip if this number is part of a field/property reference
         if (/[\w.]\s*$/.test(beforeMatch) || /^[\w.]/.test(afterMatch)) {
           return match;
@@ -106,11 +111,6 @@ export default function Scaling() {
 
   const scaleObject = (obj, scaleFactor) => {
     const scaledObj = { ...obj };
-
-    // Skip scaling entirely for Margin and Bleed fields
-    if (scaledObj.name === "Margin" || scaledObj.name === "Bleed") {
-      return scaledObj;
-    }
 
     const fieldsToScale = [
       "height",

@@ -1,0 +1,4459 @@
+[
+  {
+    "pagenr": 1,
+    "fields": [
+      {
+        "name": "Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/97f337043ad49fa1625327d2028fd3ff/test1-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.173,
+        "z": -20,
+        "y": -14.173,
+        "w": "page.width + (2*14.173)",
+        "h": "page.height+ (2*14.173)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Image_Small",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Image_Large",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Image_None",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Box",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Right",
+        "x": -300,
+        "y": 1.4,
+        "w": 300,
+        "h": 300,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Top",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "State_Bottom",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Hel bild",
+            "selected": false,
+            "show": ["State_Image_Large"],
+            "hide": ["State_Image_Small", "State_Image_None"]
+          },
+          {
+            "title": "Liten bild",
+            "selected": true,
+            "show": ["State_Image_Small"],
+            "hide": ["State_Image_None", "State_Image_Large"]
+          },
+          {
+            "title": "Ingen bild",
+            "selected": false,
+            "show": ["State_Image_None"],
+            "hide": ["State_Image_Large", "State_Image_Small"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "Bg",
+        "calcVisible": "State_Image_None.visible ? true : false",
+        "title": "Bakgrundsfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "Bleed.left",
+        "y": "Bleed.top",
+        "w": "Bleed.width",
+        "h": "Bleed.height",
+        "color": 10,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "Image_Small_Footer_SelectColor",
+        "calcVisible": "State_Image_Small.visible || State_Image_None.visible ? true : false",
+        "visible": false,
+        "title": "Bakgrundsfärg kurva",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 3,
+        "h": 1.4,
+        "color": 2,
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "Image_Small_Footer_Font",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "State_Image_Small.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": -100,
+        "y": 134,
+        "w": 3000,
+        "z": 10,
+        "h": 558.5,
+        "maxw": "Image_Small_Footer_Font.width",
+        "colorIndexFrom": "Image_Small_Footer_SelectColor",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 17,
+        "lineHeight": 254.5,
+        "fontSize": 870,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "Image_None_Curve_Font",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "State_Image_None.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": -100,
+        "y": 134,
+        "w": 3000,
+        "z": 10,
+        "h": 558.5,
+        "maxw": "Image_Small_Footer_Font.width",
+        "colorIndexFrom": "Image_Small_Footer_SelectColor",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 18,
+        "lineHeight": 254.5,
+        "fontSize": 870,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "Text_Color",
+        "wcalcVisible": "State_Splash.visible ? true : false",
+        "title": "Textfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.1,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "color": 1,
+        "colors": [0, 1],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "Logo_Header",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "ecalcVisible": "State_Image_Small.visible ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "contain",
+        "x": "Bleed.left",
+        "y": "Bleed.top - 125",
+        "z": 100,
+        "w": "Bleed.width * 1.4",
+        "h": 400,
+        "srcpdf": "https://assets.mediaflowpro.com/a/808f7518e0fdb85d6ef03232afe54d3b/logo_top_a4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/7845892473af65af4d95b00e657e70b2/840_680.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "Image_Small",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "State_Image_Small.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "Bleed.left",
+        "y": "Bleed.top",
+        "w": "Bleed.width",
+        "h": "Bleed.height * 0.8",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "Image_Large",
+        "calcVisible": "State_Image_Large.visible ? true : false",
+        "title": "Bild",
+        "visible": false,
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "Bleed.left",
+        "y": "Bleed.top",
+        "w": "Bleed.width",
+        "h": "Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "Select_Element_Image_Large_NotInUse",
+        "title": "Splash",
+        "visible": false,
+        "wcalcVisible": "State_Image_Large.visible ? true : false",
+        "type": "select",
+        "options": [
+          {
+            "title": "Uppe",
+            "selected": false,
+            "show": ["State_Splash", "State_Right", "State_Top"],
+            "hide": ["State_Box"]
+          },
+          {
+            "title": "Nere",
+            "selected": true,
+            "show": ["State_Splash"],
+            "hide": ["State_Box", "State_Top", "State_Right"]
+          },
+          {
+            "title": "Dölj splash",
+            "show": [],
+            "hide": ["State_Box", "State_Splash"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true,
+        "": {
+          "title": "Box nere vänster",
+          "selected": false,
+          "show": ["State_Box"],
+          "hide": ["State_Splash", "State_Top", "State_Right"]
+        }
+      },
+      {
+        "name": "Select_Element",
+        "title": "Splash",
+        "wcalcVisible": "State_Image_Large.visible ? false : true",
+        "type": "select",
+        "options": [
+          {
+            "title": "Uppe höger",
+            "selected": true,
+            "show": ["State_Splash", "State_Right", "State_Top"],
+            "hide": ["State_Box"]
+          },
+          {
+            "title": "Dölj splash",
+            "show": [],
+            "hide": ["State_Box", "State_Splash"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true,
+        "": {
+          "title": "Box nere vänster",
+          "selected": false,
+          "show": ["State_Box"],
+          "hide": ["State_Splash", "State_Top", "State_Right"]
+        }
+      },
+      {
+        "name": "Splash_Wrapper",
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "x": "State_Right.visible ? 243 : 96",
+        "y": "State_Top.visible ? 85 : 412",
+        "z": -1000,
+        "w": 125,
+        "h": 125,
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Splash_Style",
+        "title": "Splash typ",
+        "calcVisible": "State_Splash.visible ? true : false",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": -141.4,
+        "y": 0,
+        "w": 1.4,
+        "h": 1.4,
+        "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/Splash_1.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/Splash_1.pdf",
+            "fit": false
+          },
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/395a51daafa207599803140331bb625f/Splash_2.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "Splash_Colors",
+        "calcVisible": "State_Splash.visible ? true : false",
+        "title": "Splash bakgrundsfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "circle",
+        "x": 0,
+        "y": 0,
+        "w": -1414,
+        "h": 1.4,
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "Splash_1",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "Splash_Style[0].visible && State_Splash.visible ? true : false",
+        "scalcColor": "Splash_Colors[4].visible ? 4 : Splash_Colors[12].visible ? 12 : 0",
+        "editui": "text",
+        "contents": "A",
+        "x": 244,
+        "y": "State_Top.visible ? 75 : 200",
+        "w": "page.width",
+        "maxw": "Splash_1.width",
+        "colorIndexFrom": "Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "h": 558.5,
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "Splash_2",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "Splash_Style[1].visible && State_Splash.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 375,
+        "y": "State_Top.visible ? 85 : 200",
+        "w": "page.width",
+        "maxw": "Splash_2.width",
+        "h": 558.5,
+        "rotate": 90,
+        "hideable": false,
+        "autoShrink": false,
+        "colorIndexFrom": "Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 3, 6, 2, 12, 4],
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "Splash_Text_1",
+        "copyTo": ["Splash_Text_2", "Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "Splash_Colors[4].visible && State_Splash.visible || Splash_Colors[12].visible && State_Splash.visible || Splash_Colors[2].visible && State_Splash.visible  || Splash_Colors[6].visible && State_Splash.visible ? true : false",
+        "type": "textblock",
+        "contents": "Lorem\nipsum",
+        "textareaheight": 50,
+        "x": "State_Right.visible ? Splash_Wrapper.centerx - Splash_Text_1.width /2 : Splash_Wrapper.centerx + 360",
+        "y": "State_Top.visible ? Splash_Wrapper.centery - (Splash_Text_1.height / 2) : Splash_Wrapper.centery - (Splash_Text_1.height / 2.8) + 152",
+        "w": "Splash_Wrapper.width * 0.75",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "h": "auto",
+        "maxw": "Splash_Text_1.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 3,
+        "colors": [3, 5, 9, 7],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "Splash_Text_2",
+        "copyTo": ["Splash_Text_1", "Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "Splash_Colors[10].visible && State_Splash.visible || Splash_Colors[11].visible && State_Splash.visible  ? true : false",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "type": "textblock",
+        "contents": "Lorem\nipsum",
+        "textareaheight": 50,
+        "x": "State_Right.visible ? Splash_Wrapper.centerx - Splash_Text_2.width /2 : Splash_Wrapper.centerx + 360",
+        "y": "State_Top.visible ? Splash_Wrapper.centery - (Splash_Text_2.height / 2) : Splash_Wrapper.centery - (Splash_Text_2.height / 2.8) + 152",
+        "w": "Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "Splash_Text_2.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 2,
+        "colors": [2, 4, 7, 5],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "Splash_Text_3",
+        "title": "Splash text",
+        "copyTo": ["Splash_Text_1", "Splash_Text_2"],
+        "calcVisible": "Splash_Colors[8].visible && State_Splash.visible   || Splash_Colors[3].visible && State_Splash.visible || Splash_Colors[9].visible && State_Splash.visible  || Splash_Colors[7].visible && State_Splash.visible   || Splash_Colors[5].visible && State_Splash.visible  ? true : false",
+        "type": "textblock",
+        "contents": "Lorem\nipsum",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "textareaheight": 50,
+        "x": "State_Right.visible ? Splash_Wrapper.centerx - Splash_Text_3.width /2 : Splash_Wrapper.centerx + 360",
+        "y": "State_Top.visible ? Splash_Wrapper.centery - (Splash_Text_3.height / 2) : Splash_Wrapper.centery - (Splash_Text_3.height / 2.8) + 152",
+        "w": "Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "Splash_Text_3.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 3,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 12,
+        "colors": [12, 2, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "Text_Wrapper",
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "x": "Margin.left",
+        "y": "State_Image_Small.visible ? 510 - (Heading.height / 2) - (Preamble.height / 2) - 20 :State_Image_None.visible ? 380 - (Heading.height / 2) - (Preamble.height / 2) - 20 : Margin.bottom - Heading.height - Preamble.height - 100",
+        "z": -1000,
+        "w": "State_Image_Small.visible ? 300  : 300",
+        "h": "State_Image_Small.visible ? 100  : 160",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "Heading",
+        "title": "Rubrik",
+        "xcalcVisible": "State_Image_Small.visible || State_Image_Large.visible ? true : false ",
+        "type": "textblock",
+        "contents": "Lorem ipsum dolor sit amet",
+        "textareaheight": 50,
+        "x": "Text_Wrapper.left",
+        "y": "Text_Wrapper.top",
+        "z": 14,
+        "w": "Text_Wrapper.width",
+        "h": "auto",
+        "maxw": "Heading.width",
+        "maxRows": 2,
+        "colorFrom": "Text_Color",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 34,
+        "lineHeight": 38,
+        "fontSizes": [
+          {
+            "size": 34,
+            "name": "S",
+            "lineHeight": 38
+          },
+          {
+            "size": 40,
+            "name": "M",
+            "lineHeight": 46
+          }
+        ],
+        "color": 1,
+        "styles": [0],
+        "wcolors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "Preamble",
+        "title": "Ingress",
+        "2visible2": false,
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          }
+        ],
+        "type": "textblock",
+        "contents": "Eped ut ducim fuga sit acerori tiostis..",
+        "textareaheight": 50,
+        "x": "Text_Wrapper.left",
+        "z": 50,
+        "y": "Heading.bottom + 18",
+        "w": "State_Image_None.visible ? Text_Wrapper.width * 0.65 : Text_Wrapper.width",
+        "h": "auto",
+        "maxh": "Text_Wrapper.height - Heading.height",
+        "masxRows": 2,
+        "colorFrom": "Text_Color",
+        "align": 1,
+        "fontNr": 3,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "fsontSizes": [
+          {
+            "size": 22.6,
+            "name": "S",
+            "lineHeight": 31.1
+          },
+          {
+            "size": 28.3,
+            "name": "M",
+            "lineHeight": 36.8
+          },
+          {
+            "size": 33.9,
+            "name": "L",
+            "lineHeight": 42.4
+          }
+        ],
+        "color": 1,
+        "jstyles": [0],
+        "wcolors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": true
+      }
+    ]
+  },
+  {
+    "pagenr": 2,
+    "fields": [
+      {
+        "name": "L_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/eeedd57732570f779aaff97da1be75ff/test4-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "L_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.173,
+        "z": -20,
+        "y": -14.173,
+        "w": "page.width + (2*14.173)",
+        "h": "page.height+ (2*14.173)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Text uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_1"],
+            "hide": [
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Bild uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_2"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text uppe | Två textfält nere",
+            "selected": true,
+            "show": ["L_State_Layout_3"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text",
+            "selected": true,
+            "show": ["L_State_Layout_4"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text | Splash",
+            "selected": true,
+            "show": ["L_State_Layout_4", "L_State_Splash"],
+            "hide": ["L_State_Layout_1", "L_State_Layout_2", "L_State_Layout_3"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "L_Image",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "L_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.top",
+        "w": "L_Bleed.width",
+        "h": "L_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Text_Top",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_3.visible || L_State_Layout_4.visible ? true : false",
+        "title": "Textfält uppe",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.left + 14",
+        "y": "L_Margin.top + 33",
+        "w": "L_Margin.width -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Top.width",
+        "maxh": "L_State_Layout_4.visible ? L_State_Splash.visible ?  L_Margin.height - 180 : L_Margin.height - 40 :  L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [0, 1, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_1_Bg",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Bakgrundsfärg nere",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.centery",
+        "w": "L_State_Layout_3.visible ? L_Bleed.width / 2 : L_Bleed.width",
+        "wz": 12222,
+        "h": "L_Bleed.height / 2",
+        "color": 10,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Text_Bottom_1",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_State_Layout_3.visible ? L_Margin.left : L_Margin.left + 14",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_State_Layout_3.visible ? L_Margin.width /2 - 22 : L_Margin.width * 0.85",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Bottom_1.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [5, 6, 7, 8, 9],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_2_Bg",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Bakgrundsfärg nere höger",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.centerx",
+        "y": "L_Bleed.centery",
+        "w": "L_Bleed.width / 2",
+        "h": "L_Bleed.height /2",
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "Text_Bottom_2",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Textfält nere höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.centerx + 22",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_Margin.width / 2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "Text_Bottom_2.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [10, 11, 12, 13, 14],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Wrapper",
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "x": 243,
+        "y": 440,
+        "z": -1000,
+        "w": 125,
+        "h": 125,
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Splash_Style",
+        "title": "Splash typ",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": -141.4,
+        "y": 0,
+        "w": 1.4,
+        "h": 1.4,
+        "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+            "fit": false
+          },
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/395a51daafa207599803140331bb625f/L_Splash_2.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Splash_Colors",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "title": "Splash bakgrundsfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "circle",
+        "x": 0,
+        "y": 0,
+        "w": -1414,
+        "h": 1.4,
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Splash_1",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[0].visible && L_State_Splash.visible ? true : false",
+        "scalcColor": "L_Splash_Colors[4].visible ? 4 : L_Splash_Colors[12].visible ? 12 : 0",
+        "editui": "text",
+        "contents": "A",
+        "x": 244,
+        "y": 433,
+        "w": "page.width",
+        "maxw": "L_Splash_1.width",
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "h": 558.5,
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_2",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[1].visible && L_State_Splash.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 375,
+        "y": 440,
+        "w": "page.width",
+        "maxw": "L_Splash_2.width",
+        "h": 558.5,
+        "rotate": 90,
+        "hideable": false,
+        "autoShrink": false,
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 3, 6, 2, 12, 4],
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_Text_1",
+        "copyTo": ["L_Splash_Text_2", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[4].visible && L_State_Splash.visible || L_Splash_Colors[12].visible && L_State_Splash.visible || L_Splash_Colors[2].visible && L_State_Splash.visible  || L_Splash_Colors[6].visible && L_State_Splash.visible ? true : false",
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_1.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_1.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "h": "auto",
+        "maxw": "L_Splash_Text_1.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 3,
+        "colors": [3, 5, 9, 7],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_2",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[10].visible && L_State_Splash.visible || L_Splash_Colors[11].visible && L_State_Splash.visible  ? true : false",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_2.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_2.height / 2.8) -10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_2.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 2,
+        "colors": [2, 4, 7, 5],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_3",
+        "title": "Splash tex",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_2"],
+        "calcVisible": "L_Splash_Colors[8].visible && L_State_Splash.visible   || L_Splash_Colors[3].visible && L_State_Splash.visible || L_Splash_Colors[9].visible && L_State_Splash.visible  || L_Splash_Colors[7].visible && L_State_Splash.visible   || L_Splash_Colors[5].visible && L_State_Splash.visible  ? true : false",
+        "type": "textblock",
+        "contents": "Uptionserum et faccabo ide veliam.",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_3.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_3.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_3.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 3,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 12,
+        "colors": [12, 2, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Footer_Curve",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 130,
+        "y": 330,
+        "w": 3000,
+        "z": 1000,
+        "h": 558.5,
+        "maxw": "L_Footer_Curve.width",
+        "color": 1,
+        "wcolors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 18,
+        "lineHeight": 254.5,
+        "fontSize": 520,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      }
+    ]
+  },
+  {
+    "pagenr": 3,
+    "fields": [
+      {
+        "name": "R_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/2f4190b3617f28b8c0c990f8fc5d4010/test7-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "R_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -8.504,
+        "z": -20,
+        "y": -8.504,
+        "w": "page.width + (2*8.504)",
+        "h": "page.height+ (2*8.504)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Info",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Layout 1",
+            "selected": true,
+            "show": ["R_State_Layout_1"],
+            "hide": [
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 1 + inforuta",
+            "selected": false,
+            "show": ["R_State_Layout_1", "R_State_Info"],
+            "hide": ["R_State_Layout_2", "R_State_Layout_3", "R_State_Layout_4"]
+          },
+          {
+            "title": "Layout 2",
+            "selected": false,
+            "show": ["R_State_Layout_2"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 3",
+            "selected": false,
+            "show": ["R_State_Layout_3"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 4",
+            "selected": false,
+            "show": ["R_State_Layout_4"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Info"
+            ]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Top",
+        "colorTitle": "Välj bakgrundsfärg ",
+        "title": "Färgplatta",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible || R_State_Layout_3.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 9,
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.left : R_Bleed.centerx",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.top : R_Bleed.centerx.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.height / 2 :R_Bleed.height",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Bottom",
+        "colorTitle": " ",
+        "title": "Bakgrundsfärg inforuta",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 8,
+        "x": "R_Bleed.centerx",
+        "y": "R_Text_3.top - 20",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Text_3.height + 60",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/e4cc8d8c0b3e80136d14b911114e61be/layout1-overlay.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_State_Layout_2_3_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible  ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/7ea4e8525d1cd1873f16334e18d9b0e3/bg7.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_Image_Portrait_Small",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_State_Layout_2.visible ? R_Bleed.centerx : R_Bleed.left",
+        "y": "R_State_Layout_2.visible ? R_Bleed.centery : R_Bleed.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Landscape",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_3.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.centery",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Portrait_Big",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_4.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Text_2",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält på färgplatta",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur. Ovit, voluptatus ducidus.\n#Asi omnis erovit enis dolores ut.\n Cearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat.",
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible  ? R_Margin.left : R_Margin.centerx + 22",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? R_Margin.top + 87 : 200",
+        "w": "R_Margin.width/2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.height / 2 - 110 : R_State_Layout_1.visible ? R_Text_3.visible ? R_Margin.height - 130 - R_Text_3.height :  R_Margin.height - 90 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "colors": [0, 1],
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [17, 18, 19, 20, 21],
+        "editable": true,
+        "jparaSpacing": 12,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_1",
+        "calcVisible": "R_State_Layout_1.visible  || R_State_Layout_2.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\nOvit, voluptatus ducidus.",
+        "x": "R_Margin.left",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible  ? R_Margin.centery + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_1.visible  || R_State_Layout_2.visible  ? R_Margin.height / 2 - 40 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_4",
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält uppe höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\n\nOvit, voluptatus ducidus vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.",
+        "x": "R_Margin.centerx + 28",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.top + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_2.visible  ? R_Margin.height / 2 - 70 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_3",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "title": "Info text",
+        "type": "textblock",
+        "contents": "#Kontakta oss\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis.",
+        "x": "R_Margin.centerx + 22",
+        "y": "R_Margin.bottom - R_Text_3.height",
+        "w": "R_Margin.width/2 - 19",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_Margin.height / 2",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9,
+        "colors": [0, 1],
+        "lineHeight": 13,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [22],
+        "editable": true,
+        "wparaSpacing": 4,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      }
+    ]
+  },
+  {
+    "pagenr": 4,
+    "fields": [
+      {
+        "name": "L_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/eeedd57732570f779aaff97da1be75ff/test4-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "L_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.173,
+        "z": -20,
+        "y": -14.173,
+        "w": "page.width + (2*14.173)",
+        "h": "page.height+ (2*14.173)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Text uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_1"],
+            "hide": [
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Bild uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_2"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text uppe | Två textfält nere",
+            "selected": true,
+            "show": ["L_State_Layout_3"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text",
+            "selected": true,
+            "show": ["L_State_Layout_4"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text | Splash",
+            "selected": true,
+            "show": ["L_State_Layout_4", "L_State_Splash"],
+            "hide": ["L_State_Layout_1", "L_State_Layout_2", "L_State_Layout_3"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "L_Image",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "L_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.top",
+        "w": "L_Bleed.width",
+        "h": "L_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Text_Top",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_3.visible || L_State_Layout_4.visible ? true : false",
+        "title": "Textfält uppe",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.left + 14",
+        "y": "L_Margin.top + 33",
+        "w": "L_Margin.width -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Top.width",
+        "maxh": "L_State_Layout_4.visible ? L_State_Splash.visible ?  L_Margin.height - 180 : L_Margin.height - 40 :  L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [0, 1, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_1_Bg",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Bakgrundsfärg nere",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.centery",
+        "w": "L_State_Layout_3.visible ? L_Bleed.width / 2 : L_Bleed.width",
+        "wz": 12222,
+        "h": "L_Bleed.height / 2",
+        "color": 10,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Text_Bottom_1",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_State_Layout_3.visible ? L_Margin.left : L_Margin.left + 14",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_State_Layout_3.visible ? L_Margin.width /2 - 22 : L_Margin.width * 0.85",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Bottom_1.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [5, 6, 7, 8, 9],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_2_Bg",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Bakgrundsfärg nere höger",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.centerx",
+        "y": "L_Bleed.centery",
+        "w": "L_Bleed.width / 2",
+        "h": "L_Bleed.height /2",
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "Text_Bottom_2",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Textfält nere höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.centerx + 22",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_Margin.width / 2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "Text_Bottom_2.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [10, 11, 12, 13, 14],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Wrapper",
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "x": 243,
+        "y": 440,
+        "z": -1000,
+        "w": 125,
+        "h": 125,
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Splash_Style",
+        "title": "Splash typ",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": -141.4,
+        "y": 0,
+        "w": 1.4,
+        "h": 1.4,
+        "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+            "fit": false
+          },
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/395a51daafa207599803140331bb625f/L_Splash_2.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Splash_Colors",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "title": "Splash bakgrundsfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "circle",
+        "x": 0,
+        "y": 0,
+        "w": -1414,
+        "h": 1.4,
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Splash_1",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[0].visible && L_State_Splash.visible ? true : false",
+        "scalcColor": "L_Splash_Colors[4].visible ? 4 : L_Splash_Colors[12].visible ? 12 : 0",
+        "editui": "text",
+        "contents": "A",
+        "x": 244,
+        "y": 433,
+        "w": "page.width",
+        "maxw": "L_Splash_1.width",
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "h": 558.5,
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_2",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[1].visible && L_State_Splash.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 375,
+        "y": 440,
+        "w": "page.width",
+        "maxw": "L_Splash_2.width",
+        "h": 558.5,
+        "rotate": 90,
+        "hideable": false,
+        "autoShrink": false,
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 3, 6, 2, 12, 4],
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_Text_1",
+        "copyTo": ["L_Splash_Text_2", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[4].visible && L_State_Splash.visible || L_Splash_Colors[12].visible && L_State_Splash.visible || L_Splash_Colors[2].visible && L_State_Splash.visible  || L_Splash_Colors[6].visible && L_State_Splash.visible ? true : false",
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_1.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_1.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "h": "auto",
+        "maxw": "L_Splash_Text_1.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 3,
+        "colors": [3, 5, 9, 7],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_2",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[10].visible && L_State_Splash.visible || L_Splash_Colors[11].visible && L_State_Splash.visible  ? true : false",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_2.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_2.height / 2.8) -10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_2.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 2,
+        "colors": [2, 4, 7, 5],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_3",
+        "title": "Splash tex",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_2"],
+        "calcVisible": "L_Splash_Colors[8].visible && L_State_Splash.visible   || L_Splash_Colors[3].visible && L_State_Splash.visible || L_Splash_Colors[9].visible && L_State_Splash.visible  || L_Splash_Colors[7].visible && L_State_Splash.visible   || L_Splash_Colors[5].visible && L_State_Splash.visible  ? true : false",
+        "type": "textblock",
+        "contents": "Uptionserum et faccabo ide veliam.",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_3.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_3.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_3.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 3,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 12,
+        "colors": [12, 2, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Footer_Curve",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 130,
+        "y": 330,
+        "w": 3000,
+        "z": 1000,
+        "h": 558.5,
+        "maxw": "L_Footer_Curve.width",
+        "color": 1,
+        "wcolors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 18,
+        "lineHeight": 254.5,
+        "fontSize": 520,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      }
+    ]
+  },
+  {
+    "pagenr": 5,
+    "fields": [
+      {
+        "name": "R_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/2f4190b3617f28b8c0c990f8fc5d4010/test7-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "R_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -8.504,
+        "z": -20,
+        "y": -8.504,
+        "w": "page.width + (2*8.504)",
+        "h": "page.height+ (2*8.504)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Info",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Layout 1",
+            "selected": true,
+            "show": ["R_State_Layout_1"],
+            "hide": [
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 1 + inforuta",
+            "selected": false,
+            "show": ["R_State_Layout_1", "R_State_Info"],
+            "hide": ["R_State_Layout_2", "R_State_Layout_3", "R_State_Layout_4"]
+          },
+          {
+            "title": "Layout 2",
+            "selected": false,
+            "show": ["R_State_Layout_2"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 3",
+            "selected": false,
+            "show": ["R_State_Layout_3"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 4",
+            "selected": false,
+            "show": ["R_State_Layout_4"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Info"
+            ]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Top",
+        "colorTitle": "Välj bakgrundsfärg ",
+        "title": "Färgplatta",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible || R_State_Layout_3.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 9,
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.left : R_Bleed.centerx",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.top : R_Bleed.centerx.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.height / 2 :R_Bleed.height",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Bottom",
+        "colorTitle": " ",
+        "title": "Bakgrundsfärg inforuta",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 8,
+        "x": "R_Bleed.centerx",
+        "y": "R_Text_3.top - 20",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Text_3.height + 60",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/e4cc8d8c0b3e80136d14b911114e61be/layout1-overlay.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_State_Layout_2_3_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible  ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/7ea4e8525d1cd1873f16334e18d9b0e3/bg7.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_Image_Portrait_Small",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_State_Layout_2.visible ? R_Bleed.centerx : R_Bleed.left",
+        "y": "R_State_Layout_2.visible ? R_Bleed.centery : R_Bleed.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Landscape",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_3.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.centery",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Portrait_Big",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_4.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Text_2",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält på färgplatta",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur. Ovit, voluptatus ducidus.\n#Asi omnis erovit enis dolores ut.\n Cearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat.",
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible  ? R_Margin.left : R_Margin.centerx + 22",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? R_Margin.top + 87 : 200",
+        "w": "R_Margin.width/2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.height / 2 - 110 : R_State_Layout_1.visible ? R_Text_3.visible ? R_Margin.height - 130 - R_Text_3.height :  R_Margin.height - 90 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "colors": [0, 1],
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [17, 18, 19, 20, 21],
+        "editable": true,
+        "jparaSpacing": 12,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_1",
+        "calcVisible": "R_State_Layout_1.visible  || R_State_Layout_2.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\nOvit, voluptatus ducidus.",
+        "x": "R_Margin.left",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible  ? R_Margin.centery + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_1.visible  || R_State_Layout_2.visible  ? R_Margin.height / 2 - 40 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_4",
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält uppe höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\n\nOvit, voluptatus ducidus vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.",
+        "x": "R_Margin.centerx + 28",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.top + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_2.visible  ? R_Margin.height / 2 - 70 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_3",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "title": "Info text",
+        "type": "textblock",
+        "contents": "#Kontakta oss\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis.",
+        "x": "R_Margin.centerx + 22",
+        "y": "R_Margin.bottom - R_Text_3.height",
+        "w": "R_Margin.width/2 - 19",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_Margin.height / 2",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9,
+        "colors": [0, 1],
+        "lineHeight": 13,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [22],
+        "editable": true,
+        "wparaSpacing": 4,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      }
+    ]
+  },
+  {
+    "pagenr": 6,
+    "fields": [
+      {
+        "name": "L_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/eeedd57732570f779aaff97da1be75ff/test4-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "L_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.173,
+        "z": -20,
+        "y": -14.173,
+        "w": "page.width + (2*14.173)",
+        "h": "page.height+ (2*14.173)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Text uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_1"],
+            "hide": [
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Bild uppe | Text nere",
+            "selected": true,
+            "show": ["L_State_Layout_2"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_3",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text uppe | Två textfält nere",
+            "selected": true,
+            "show": ["L_State_Layout_3"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_4",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text",
+            "selected": true,
+            "show": ["L_State_Layout_4"],
+            "hide": [
+              "L_State_Layout_1",
+              "L_State_Layout_2",
+              "L_State_Layout_3",
+              "L_State_Splash"
+            ]
+          },
+          {
+            "title": "Text | Splash",
+            "selected": true,
+            "show": ["L_State_Layout_4", "L_State_Splash"],
+            "hide": ["L_State_Layout_1", "L_State_Layout_2", "L_State_Layout_3"]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "L_Image",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "L_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.top",
+        "w": "L_Bleed.width",
+        "h": "L_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/caafef3000f4e4587e4e600751e52f31/1920x1407.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Text_Top",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_3.visible || L_State_Layout_4.visible ? true : false",
+        "title": "Textfält uppe",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.left + 14",
+        "y": "L_Margin.top + 33",
+        "w": "L_Margin.width -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Top.width",
+        "maxh": "L_State_Layout_4.visible ? L_State_Splash.visible ?  L_Margin.height - 180 : L_Margin.height - 40 :  L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [0, 1, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_1_Bg",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Bakgrundsfärg nere",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.left",
+        "y": "L_Bleed.centery",
+        "w": "L_State_Layout_3.visible ? L_Bleed.width / 2 : L_Bleed.width",
+        "wz": 12222,
+        "h": "L_Bleed.height / 2",
+        "color": 10,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Text_Bottom_1",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible || L_State_Layout_3.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_State_Layout_3.visible ? L_Margin.left : L_Margin.left + 14",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_State_Layout_3.visible ? L_Margin.width /2 - 22 : L_Margin.width * 0.85",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "L_Text_Bottom_1.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [5, 6, 7, 8, 9],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Text_Bottom_2_Bg",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Bakgrundsfärg nere höger",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": "L_Bleed.centerx",
+        "y": "L_Bleed.centery",
+        "w": "L_Bleed.width / 2",
+        "h": "L_Bleed.height /2",
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": true,
+        "editui": "colors"
+      },
+      {
+        "name": "Text_Bottom_2",
+        "calcVisible": "L_State_Layout_3.visible  ? true : false",
+        "title": "Textfält nere höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut dolut exceper nis min.\n Qui ut harum accus alicabo. Ut aliae comniti atemqui imus acilliqui aut et andita volore si to voluptatque sapiet acia volum ut que perum que inis am cus eati consequiassi. \n\nOfficia pratur aut arit voluptur apientur rem natias et latin et expernam quiandia perum audis arumqui cus, sequibu sciendae vel expellam, cum repuditatet quid quiandi taeperu ptatentem. Bust quia idicti que nimi, oditaes simodip susanto",
+        "x": "L_Margin.centerx + 22",
+        "y": "L_Margin.centery + 33",
+        "z": 10,
+        "w": "L_Margin.width / 2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "Text_Bottom_2.width",
+        "maxh": "L_Margin.height / 2 - 40",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [10, 11, 12, 13, 14],
+        "colors": [0, 1],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Wrapper",
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "x": 243,
+        "y": 440,
+        "z": -1000,
+        "w": 125,
+        "h": 125,
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "L_Splash_Style",
+        "title": "Splash typ",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 150,
+        "editable": true,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": -141.4,
+        "y": 0,
+        "w": 1.4,
+        "h": 1.4,
+        "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/132e2d544645fe47470f053985397857/L_Splash_1.pdf",
+            "fit": false
+          },
+          {
+            "selected": true,
+            "sthumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_images_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/395a51daafa207599803140331bb625f/L_Splash_2.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "L_Splash_Colors",
+        "calcVisible": "L_State_Splash.visible ? true : false",
+        "title": "Splash bakgrundsfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "circle",
+        "x": 0,
+        "y": 0,
+        "w": -1414,
+        "h": 1.4,
+        "color": 7,
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "L_Splash_1",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[0].visible && L_State_Splash.visible ? true : false",
+        "scalcColor": "L_Splash_Colors[4].visible ? 4 : L_Splash_Colors[12].visible ? 12 : 0",
+        "editui": "text",
+        "contents": "A",
+        "x": 244,
+        "y": 433,
+        "w": "page.width",
+        "maxw": "L_Splash_1.width",
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "h": 558.5,
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_2",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_Splash_Style[1].visible && L_State_Splash.visible  ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 375,
+        "y": 440,
+        "w": "page.width",
+        "maxw": "L_Splash_2.width",
+        "h": 558.5,
+        "rotate": 90,
+        "hideable": false,
+        "autoShrink": false,
+        "colorIndexFrom": "L_Splash_Colors",
+        "colors": [5, 7, 9, 3, 8, 11, 3, 6, 2, 12, 4],
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 16,
+        "lineHeight": 254.5,
+        "fontSize": 130,
+        "color": 0,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      },
+      {
+        "name": "L_Splash_Text_1",
+        "copyTo": ["L_Splash_Text_2", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[4].visible && L_State_Splash.visible || L_Splash_Colors[12].visible && L_State_Splash.visible || L_Splash_Colors[2].visible && L_State_Splash.visible  || L_Splash_Colors[6].visible && L_State_Splash.visible ? true : false",
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_1.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_1.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "h": "auto",
+        "maxw": "L_Splash_Text_1.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 3,
+        "colors": [3, 5, 9, 7],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_2",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_3"],
+        "title": "Splash text",
+        "calcVisible": "L_Splash_Colors[10].visible && L_State_Splash.visible || L_Splash_Colors[11].visible && L_State_Splash.visible  ? true : false",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "type": "textblock",
+        "contents": "18/5\nKl 18",
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_2.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_2.height / 2.8) -10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_2.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 4,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 2,
+        "colors": [2, 4, 7, 5],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Splash_Text_3",
+        "title": "Splash tex",
+        "copyTo": ["L_Splash_Text_1", "L_Splash_Text_2"],
+        "calcVisible": "L_Splash_Colors[8].visible && L_State_Splash.visible   || L_Splash_Colors[3].visible && L_State_Splash.visible || L_Splash_Colors[9].visible && L_State_Splash.visible  || L_Splash_Colors[7].visible && L_State_Splash.visible   || L_Splash_Colors[5].visible && L_State_Splash.visible  ? true : false",
+        "type": "textblock",
+        "contents": "Uptionserum et faccabo ide veliam.",
+        "fontSizes": [
+          {
+            "size": 12,
+            "name": "S",
+            "lineHeight": 16
+          },
+          {
+            "size": 16,
+            "name": "M",
+            "lineHeight": 20
+          },
+          {
+            "size": 20,
+            "name": "L",
+            "lineHeight": 24
+          }
+        ],
+        "textareaheight": 50,
+        "x": "L_Splash_Wrapper.centerx - L_Splash_Text_3.width /2 ",
+        "y": "L_Splash_Wrapper.centery - (L_Splash_Text_3.height / 2.8) - 10",
+        "w": "L_Splash_Wrapper.width * 0.75",
+        "h": "auto",
+        "maxw": "L_Splash_Text_3.width",
+        "maxRows": 3,
+        "align": 3,
+        "fontNr": 3,
+        "fontSize": 16,
+        "lineHeight": 20,
+        "color": 12,
+        "colors": [12, 2, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "L_Footer_Curve",
+        "title": "",
+        "type": "textline",
+        "calcVisible": "L_State_Layout_1.visible || L_State_Layout_2.visible ? true : false",
+        "editui": "text",
+        "contents": "A",
+        "x": 130,
+        "y": 330,
+        "w": 3000,
+        "z": 1000,
+        "h": 558.5,
+        "maxw": "L_Footer_Curve.width",
+        "color": 1,
+        "wcolors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 18,
+        "lineHeight": 254.5,
+        "fontSize": 520,
+        "editable": false,
+        "spacing": 0,
+        "kern": true
+      }
+    ]
+  },
+  {
+    "pagenr": 7,
+    "fields": [
+      {
+        "name": "R_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/2f4190b3617f28b8c0c990f8fc5d4010/test7-Till%20MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "R_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -8.504,
+        "z": -20,
+        "y": -8.504,
+        "w": "page.width + (2*8.504)",
+        "h": "page.height+ (2*8.504)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Image",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Splash",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Info",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_1",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_2",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_3",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_State_Layout_4",
+        "x": -141.4,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "z": -100,
+        "hidePrint": true,
+        "type": "shape",
+        "shape": "rect",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Select_Layout",
+        "title": "Välj layout",
+        "type": "select",
+        "options": [
+          {
+            "title": "Layout 1",
+            "selected": true,
+            "show": ["R_State_Layout_1"],
+            "hide": [
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 1 + inforuta",
+            "selected": false,
+            "show": ["R_State_Layout_1", "R_State_Info"],
+            "hide": ["R_State_Layout_2", "R_State_Layout_3", "R_State_Layout_4"]
+          },
+          {
+            "title": "Layout 2",
+            "selected": false,
+            "show": ["R_State_Layout_2"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_3",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 3",
+            "selected": false,
+            "show": ["R_State_Layout_3"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_4",
+              "R_State_Info"
+            ]
+          },
+          {
+            "title": "Layout 4",
+            "selected": false,
+            "show": ["R_State_Layout_4"],
+            "hide": [
+              "R_State_Layout_1",
+              "R_State_Layout_2",
+              "R_State_Layout_3",
+              "R_State_Info"
+            ]
+          }
+        ],
+        "editui": "selectlist",
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Top",
+        "colorTitle": "Välj bakgrundsfärg ",
+        "title": "Färgplatta",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible || R_State_Layout_3.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 9,
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.left : R_Bleed.centerx",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.top : R_Bleed.centerx.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Bleed.height / 2 :R_Bleed.height",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Bg_Right_Bottom",
+        "colorTitle": " ",
+        "title": "Bakgrundsfärg inforuta",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "color": 8,
+        "x": "R_Bleed.centerx",
+        "y": "R_Text_3.top - 20",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Text_3.height + 60",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_State_Layout_1_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/e4cc8d8c0b3e80136d14b911114e61be/layout1-overlay.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_State_Layout_2_3_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible  ? true : false",
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/7ea4e8525d1cd1873f16334e18d9b0e3/bg7.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_Image_Portrait_Small",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_State_Layout_2.visible ? R_Bleed.centerx : R_Bleed.left",
+        "y": "R_State_Layout_2.visible ? R_Bleed.centery : R_Bleed.top",
+        "w": "R_Bleed.width / 2",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Landscape",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_3.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.centery",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height * 0.5",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Image_Portrait_Big",
+        "title": "Bild",
+        "type": "fleximage",
+        "dpi": 300,
+        "calcVisible": "R_State_Layout_4.visible ? true : false",
+        "displayDPI": 72,
+        "editable": true,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "cover",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/05cfd3ba54b802ba2f3528186035aaa0/A4.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "R_Text_2",
+        "calcVisible": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält på färgplatta",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur. Ovit, voluptatus ducidus.\n#Asi omnis erovit enis dolores ut.\n Cearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat.",
+        "x": "R_State_Layout_2.visible || R_State_Layout_3.visible  ? R_Margin.left : R_Margin.centerx + 22",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? R_Margin.top + 87 : 200",
+        "w": "R_Margin.width/2 - 22",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.height / 2 - 110 : R_State_Layout_1.visible ? R_Text_3.visible ? R_Margin.height - 130 - R_Text_3.height :  R_Margin.height - 90 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "colors": [0, 1],
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [17, 18, 19, 20, 21],
+        "editable": true,
+        "jparaSpacing": 12,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_1",
+        "calcVisible": "R_State_Layout_1.visible  || R_State_Layout_2.visible ? true : false",
+        "title": "Textfält nere",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\nOvit, voluptatus ducidus.",
+        "x": "R_Margin.left",
+        "y": "R_State_Layout_1.visible || R_State_Layout_2.visible  ? R_Margin.centery + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_1.visible  || R_State_Layout_2.visible  ? R_Margin.height / 2 - 40 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_4",
+        "calcVisible": "R_State_Layout_2.visible ||  R_State_Layout_3.visible   ? true : false",
+        "title": "Textfält uppe höger",
+        "type": "textblock",
+        "contents": "#Asi omnis erovit enis dolores ut.\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.\n\nOvit, voluptatus ducidus vellum hilis rehendebitia perum sam que in nat et velecte nihil id qui optatessi dolumquatur.",
+        "x": "R_Margin.centerx + 28",
+        "y": "R_State_Layout_2.visible || R_State_Layout_3.visible ? R_Margin.top + 36 : 200",
+        "w": "R_Margin.width/2 -28",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_1.width",
+        "maxh": "R_State_Layout_2.visible  ? R_Margin.height / 2 - 70 : 200",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9.5,
+        "lineHeight": 13.5,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [15, 16, 2, 3, 4],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      },
+      {
+        "name": "R_Text_3",
+        "calcVisible": "R_State_Layout_1.visible && R_State_Info.visible ? true : false",
+        "title": "Info text",
+        "type": "textblock",
+        "contents": "#Kontakta oss\nCearum est, eos alibus doloreptae non conseque coria con consecer fere suntia vellum hilis.",
+        "x": "R_Margin.centerx + 22",
+        "y": "R_Margin.bottom - R_Text_3.height",
+        "w": "R_Margin.width/2 - 19",
+        "h": "auto",
+        "textareaheight": 36,
+        "maxw": "R_Text_2.width",
+        "maxh": "R_Margin.height / 2",
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 9,
+        "colors": [0, 1],
+        "lineHeight": 13,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "color": 0,
+        "styles": [22],
+        "editable": true,
+        "wparaSpacing": 4,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      }
+    ]
+  },
+  {
+    "pagenr": 8,
+    "fields": [
+      {
+        "name": "R_Test",
+        "title": "",
+        "type": "fleximage",
+        "size": "keepSize",
+        "x": 0,
+        "y": 0,
+        "w": "page.width",
+        "z": 1000,
+        "h": "page.height",
+        "editui": "browse",
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hidePrint": false,
+        "hideable": true,
+        "hide": true,
+        "srcpdf": "https://assets.mediaflowpro.com/a/4ee3378241a1c3ebc562f394f87574ab/test-MF%20LK_Broschyr_A5.pdf",
+        "dpi": 300,
+        "displayDPI": 200
+      },
+      {
+        "name": "R_Margin",
+        "type": "shape",
+        "shape": "rect",
+        "x": 28,
+        "z": -100,
+        "y": 28,
+        "w": "page.width - 56",
+        "h": "page.height - 56",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Bg",
+        "title": "Färg på kurva",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "editui": "colors",
+        "colors": [5, 7, 9, 3, 8, 11, 10, 6, 2, 12, 4],
+        "dcolors": [2, 3],
+        "color": 9,
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "hideable": false,
+        "editable": true
+      },
+      {
+        "name": "R_Bleed",
+        "type": "shape",
+        "shape": "rect",
+        "x": -8.504,
+        "z": -20,
+        "y": -8.504,
+        "w": "page.width + (2*8.504)",
+        "h": "page.height+ (2*8.504)",
+        "color": 1,
+        "editable": false
+      },
+      {
+        "name": "R_Overlay",
+        "title": "",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 300,
+        "editable": false,
+        "browse": false,
+        "allowUpload": false,
+        "hideable": false,
+        "editui": "browse",
+        "size": "keepSize",
+        "x": "R_Bleed.left",
+        "y": "R_Bleed.top",
+        "w": "R_Bleed.width",
+        "h": "R_Bleed.height",
+        "srcpdf": "https://assets.mediaflowpro.com/a/638be1d11b8072edf8d288eb35d4dce7/overly%20brosyr-last.pdf",
+        "fileSelectorFolderId": null
+      },
+      {
+        "name": "R_Last_Text_Color",
+        "wcalcVisible": "State_Splash.visible ? true : false",
+        "title": "Textfärg",
+        "colorTitle": " ",
+        "type": "shape",
+        "shape": "rect",
+        "x": -14.1,
+        "y": 1.4,
+        "w": 1.4,
+        "h": 1.4,
+        "color": 0,
+        "colors": [0, 1],
+        "editable": true,
+        "hideable": false,
+        "editui": "colors"
+      },
+      {
+        "name": "R_Samarbete",
+        "title": "Text samarbete",
+        "type": "textblock",
+        "contents": "I samarbete med:",
+        "textareaheight": 50,
+        "x": 37,
+        "y": 523,
+        "w": 170,
+        "h": "auto",
+        "maxw": "R_Samarbete.width",
+        "maxRows": 2,
+        "align": 1,
+        "fontNr": 8,
+        "fontSize": 11,
+        "lineHeight": 13.4,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "colorFrom": "R_Last_Text_Color",
+        "styles": [23],
+        "editable": true,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": true
+      },
+      {
+        "name": "R_Logo",
+        "title": "Image",
+        "type": "fleximage",
+        "dpi": 300,
+        "displayDPI": 72,
+        "editable": false,
+        "browse": true,
+        "allowUpload": true,
+        "hideable": false,
+        "editui": "browse",
+        "size": "contain",
+        "x": 15,
+        "y": -53,
+        "w": 120,
+        "h": 200,
+        "srcpdf": "https://assets.mediaflowpro.com/a/222576594226c776f65713b74ed27d5f/LK_logotyp_liggande_CMYK.pdf",
+        "fileSelectorFolderId": null,
+        "options": [
+          {
+            "selected": true,
+            "thumbnail": "https://assets.mediaflowpro.com/a/1396471fc78f79611090d2995aad4295/placehold_image_thumb.png",
+            "srcpdf": "https://assets.mediaflowpro.com/a/7845892473af65af4d95b00e657e70b2/840_680.pdf",
+            "fit": false
+          }
+        ]
+      },
+      {
+        "name": "QR",
+        "title": "QR-kod",
+        "colorFrom": "R_Last_Text_Color",
+        "type": "barcode",
+        "barcode": "QR",
+        "contents": "",
+        "x": 280,
+        "y": 420,
+        "w": 80,
+        "h": 80,
+        "z": 1,
+        "color": 0,
+        "hideable": true,
+        "editable": true
+      },
+      {
+        "name": "R_Adress",
+        "title": "",
+        "type": "textblock",
+        "contents": "Lidköpings kommun, 531 88 Lidköping\n0510-77 00 00, www.lidkoping.se",
+        "textareaheight": 50,
+        "x": 192,
+        "y": 544,
+        "w": 200,
+        "h": "auto",
+        "maxw": "R_Adress.width",
+        "maxRows": 2,
+        "align": 2,
+        "fontNr": 8,
+        "fontSize": 8,
+        "lineHeight": 13,
+        "wfontSizes": [
+          {
+            "size": 28,
+            "name": "28",
+            "lineHeight": 33.6
+          },
+          {
+            "size": 32,
+            "name": "32",
+            "lineHeight": 38.4
+          }
+        ],
+        "colorFrom": "R_Last_Text_Color",
+        "dstyles": [23],
+        "editable": false,
+        "editui": "text",
+        "kern": true,
+        "spacing": 0,
+        "hideable": false
+      }
+    ]
+  }
+]
