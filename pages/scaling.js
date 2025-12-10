@@ -16,12 +16,17 @@ export default function Scaling() {
   const [textAreaError, setTextAreaError] = React.useState(false);
   const [jsonSuccess, setJsonSuccess] = React.useState(false);
   const [jsonInputValue, setJsonInputValue] = React.useState("");
+  const [stylesJsonInputValue, setStylesJsonInputValue] = React.useState("");
+  const [stylesJsonError, setStylesJsonError] = React.useState(false);
+  const [stylesJsonSuccess, setStylesJsonSuccess] = React.useState(false);
+  const [stylesData, setStylesData] = React.useState(null);
   const [scaleType, setScaleType] = React.useState("");
   const [customFromWidth, setCustomFromWidth] = React.useState("");
   const [customFromHeight, setCustomFromHeight] = React.useState("");
   const [customToWidth, setCustomToWidth] = React.useState("");
   const [customToHeight, setCustomToHeight] = React.useState("");
   const [scaledJson, setScaledJson] = React.useState("");
+  const [scaledStylesJson, setScaledStylesJson] = React.useState("");
   const [hasStoredJson, setHasStoredJson] = React.useState(false);
 
   // Load JSON from localStorage on component mount
@@ -146,7 +151,7 @@ export default function Scaling() {
     return scaledObj;
   };
 
-  const generateScaledJSON = () => {
+  const generateScaledFieldsJSON = () => {
     const scaleFactor = getScaleFactor();
     const scaledData = JSON.parse(JSON.stringify(designGeneratorJson)); // Deep clone
 
@@ -165,20 +170,64 @@ export default function Scaling() {
     return jsonString;
   };
 
+  const scaleStyleEntry = (styleObj, scaleFactor) => {
+    const styleKeysToScale = [
+      "fontSize",
+      "lineHeight",
+      "paraSpacing",
+      "paraSpacingBefore",
+      "bulletIndent",
+      "indent",
+    ];
+    const scaledStyle = { ...styleObj };
+    styleKeysToScale.forEach((key) => {
+      if (scaledStyle[key] !== undefined) {
+        scaledStyle[key] = scaleValue(scaledStyle[key], scaleFactor);
+      }
+    });
+    return scaledStyle;
+  };
+
+  const generateScaledStylesJSON = () => {
+    if (!stylesData || !stylesData.styles) return "";
+    const scaleFactor = getScaleFactor();
+    const scaledStylesData = JSON.parse(JSON.stringify(stylesData));
+    scaledStylesData.styles = scaledStylesData.styles.map((style) =>
+      scaleStyleEntry(style, scaleFactor)
+    );
+    const jsonString = JSON.stringify(scaledStylesData, null, 2);
+    setScaledStylesJson(jsonString);
+    return jsonString;
+  };
+
   /**
-   * Checks if valid JSON
+   * Checks if valid fields JSON
    */
-  function IsJsonString(str) {
+  const isFieldsJsonValid = (str) => {
     try {
-      JSON.parse(str);
+      const parsed = JSON.parse(str);
+      if (Array.isArray(parsed) && parsed[0]?.pagenr === 1) {
+        setDesignGeneratorJson(parsed);
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
+  };
 
-    const designGeneratorJson = JSON.parse(str)[0].pagenr === 1;
-    designGeneratorJson ? setDesignGeneratorJson(JSON.parse(str)) : "";
-    return designGeneratorJson ? true : false;
-  }
+  const isStylesJsonValid = (str) => {
+    try {
+      const parsed = JSON.parse(str);
+      if (parsed?.styles && Array.isArray(parsed.styles)) {
+        setStylesData(parsed);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
 
   async function handleField(event) {
     const inputValue = event.target.value;
@@ -186,7 +235,7 @@ export default function Scaling() {
     setJsonSuccess(false);
 
     if (inputValue.length > 2) {
-      if (IsJsonString(inputValue)) {
+      if (isFieldsJsonValid(inputValue)) {
         setJsonSuccess(true);
         setTextAreaError(false);
       } else {
@@ -199,12 +248,38 @@ export default function Scaling() {
     }
   }
 
+  async function handleStylesField(event) {
+    const inputValue = event.target.value;
+    setStylesJsonInputValue(inputValue);
+    setStylesJsonSuccess(false);
+
+    if (inputValue.length > 2) {
+      if (isStylesJsonValid(inputValue)) {
+        setStylesJsonSuccess(true);
+        setStylesJsonError(false);
+      } else {
+        setStylesJsonError(true);
+        setStylesJsonSuccess(false);
+      }
+    } else {
+      setStylesJsonError(false);
+      setStylesJsonSuccess(false);
+    }
+  }
+
   const isScalingConfigured = () => {
     return (
       scaleType !== "" &&
+      jsonSuccess &&
+      stylesJsonSuccess &&
       (scaleType !== "custom" ||
         (customFromWidth !== "" && customToWidth !== ""))
     );
+  };
+
+  const handleGenerateScaled = () => {
+    generateScaledFieldsJSON();
+    generateScaledStylesJSON();
   };
 
   return (
@@ -236,6 +311,28 @@ export default function Scaling() {
               }
             />
           </FormControl>
+
+          <FormControl sx={{ width: "100%", mb: 10 }}>
+            <TextField
+              onChange={handleStylesField}
+              value={stylesJsonInputValue}
+              fullWidth
+              label="Paste Styles JSON here"
+              multiline
+              rows={12}
+              error={stylesJsonError}
+              color={
+                stylesJsonError ? "" : stylesJsonSuccess ? "success" : "primary"
+              }
+              helperText={
+                stylesJsonError
+                  ? `Not valid Styles JSON (must include styles array)`
+                  : stylesJsonSuccess
+                  ? "Correct Styles JSON"
+                  : ""
+              }
+            />
+          </FormControl>
         </Box>
 
         {/* Step 2: Configure Scaling */}
@@ -244,7 +341,7 @@ export default function Scaling() {
           component="p"
           gutterBottom
           sx={
-            jsonSuccess
+            jsonSuccess && stylesJsonSuccess
               ? { mb: 5, color: "text.primary" }
               : { mb: 5, color: "text.disabled" }
           }
@@ -358,7 +455,7 @@ export default function Scaling() {
           component="p"
           gutterBottom
           sx={
-            jsonSuccess && isScalingConfigured()
+            jsonSuccess && stylesJsonSuccess && isScalingConfigured()
               ? { mb: 5, color: "text.primary" }
               : { mb: 5, color: "text.disabled" }
           }
@@ -377,17 +474,14 @@ export default function Scaling() {
           }}
         >
           <Button
-            disabled={!jsonSuccess || !isScalingConfigured()}
+            disabled={!isScalingConfigured()}
             sx={{ p: 1.85 }}
-            onClick={() => {
-              const scaledJsonString = generateScaledJSON();
-              navigator.clipboard.writeText(scaledJsonString);
-            }}
+            onClick={handleGenerateScaled}
             color="success"
             variant="contained"
             size="large"
           >
-            Copy Scaled JSON to Clipboard
+            Generate Scaled JSONs
           </Button>
 
           <Button
@@ -400,17 +494,65 @@ export default function Scaling() {
           </Button>
         </Box>
 
-        {/* Preview scaled JSON */}
+        {/* Preview scaled JSON - Fields */}
         {scaledJson && (
           <Box sx={{ width: "1000px", mt: 5 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Preview Scaled JSON:
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6">Preview Scaled Fields JSON:</Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => navigator.clipboard.writeText(scaledJson)}
+              >
+                Copy Fields JSON
+              </Button>
+            </Box>
             <TextField
               fullWidth
               multiline
               rows={15}
               value={scaledJson}
+              variant="outlined"
+              InputProps={{
+                readOnly: true,
+                style: { fontSize: "12px", fontFamily: "monospace" },
+              }}
+            />
+          </Box>
+        )}
+
+        {/* Preview scaled JSON - Styles */}
+        {scaledStylesJson && (
+          <Box sx={{ width: "1000px", mt: 5 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6">Preview Scaled Styles JSON:</Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => navigator.clipboard.writeText(scaledStylesJson)}
+              >
+                Copy Styles JSON
+              </Button>
+            </Box>
+            <TextField
+              fullWidth
+              multiline
+              rows={15}
+              value={scaledStylesJson}
               variant="outlined"
               InputProps={{
                 readOnly: true,
