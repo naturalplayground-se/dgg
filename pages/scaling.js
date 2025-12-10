@@ -62,6 +62,10 @@ export default function Scaling() {
         return 1.414; // √2
       case "a3-to-a4":
         return 0.707; // 1/√2
+      case "a4-to-a5":
+        return 0.707; // 1/√2 (downscale)
+      case "a5-to-a4":
+        return 1.414; // √2 (upscale)
       case "custom":
         if (customFromWidth && customToWidth) {
           return parseFloat(customToWidth) / parseFloat(customFromWidth);
@@ -369,6 +373,8 @@ export default function Scaling() {
             >
               <MenuItem value="a4-to-a3">A4 → A3</MenuItem>
               <MenuItem value="a3-to-a4">A3 → A4</MenuItem>
+              <MenuItem value="a4-to-a5">A4 → A5</MenuItem>
+              <MenuItem value="a5-to-a4">A5 → A4</MenuItem>
               <MenuItem value="custom">Custom</MenuItem>
             </Select>
           </FormControl>
