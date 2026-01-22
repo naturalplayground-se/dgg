@@ -82,6 +82,19 @@ export default function Home() {
         "Automatic clipboard copying",
       ],
     },
+    {
+      title: "Statistics",
+      description:
+        "Parse statistics data from Mediaflow and convert it to CSV format for easy Excel import. Extract template names, creation dates, file counts, and last used dates with automatic sorting.",
+      route: "/statistics",
+      color: "#0288d1",
+      features: [
+        "Parse statistics data from text format",
+        "Extract template metadata automatically",
+        "Sort by file count (descending)",
+        "Export to CSV for Excel import",
+      ],
+    },
   ];
 
   return (

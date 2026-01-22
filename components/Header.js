@@ -11,6 +11,7 @@ export default function Header() {
     { label: "Scaling", path: "/scaling" },
     { label: "Import", path: "/import" },
     { label: "Prefix", path: "/prefix" },
+    { label: "Statistics", path: "/statistics" },
   ];
 
   return (
