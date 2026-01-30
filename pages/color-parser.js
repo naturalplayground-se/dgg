@@ -42,13 +42,38 @@ const parseColorText = (text) => {
     if (currentColor && currentColor.name) {
       // Ensure we have at least one color format
       if (currentColor.cmyk || currentColor.rgb || currentColor.hex) {
-        // Generate missing values if possible
-        if (currentColor.hex && !currentColor.rgb) {
-          currentColor.rgb = hexToRgb(currentColor.hex);
+        // Generate MISSING values only - preserve existing parsed values
+
+        // If we have CMYK but missing RGB or Hex, generate them
+        if (currentColor.cmyk) {
+          if (!currentColor.rgb) {
+            currentColor.rgb = cmykToRgb(currentColor.cmyk);
+          }
+          if (!currentColor.hex) {
+            currentColor.hex = rgbToHex(currentColor.rgb);
+          }
         }
-        if (currentColor.rgb && !currentColor.hex) {
-          currentColor.hex = rgbToHex(currentColor.rgb);
+
+        // If we have RGB but missing CMYK or Hex, generate them
+        if (currentColor.rgb) {
+          if (!currentColor.cmyk) {
+            currentColor.cmyk = rgbToCmyk(currentColor.rgb);
+          }
+          if (!currentColor.hex) {
+            currentColor.hex = rgbToHex(currentColor.rgb);
+          }
         }
+
+        // If we have Hex but missing RGB or CMYK, generate them
+        if (currentColor.hex) {
+          if (!currentColor.rgb) {
+            currentColor.rgb = hexToRgb(currentColor.hex);
+          }
+          if (!currentColor.cmyk) {
+            currentColor.cmyk = rgbToCmyk(currentColor.rgb);
+          }
+        }
+
         colors.push({ ...currentColor });
       }
     }
@@ -528,13 +553,10 @@ export default function ColorParser() {
         if (i !== index) return color;
         const newCmyk = [...(color.cmyk || [0, 0, 0, 0])];
         newCmyk[cmykIndex] = Math.max(0, Math.min(100, parseFloat(value) || 0));
-        // Update hex from CMYK via RGB conversion
-        const rgb = cmykToRgb(newCmyk);
+        // Only update CMYK - preserve existing RGB and Hex values
         return {
           ...color,
           cmyk: newCmyk,
-          rgb: rgb,
-          hex: rgbToHex(rgb),
           model: "CMYK",
         };
       }),
@@ -547,11 +569,10 @@ export default function ColorParser() {
         if (i !== index) return color;
         const newRgb = [...(color.rgb || [0, 0, 0])];
         newRgb[rgbIndex] = Math.max(0, Math.min(255, parseInt(value) || 0));
+        // Only update RGB - preserve existing CMYK and Hex values
         return {
           ...color,
           rgb: newRgb,
-          hex: rgbToHex(newRgb),
-          cmyk: rgbToCmyk(newRgb),
           model: "RGB",
         };
       }),
@@ -566,15 +587,11 @@ export default function ColorParser() {
         let hex = value.replace(/[^0-9A-Fa-f#]/g, "");
         if (!hex.startsWith("#")) hex = "#" + hex;
         if (hex.length > 7) hex = hex.substring(0, 7);
-
-        const updated = { ...color, hex: hex.toUpperCase() };
-        // Only update RGB/CMYK if we have a valid 6-digit hex
-        if (hex.length === 7) {
-          updated.rgb = hexToRgb(hex);
-          updated.cmyk = rgbToCmyk(updated.rgb);
-          updated.model = "RGB";
-        }
-        return updated;
+        // Only update Hex - preserve existing RGB and CMYK values
+        return {
+          ...color,
+          hex: hex.toUpperCase(),
+        };
       }),
     );
   };
@@ -629,11 +646,17 @@ export default function ColorParser() {
   };
 
   const getColorPreview = (color) => {
+    // Use existing hex if available
     if (color.hex) {
       return color.hex;
     }
+    // Convert RGB to hex for preview
     if (color.rgb) {
       return rgbToHex(color.rgb);
+    }
+    // Convert CMYK to RGB to hex for preview
+    if (color.cmyk) {
+      return rgbToHex(cmykToRgb(color.cmyk));
     }
     return "#808080";
   };
