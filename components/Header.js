@@ -12,6 +12,7 @@ export default function Header() {
     { label: "Import", path: "/import" },
     { label: "Prefix", path: "/prefix" },
     { label: "Statistics", path: "/statistics" },
+    { label: "Colors", path: "/color-parser" },
   ];
 
   return (

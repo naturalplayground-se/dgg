@@ -17,17 +17,17 @@ export default function Home() {
 
   const features = [
     {
-      title: "Studio",
+      title: "Color Parser",
       description:
-        "Visual template builder with drag-and-drop functionality. Create stunning designs by dragging text blocks, images, shapes, and other elements directly onto the canvas. Export as structured JSON templates.",
-      route: "/studio",
+        "Parse unstructured color information and generate Adobe Swatch Exchange (.ase) files. Paste color data in any format and extract CMYK, RGB, and Hex values automatically for use in Adobe applications.",
+      route: "/color-parser",
       color: "#9c27b0",
       isNew: true,
       features: [
-        "Drag-and-drop visual builder",
-        "Interactive canvas with Fabric.js",
-        "Real-time element positioning",
-        "Complete JSON template export",
+        "Parse unstructured color text",
+        "Extract CMYK, RGB, and Hex values",
+        "Preview colors with live swatches",
+        "Download .ase files for Adobe apps",
       ],
     },
     {
