@@ -356,10 +356,12 @@ const encodeColorBlock = (color) => {
   const nameLength = nameChars.length;
 
   // Determine color model and values
+  // ASE supports: RGB, CMYK, LAB, Gray (not Hex directly - Hex is converted to RGB)
   let modelBytes;
   let valueBytes;
 
-  if (color.model === "CMYK" && color.cmyk) {
+  // Prioritize CMYK for print workflows, then RGB
+  if (color.cmyk) {
     // CMYK model: "CMYK" + 4 float32 values (0.0-1.0)
     modelBytes = [0x43, 0x4d, 0x59, 0x4b]; // "CMYK"
     valueBytes = new ArrayBuffer(16);
@@ -376,6 +378,15 @@ const encodeColorBlock = (color) => {
     valueView.setFloat32(0, color.rgb[0] / 255, false); // R
     valueView.setFloat32(4, color.rgb[1] / 255, false); // G
     valueView.setFloat32(8, color.rgb[2] / 255, false); // B
+  } else if (color.hex) {
+    // Convert Hex to RGB for ASE (Hex is not a native ASE format)
+    const rgb = hexToRgb(color.hex);
+    modelBytes = [0x52, 0x47, 0x42, 0x20]; // "RGB "
+    valueBytes = new ArrayBuffer(12);
+    const valueView = new DataView(valueBytes);
+    valueView.setFloat32(0, rgb[0] / 255, false); // R
+    valueView.setFloat32(4, rgb[1] / 255, false); // G
+    valueView.setFloat32(8, rgb[2] / 255, false); // B
   } else {
     // Fallback to black
     modelBytes = [0x52, 0x47, 0x42, 0x20]; // "RGB "
@@ -791,11 +802,6 @@ Hex: #5B6D48`}
                         RGB
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: 11, py: 0.5, color: "text.secondary" }}
-                      >
-                        Hex
-                      </TableCell>
-                      <TableCell
                         sx={{ fontSize: 11, py: 0.5 }}
                         width={40}
                       ></TableCell>
@@ -945,27 +951,6 @@ Hex: #5B6D48`}
                               </Box>
                             ))}
                           </Box>
-                        </TableCell>
-                        <TableCell sx={{ py: 0.5 }}>
-                          <TextField
-                            value={color.hex || "#000000"}
-                            onChange={(e) =>
-                              handleHexChange(index, e.target.value)
-                            }
-                            size="small"
-                            variant="outlined"
-                            sx={{
-                              width: 76,
-                              "& .MuiInputBase-input": {
-                                fontSize: 11,
-                                py: 0.5,
-                                px: 0.5,
-                                fontFamily: "monospace",
-                              },
-                              "& .MuiOutlinedInput-root": { height: 28 },
-                            }}
-                            aria-label="Hex value"
-                          />
                         </TableCell>
                         <TableCell sx={{ py: 0.5 }}>
                           <Tooltip title="Remove">
