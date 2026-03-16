@@ -25,6 +25,7 @@ export default function Scaling() {
   const [customFromHeight, setCustomFromHeight] = React.useState("");
   const [customToWidth, setCustomToWidth] = React.useState("");
   const [customToHeight, setCustomToHeight] = React.useState("");
+  const [scalePercent, setScalePercent] = React.useState("");
   const [scaledJson, setScaledJson] = React.useState("");
   const [scaledStylesJson, setScaledStylesJson] = React.useState("");
   const [hasStoredJson, setHasStoredJson] = React.useState(false);
@@ -66,6 +67,11 @@ export default function Scaling() {
         return 0.707; // 1/√2 (downscale)
       case "a5-to-a4":
         return 1.414; // √2 (upscale)
+      case "percent":
+        if (scalePercent !== "" && !Number.isNaN(parseFloat(scalePercent))) {
+          return parseFloat(scalePercent) / 100;
+        }
+        return 1;
       case "custom":
         if (customFromWidth && customToWidth) {
           return parseFloat(customToWidth) / parseFloat(customFromWidth);
@@ -159,15 +165,14 @@ export default function Scaling() {
     const scaleFactor = getScaleFactor();
     const scaledData = JSON.parse(JSON.stringify(designGeneratorJson)); // Deep clone
 
-    if (
-      scaledData[0] &&
-      scaledData[0].fields &&
-      Array.isArray(scaledData[0].fields)
-    ) {
-      scaledData[0].fields = scaledData[0].fields.map((field) =>
-        scaleObject(field, scaleFactor)
-      );
-    }
+    // Loop all pages and scale each page's fields (multi-page support)
+    scaledData.forEach((page) => {
+      if (page && page.fields && Array.isArray(page.fields)) {
+        page.fields = page.fields.map((field) =>
+          scaleObject(field, scaleFactor)
+        );
+      }
+    });
 
     const jsonString = JSON.stringify(scaledData, null, 2);
     setScaledJson(jsonString);
@@ -272,13 +277,21 @@ export default function Scaling() {
   }
 
   const isScalingConfigured = () => {
-    return (
-      scaleType !== "" &&
-      jsonSuccess &&
-      stylesJsonSuccess &&
-      (scaleType !== "custom" ||
-        (customFromWidth !== "" && customToWidth !== ""))
-    );
+    if (
+      !scaleType ||
+      !jsonSuccess ||
+      !stylesJsonSuccess
+    ) {
+      return false;
+    }
+    if (scaleType === "custom") {
+      return customFromWidth !== "" && customToWidth !== "";
+    }
+    if (scaleType === "percent") {
+      const num = parseFloat(scalePercent);
+      return scalePercent !== "" && !Number.isNaN(num) && num > 0;
+    }
+    return true;
   };
 
   const handleGenerateScaled = () => {
@@ -375,9 +388,32 @@ export default function Scaling() {
               <MenuItem value="a3-to-a4">A3 → A4</MenuItem>
               <MenuItem value="a4-to-a5">A4 → A5</MenuItem>
               <MenuItem value="a5-to-a4">A5 → A4</MenuItem>
+              <MenuItem value="percent">Scale by %</MenuItem>
               <MenuItem value="custom">Custom</MenuItem>
             </Select>
           </FormControl>
+
+          {scaleType === "percent" && (
+            <Box sx={{ mt: 3 }}>
+              <FormControl sx={{ width: "160px" }}>
+                <TextField
+                  id="scalePercent"
+                  label="Scale (%)"
+                  variant="outlined"
+                  type="number"
+                  inputProps={{ min: 1, max: 999, step: 1 }}
+                  value={scalePercent}
+                  onChange={(event) => setScalePercent(event.target.value)}
+                  helperText="e.g. 80 for 80%, 150 for 150%"
+                />
+              </FormControl>
+              {scalePercent !== "" && !Number.isNaN(parseFloat(scalePercent)) && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                  Scale Factor: {(parseFloat(scalePercent) / 100).toFixed(3)}
+                </Typography>
+              )}
+            </Box>
+          )}
 
           {scaleType === "custom" && (
             <Box sx={{ mt: 3 }}>
