@@ -13,6 +13,7 @@ export default function Header() {
     { label: "Prefix", path: "/prefix" },
     { label: "Statistics", path: "/statistics" },
     { label: "Colors", path: "/color-parser" },
+    { label: "Fonts", path: "/adobe-fonts" },
   ];
 
   return (

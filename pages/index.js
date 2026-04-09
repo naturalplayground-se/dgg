@@ -95,6 +95,20 @@ export default function Home() {
         "Export to CSV for Excel import",
       ],
     },
+    {
+      title: "Adobe Fonts",
+      description:
+        "Download fonts from Adobe Fonts (formerly TypeKit). Paste a font family or collection URL, browse available styles with live preview, and download fonts as TTF files.",
+      route: "/adobe-fonts",
+      color: "#ff3366",
+      isNew: true,
+      features: [
+        "Paste any Adobe Fonts family or collection URL",
+        "Browse all available font styles",
+        "Live font preview with sample text",
+        "Download individual fonts or all as TTF",
+      ],
+    },
   ];
 
   return (
