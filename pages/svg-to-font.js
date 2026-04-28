@@ -54,6 +54,7 @@ export default function SvgToFont() {
   const [generatedFont, setGeneratedFont] = React.useState(null);
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [fieldSettings, setFieldSettings] = React.useState(
     DEFAULT_FIELD_SETTINGS,
   );
@@ -126,6 +127,14 @@ export default function SvgToFont() {
     };
   }, [generatedFont]);
 
+  React.useEffect(() => {
+    return () => {
+      if (backgroundImage?.url) {
+        URL.revokeObjectURL(backgroundImage.url);
+      }
+    };
+  }, [backgroundImage]);
+
   const resetGeneratedFont = () => {
     setGeneratedFont(null);
   };
@@ -155,6 +164,33 @@ export default function SvgToFont() {
       setSelectedFile(null);
       setError(`Could not read SVG file: ${err.message}`);
     }
+  };
+
+  const handleBackgroundSelect = (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    setBackgroundImage((current) => {
+      if (current?.url) {
+        URL.revokeObjectURL(current.url);
+      }
+
+      return {
+        name: file.name,
+        url: URL.createObjectURL(file),
+      };
+    });
+  };
+
+  const clearBackgroundImage = () => {
+    setBackgroundImage((current) => {
+      if (current?.url) {
+        URL.revokeObjectURL(current.url);
+      }
+
+      return null;
+    });
   };
 
   const processSvg = async () => {
@@ -463,8 +499,40 @@ export default function SvgToFont() {
               </Box>
 
               <Typography variant="h6" gutterBottom>
-                Document Preview
+                Reference Preview
               </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Upload an optional reference image with the same size as the
+                document, then adjust the numeric values until the generated A
+                aligns exactly. The background image is only for preview and is
+                not included in `font-field.json`.
+              </Typography>
+              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 2 }}>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="font-reference-image-upload"
+                  type="file"
+                  onChange={handleBackgroundSelect}
+                />
+                <label htmlFor="font-reference-image-upload">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<UploadFileIcon />}
+                  >
+                    Upload Reference Image
+                  </Button>
+                </label>
+                {backgroundImage && (
+                  <>
+                    <Chip label={backgroundImage.name} color="info" />
+                    <Button variant="text" onClick={clearBackgroundImage}>
+                      Remove Background
+                    </Button>
+                  </>
+                )}
+              </Box>
               <Box
                 sx={{
                   mb: 3,
@@ -481,26 +549,41 @@ export default function SvgToFont() {
                     height: documentHeight * previewScale,
                     mx: "auto",
                     backgroundColor: "#fff",
+                    backgroundImage: backgroundImage
+                      ? `url(${backgroundImage.url})`
+                      : "none",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "100% 100%",
                     border: "1px solid #bbb",
                     boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
                     overflow: "hidden",
                   }}
                 >
-                  <Typography
+                  <Box
                     sx={{
                       position: "absolute",
                       left: fontField.x * previewScale,
                       top: fontField.y * previewScale,
                       width: fontField.w * previewScale,
-                      color: "#000",
-                      fontFamily: `'${generatedFont.fontFamily}', sans-serif`,
-                      fontSize: fontField.fontSize * previewScale,
-                      lineHeight: 1,
-                      whiteSpace: "nowrap",
+                      minHeight: fontField.fontSize * previewScale,
+                      border: "1px dashed #1976d2",
+                      backgroundColor: "rgba(25, 118, 210, 0.06)",
+                      pointerEvents: "none",
                     }}
                   >
-                    A
-                  </Typography>
+                    <Typography
+                      sx={{
+                        color: "#000",
+                        fontFamily: `'${generatedFont.fontFamily}', sans-serif`,
+                        fontSize: fontField.fontSize * previewScale,
+                        lineHeight: 1,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      A
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
 
