@@ -1,0 +1,36 @@
+{
+        "name": "Textline",
+        "title": "Text",
+        "type": "textline",
+        "editui": "text",
+        "contents": "A",
+        "x": 100,
+        "y": 100,
+        "w": 100,
+        "maxw": "Textline.width",
+        "h": "auto",
+        "hideable": false,
+        "autoShrink": false,
+        "shrinkLimit": 0.5,
+        "align": 1,
+        "fontNr": 4,
+        "fontSize": 200,
+        "4fontSizes": [
+          {
+            "size": 28,
+            "name": "28"
+          },
+          {
+            "size": 32,
+            "name": "32"
+          }
+        ],
+        "color": 0,
+        "wcolors": [
+          0,
+          1
+        ],
+        "editable": true,
+        "spacing": 0,
+        "kern": true
+      },

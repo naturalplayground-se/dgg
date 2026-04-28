@@ -119,6 +119,21 @@ const features = [
       "Download individual fonts or all as TTF",
     ],
   },
+  {
+    title: "SVG to TTF",
+    description:
+      "Import a simple SVG and generate a TTF font where the artwork is mapped to the uppercase letter A, with live preview before download.",
+    route: "/svg-to-font",
+    color: "#5d4037",
+    isNew: true,
+    buttonLabel: "Open SVG to TTF Tool",
+    features: [
+      "Upload one SVG file",
+      "Map artwork to letter A",
+      "Preview the generated glyph",
+      "Download a ready-to-use TTF",
+    ],
+  },
 ];
 
 const footerNavItems = [
@@ -130,6 +145,7 @@ const footerNavItems = [
   { label: "Statistics", path: "/statistics" },
   { label: "Colors", path: "/color-parser" },
   { label: "Fonts", path: "/adobe-fonts" },
+  { label: "SVG Font", path: "/svg-to-font" },
 ];
 
 function CloudCard({ feature, onClick }) {
@@ -331,10 +347,10 @@ export default function Home() {
           />
         </Box>
 
-        {/* Row 3: Adobe Fonts (centered) */}
+        {/* Row 3: Font tools */}
         <Box
           sx={{
-            gridColumn: { md: "1 / -1", lg: "2 / 3" },
+            gridColumn: { md: "1 / 2", lg: "1 / 2" },
             maxWidth: { md: "500px", lg: "none" },
             mx: { md: "auto", lg: 0 },
             mt: { lg: 0 },
@@ -343,6 +359,19 @@ export default function Home() {
           <CloudCard
             feature={features[6]}
             onClick={() => router.push(features[6].route)}
+          />
+        </Box>
+        <Box
+          sx={{
+            gridColumn: { md: "2 / 3", lg: "2 / 3" },
+            maxWidth: { md: "500px", lg: "none" },
+            mx: { md: "auto", lg: 0 },
+            mt: { lg: 3 },
+          }}
+        >
+          <CloudCard
+            feature={features[7]}
+            onClick={() => router.push(features[7].route)}
           />
         </Box>
       </Box>

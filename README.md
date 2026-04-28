@@ -31,6 +31,15 @@ Import IDML (InDesign Markup Language) files and automatically convert them to y
 - Color and font extraction
 - Complete JSON structure generation
 
+### 4. **NEW: SVG to TTF Tool**
+
+Import a simple SVG and generate a TrueType font where the artwork is mapped to the uppercase letter A.
+
+- Single SVG upload
+- Converts filled vector paths into a font glyph
+- Maps the glyph to Unicode `U+0041` (`A`)
+- Live preview and `.ttf` download
+
 ## IDML Import Process
 
 The IDML Import tool converts Adobe InDesign files into four JSON files required for web-to-print systems:
@@ -78,6 +87,7 @@ npm run dev
    - **Repetition**: For creating repeated elements
    - **Scaling**: For resizing designs proportionally
    - **Import**: For converting IDML files to JSON
+   - **SVG to TTF**: For converting one SVG into a font with the SVG mapped to letter A
 3. Follow the step-by-step interface for each tool
 
 ## Technical Details
@@ -136,3 +146,4 @@ Built with:
 - Material-UI
 - JSZip (for IDML parsing)
 - DOMParser (for XML parsing)
+- fonteditor-core (for SVG to TTF generation)

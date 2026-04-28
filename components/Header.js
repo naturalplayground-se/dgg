@@ -14,6 +14,7 @@ export default function Header({ transparent = false }) {
     { label: "Statistics", path: "/statistics" },
     { label: "Colors", path: "/color-parser" },
     { label: "Fonts", path: "/adobe-fonts" },
+    { label: "SVG Font", path: "/svg-to-font" },
   ];
 
   return (
