@@ -5,8 +5,10 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   Chip,
   Container,
+  FormControlLabel,
   LinearProgress,
   Paper,
   TextField,
@@ -55,6 +57,7 @@ export default function SvgToFont() {
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [error, setError] = React.useState("");
   const [backgroundImage, setBackgroundImage] = React.useState(null);
+  const [preservePathDetail, setPreservePathDetail] = React.useState(true);
   const [fieldSettings, setFieldSettings] = React.useState(
     DEFAULT_FIELD_SETTINGS,
   );
@@ -201,7 +204,7 @@ export default function SvgToFont() {
     setError("");
 
     try {
-      const result = createTtfFromSvg(svgText);
+      const result = createTtfFromSvg(svgText, { preservePathDetail });
       const blob = new Blob([result.bytes], { type: "font/ttf" });
       const url = URL.createObjectURL(blob);
 
@@ -272,8 +275,9 @@ export default function SvgToFont() {
               1. Select SVG File
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Choose a simple vector SVG. Filled paths work best; text, images,
-              filters, masks, and unexpanded strokes may not convert cleanly.
+              Choose a vector SVG. Illustrator internal CSS exports are cleaned
+              up automatically; text, images, filters, masks, and unexpanded
+              strokes may not convert cleanly.
             </Typography>
 
             <Box sx={{ mb: 3 }}>
@@ -320,6 +324,23 @@ export default function SvgToFont() {
               <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
                 The generated font contains `.notdef`, space, and uppercase A
                 mapped to Unicode U+0041.
+              </Typography>
+
+              <FormControlLabel
+                sx={{ display: "block", mb: 2 }}
+                control={
+                  <Checkbox
+                    checked={preservePathDetail}
+                    onChange={(event) =>
+                      setPreservePathDetail(event.target.checked)
+                    }
+                  />
+                }
+                label="High quality / preserve path detail"
+              />
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Keep this enabled for smooth organic SVG shapes. Disable it only
+                if you need a smaller simplified font file.
               </Typography>
 
               <Button
@@ -630,9 +651,9 @@ export default function SvgToFont() {
                 accept TTF uploads.
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                For reliable results, export the artwork as filled paths from
-                Illustrator, Inkscape, Figma, or another vector editor before
-                uploading.
+                Illustrator&apos;s default internal CSS export is normalized
+                automatically. For reliable results, still expand strokes and
+                outline text before uploading.
               </Typography>
             </CardContent>
           </Card>

@@ -21,6 +21,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 import JSZip from "jszip";
+import { buildIdmlSwatchColors } from "../lib/idmlColors";
 
 export default function Import() {
   const router = useRouter();
@@ -100,41 +101,24 @@ export default function Import() {
 
       setProcessingStatus("Extracting colors and fonts...");
 
-      // Extract styles from Preferences.xml and Styles.xml
-      const stylesFile = contents.files["Resources/Styles.xml"];
-      if (stylesFile) {
-        const stylesContent = await stylesFile.async("string");
-        const parser = new DOMParser();
-        const stylesDoc = parser.parseFromString(stylesContent, "text/xml");
-
-        // Extract colors (simplified parsing)
-        const colorElements = stylesDoc.querySelectorAll("Color");
-        colorElements.forEach((colorEl, index) => {
-          const name = colorEl.getAttribute("Name") || `Color_${index}`;
-          const colorSpace = colorEl.getAttribute("Space") || "RGB";
-
-          if (name !== "Black" && name !== "Paper") {
-            stylesData.colors.push({
-              cmyk: "0,0,0,0",
-              name: name,
-              rgb: "#000000", // Would extract actual color values
-            });
-          }
-        });
-
-        // Add default colors
-        stylesData.colors.unshift(
-          {
-            cmyk: "0,0,0,100",
-            name: "Black",
-            rgb: "#000000",
-          },
-          {
-            cmyk: "0,0,0,0",
-            name: "Paper",
-            rgb: "#ffffff",
-          }
-        );
+      // Document swatches live in Graphic.xml (all swatches, used or not).
+      // Styles.xml may list overlapping Color definitions — merge without duplicates.
+      let graphicXml = null;
+      const graphicFile = contents.files["Resources/Graphic.xml"];
+      if (graphicFile) {
+        graphicXml = await graphicFile.async("string");
+      }
+      let stylesXmlForColors = null;
+      const stylesFileForColors = contents.files["Resources/Styles.xml"];
+      if (stylesFileForColors) {
+        stylesXmlForColors = await stylesFileForColors.async("string");
+      }
+      stylesData.colors = buildIdmlSwatchColors(graphicXml, stylesXmlForColors);
+      if (stylesData.colors.length === 0) {
+        stylesData.colors = [
+          { cmyk: "0,0,0,100", name: "Black", rgb: "#000000" },
+          { cmyk: "0,0,0,0", name: "Paper", rgb: "#ffffff" },
+        ];
       }
 
       setProcessingStatus("Processing text and layout elements...");
